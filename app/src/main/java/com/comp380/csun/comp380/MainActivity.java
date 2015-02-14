@@ -1,9 +1,12 @@
 package com.comp380.csun.comp380;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -19,7 +22,7 @@ public class MainActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -33,7 +36,30 @@ public class MainActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        else if(id == R.id.action_add){
+            return true;
+        }
+        else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+    public void onButtonClick(View view){
+        EditText ammount = (EditText) findViewById(R.id.ammount_input);
+        EditText category = (EditText) findViewById(R.id.category_input);
+        EditText vendor = (EditText) findViewById(R.id.vendor_input);
+        int id = view.getId();
 
-        return super.onOptionsItemSelected(item);
+        if(id == R.id.reset_button){
+            ammount.setText(null);
+            category.setText(null);
+            vendor.setText(null);
+        }
+        else if(id == R.id.submit_button){
+            Intent display = new Intent(this, DataDisplayActivity.class);
+            display.putExtra("Ammount", ammount.getText().toString());
+            display.putExtra("Category", category.getText().toString());
+            display.putExtra("Vendor", vendor.getText().toString());
+            startActivity(display);
+        }
     }
 }
