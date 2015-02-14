@@ -13,11 +13,11 @@ public class DataDisplayActivity extends ActionBarActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data);
         Intent callingIntent = getIntent();
-        String tmp = callingIntent.getStringExtra("Ammount");
-        TextView ammount = (TextView)findViewById(R.id.textView);
+        String tmp = callingIntent.getStringExtra("Amount");
+        TextView amount = (TextView)findViewById(R.id.textView);
         TextView category = (TextView)findViewById(R.id.textView2);
         TextView vendor = (TextView)findViewById(R.id.textView3);
-        ammount.setText(tmp);
+        amount.setText(tmp);
         tmp = callingIntent.getStringExtra("Category");
         category.setText(tmp);
         tmp = callingIntent.getStringExtra("Vendor");

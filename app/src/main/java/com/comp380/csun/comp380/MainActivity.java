@@ -44,19 +44,19 @@ public class MainActivity extends ActionBarActivity {
         }
     }
     public void onButtonClick(View view){
-        EditText ammount = (EditText) findViewById(R.id.ammount_input);
+        EditText amount = (EditText) findViewById(R.id.amount_input);
         EditText category = (EditText) findViewById(R.id.category_input);
         EditText vendor = (EditText) findViewById(R.id.vendor_input);
         int id = view.getId();
 
         if(id == R.id.reset_button){
-            ammount.setText(null);
+            amount.setText(null);
             category.setText(null);
             vendor.setText(null);
         }
         else if(id == R.id.submit_button){
             Intent display = new Intent(this, DataDisplayActivity.class);
-            display.putExtra("Ammount", ammount.getText().toString());
+            display.putExtra("Amount", amount.getText().toString());
             display.putExtra("Category", category.getText().toString());
             display.putExtra("Vendor", vendor.getText().toString());
             startActivity(display);
