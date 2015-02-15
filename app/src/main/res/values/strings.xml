@@ -9,5 +9,6 @@
     <string name="reset_button_text">Reset</string>
     <string name="category_text">Category</string>
     <string name="vendor_text">Vendor</string>
+    <string name="date_text">Date</string>
 
 </resources>

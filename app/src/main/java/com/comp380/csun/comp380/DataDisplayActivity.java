@@ -13,16 +13,18 @@ public class DataDisplayActivity extends ActionBarActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data);
         Intent callingIntent = getIntent();
-        String tmp = callingIntent.getStringExtra("Amount");
+        String tmp = callingIntent.getStringExtra("Cost");
         TextView amount = (TextView)findViewById(R.id.textView);
         TextView category = (TextView)findViewById(R.id.textView2);
         TextView vendor = (TextView)findViewById(R.id.textView3);
+        TextView date = (TextView)findViewById(R.id.textView4);
         amount.setText(tmp);
         tmp = callingIntent.getStringExtra("Category");
         category.setText(tmp);
         tmp = callingIntent.getStringExtra("Vendor");
         vendor.setText(tmp);
-
+        tmp = callingIntent.getStringExtra("Date");
+        date.setText(tmp);
 
     }
 }
