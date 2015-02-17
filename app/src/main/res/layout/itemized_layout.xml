@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/checkboxes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="IDs"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        />
+
+    <TextView
+        android:id="@+id/categoryViewer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Category"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        />
+    <TextView
+        android:id="@+id/venderViewer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Vender"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        />
+    <TextView
+        android:id="@+id/costViewer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Cost"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        />
+    <TextView
+        android:id="@+id/dateViewer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Date"
+        />
+</LinearLayout>
