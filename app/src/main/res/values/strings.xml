@@ -10,5 +10,6 @@
     <string name="category_text">Category</string>
     <string name="vendor_text">Vendor</string>
     <string name="date_text">Date</string>
+    <string name="show_table">Show DB</string>
 
 </resources>

@@ -1,10 +1,13 @@
 package com.comp380.csun.comp380;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 
 /**
  * Created by gdfairclough on 2/15/15.
@@ -27,7 +30,7 @@ import android.widget.EditText;
             vendorBox = (EditText) findViewById(R.id.vendor_input);
             costBox = (EditText) findViewById(R.id.amount_input);
             dateBox = (EditText) findViewById(R.id.date_input);
-
+            populateViewer();
         }
 
         public void newExpense (View view){
@@ -45,8 +48,7 @@ import android.widget.EditText;
             vendorBox.setText("");
             costBox.setText("");
             dateBox.setText("");
-
-
+            populateViewer();
         }
 
         public void onButtonClick(View view){
@@ -94,5 +96,15 @@ import android.widget.EditText;
 
         }
 
+        public void populateViewer(){
+            DatabaseHandler dbHandler = new DatabaseHandler(this,null,null,1);
+            Cursor cursor = dbHandler.getAllRows();
+            String[] columns = dbHandler.tableNames();
+            int[] ids = new int[] {R.id.checkboxes, R.id.categoryViewer, R.id.venderViewer, R.id.costViewer, R.id.dateViewer};
+            SimpleCursorAdapter myCursorAdapter;
+            myCursorAdapter = new SimpleCursorAdapter(getBaseContext(), R.layout.itemized_layout, cursor, columns, ids,0);
+            ListView myList = (ListView) findViewById(R.id.listViewTasks);
+            myList.setAdapter(myCursorAdapter);
+        }
     }
 
