@@ -15,6 +15,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "expenseTracker.db";
     private static final String TABLE_EXPENSES = "expenses";
+    private static final String TABLE_CATEGORIES = "categories";
 
     //column names
     private static final String COLUMN_ID = "_id";
@@ -23,21 +24,43 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String COLUMN_COST = "cost";
     private static final String COLUMN_DATE = "date";
 
+    //category table column names
+    private static final String COLUMN_CATID = "category_id";
+    private static final String COLUMN_CATDESC = "category_desc";
+
 
     public DatabaseHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db){
+    //called when database is first created
+    public void onCreate(SQLiteDatabase db) {
 
-        //initialize database
-        String CREATE_EXPENSES_TABLE  = "CREATE TABLE " +
+        //ensure that foreign keys are activated
+        String FOREIGN_KEYS_ON = "PRAGMA foreign_keys = ON";
+
+        //----------initialize database tables ---------------
+
+        //initialize expenses table
+        //TODO change COLUMN_CATEGORY to an integer field
+        String CREATE_EXPENSES_TABLE = "CREATE TABLE " +
                 TABLE_EXPENSES + "("
                 + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_CATEGORY
                 + " TEXT," + COLUMN_VENDOR + " TEXT," + COLUMN_COST +
-                " REAL," + COLUMN_DATE +" DATETIME DEFAULT CURRENT_TIMESTAMP)";
-        db.execSQL(CREATE_EXPENSES_TABLE);
+                " REAL," + COLUMN_DATE + " DATETIME DEFAULT CURRENT_TIMESTAMP)";
+
+        //initialize categories table
+        String CREATE_CATEGORIES_TABLE = "CREATE TABLE " +
+                TABLE_CATEGORIES + "("
+                + COLUMN_CATID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_CATDESC
+                + " TEXT UNIQUE, FOREIGN KEY(" + COLUMN_CATID + ") REFERENCES expenses(" +
+                COLUMN_CATEGORY + "))";
+
+        // ---------------------------------------------------
+
+        //execute the above sql statements
+        db.execSQL(FOREIGN_KEYS_ON);
     }
 
     @Override
