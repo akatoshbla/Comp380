@@ -48,25 +48,29 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 TABLE_EXPENSES + "("
                 + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_CATEGORY
                 + " TEXT," + COLUMN_VENDOR + " TEXT," + COLUMN_COST +
-                " REAL," + COLUMN_DATE + " DATETIME DEFAULT CURRENT_TIMESTAMP)";
+                " REAL," + COLUMN_DATE + " DATETIME DEFAULT CURRENT_TIMESTAMP," +
+                "FOREIGN KEY(" + COLUMN_CATEGORY + ") REFERENCES " + TABLE_CATEGORIES +
+                "("+ COLUMN_CATID + "))";
 
         //initialize categories table
         String CREATE_CATEGORIES_TABLE = "CREATE TABLE " +
                 TABLE_CATEGORIES + "("
                 + COLUMN_CATID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_CATDESC
-                + " TEXT UNIQUE, FOREIGN KEY(" + COLUMN_CATID + ") REFERENCES expenses(" +
-                COLUMN_CATEGORY + "))";
+                + " TEXT UNIQUE)";
 
         // ---------------------------------------------------
 
         //execute the above sql statements
         db.execSQL(FOREIGN_KEYS_ON);
+        db.execSQL(CREATE_EXPENSES_TABLE);
+        db.execSQL(CREATE_CATEGORIES_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
 
         db.execSQL("DROP TABLE IF EXISTS" + TABLE_EXPENSES);
+        db.execSQL("DROP TABLE IF EXISTS" + TABLE_CATEGORIES);
         onCreate(db);
 
     }
@@ -84,6 +88,42 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.insert(TABLE_EXPENSES, null,values);
         db.close();
+
+    }
+    public void textCategoryValues(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues(5);
+        values.put(COLUMN_CATDESC, "Transportation");
+        db.insert(TABLE_CATEGORIES,null,values);
+        values.put(COLUMN_CATDESC, "Travel");
+        db.insert(TABLE_CATEGORIES,null,values);
+        values.put(COLUMN_CATDESC, "Gas");
+        db.insert(TABLE_CATEGORIES,null,values);
+        values.put(COLUMN_CATDESC, "Food");
+        db.insert(TABLE_CATEGORIES,null,values);
+        values.put(COLUMN_CATDESC, "Healthcare");
+        db.insert(TABLE_CATEGORIES,null,values);
+
+    }
+
+    public String[] getCategoriesStrings(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT " + COLUMN_CATDESC + " FROM " + TABLE_CATEGORIES,null);
+        if (cursor != null){
+            //store category text to a string
+            int i = 0;
+            String[] categories = new String[cursor.getCount()];
+            while(cursor.moveToNext()){
+                String category = cursor.getString(cursor.getColumnIndex(COLUMN_CATDESC));
+                categories[i] = category;
+                i++;
+            }
+            db.close();
+            return categories;
+        }
+        System.out.print("Error reading categories to string");
+        db.close();
+        return null;
 
     }
 
