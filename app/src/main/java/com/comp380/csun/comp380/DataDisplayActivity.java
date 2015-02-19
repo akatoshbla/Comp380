@@ -26,5 +26,6 @@ public class DataDisplayActivity extends ActionBarActivity{
         tmp = callingIntent.getStringExtra("Date");
         date.setText(tmp);
 
+
     }
 }

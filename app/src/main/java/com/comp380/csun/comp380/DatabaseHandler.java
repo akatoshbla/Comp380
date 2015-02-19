@@ -64,8 +64,28 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
-    //find an expense using this method which generates a SELECT statement
+    //Gets all the rows of the db on one cursor for ListView
+    public Cursor getAllRows() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String[] columns = {COLUMN_ID, COLUMN_CATEGORY, COLUMN_VENDOR, COLUMN_COST,
+                COLUMN_DATE};
+        Cursor cursor = db.query(true, TABLE_EXPENSES, columns, null, null,
+                null, null, null, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+        }
 
+        return cursor;
+    }
+
+    //Gets all String names of table
+    public String[] tableNames() {
+        String[] names = new String[] {COLUMN_ID, COLUMN_CATEGORY, COLUMN_VENDOR, COLUMN_COST,
+                COLUMN_DATE};
+        return names;
+    }
+
+    //find an expense using this method which generates a SELECT statement
     public Expense findExpense(String category){
         String query = "SELECT * FROM " + TABLE_EXPENSES + " WHERE "+ COLUMN_CATEGORY
                 + " = \"" + category + "\" ";

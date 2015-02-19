@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    style="@style/ExpenseBackground"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" >
@@ -67,7 +68,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:onClick="onButtonClick"/>
+        android:onClick="onButtonClick"
+        style="@style/ExpenseButtons"/>
 
     <Button
         android:layout_width="160dp"
@@ -77,7 +79,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:onClick="onButtonClick"/>
+        android:onClick="onButtonClick"
+        style="@style/ExpenseButtons"/>
 
     <TextView
         android:text="@string/date_text"
@@ -101,5 +104,14 @@
         android:layout_alignTop="@+id/date_input"
         />
 
-
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listViewTasks"
+        android:layout_below="@+id/dateText"
+        android:layout_alignRight="@+id/submit_button"
+        android:layout_alignEnd="@+id/submit_button"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/reset_button"/>
 </RelativeLayout>
