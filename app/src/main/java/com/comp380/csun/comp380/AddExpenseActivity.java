@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -15,7 +17,7 @@ import android.widget.SimpleCursorAdapter;
 
     public class AddExpenseActivity extends ActionBarActivity {
 
-        EditText categoryBox;
+        AutoCompleteTextView categoryBox;
         EditText vendorBox;
         EditText costBox;
         EditText dateBox;
@@ -24,13 +26,30 @@ import android.widget.SimpleCursorAdapter;
         protected void onCreate(Bundle savedInstanceState){
             super.onCreate(savedInstanceState);
 
+            //delete database when needed
+            //this.deleteDatabase("expenseTracker.db");
+
+            DatabaseHandler dbHandler = new DatabaseHandler(this, null, null,1);
+
+            //manually insert hardcoded categories for testing purposees
+            //dbHandler.textCategoryValues();
+
             setContentView(R.layout.activity_main);
 
-            categoryBox = (EditText) findViewById(R.id.category_input);
+            categoryBox = (AutoCompleteTextView) findViewById(R.id.category_input);
             vendorBox = (EditText) findViewById(R.id.vendor_input);
             costBox = (EditText) findViewById(R.id.amount_input);
             dateBox = (EditText) findViewById(R.id.date_input);
             populateViewer();
+
+
+            //populate autocompletetextview
+            ArrayAdapter<String> adapter =
+                    new ArrayAdapter<String>(this,R.layout.autocomplete_dropdown_item,
+                            dbHandler.getCategoriesStrings());
+
+            categoryBox.setAdapter(adapter);
+
         }
 
         public void newExpense (View view){
