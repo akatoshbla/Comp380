@@ -15,6 +15,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "expenseTracker.db";
     private static final String TABLE_EXPENSES = "expenses";
+    private static final String TABLE_CATEGORIES = "categories";
 
     //column names
     private static final String COLUMN_ID = "_id";
@@ -23,27 +24,53 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String COLUMN_COST = "cost";
     private static final String COLUMN_DATE = "date";
 
+    //category table column names
+    private static final String COLUMN_CATID = "category_id";
+    private static final String COLUMN_CATDESC = "category_desc";
+
 
     public DatabaseHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db){
+    //called when database is first created
+    public void onCreate(SQLiteDatabase db) {
 
-        //initialize database
-        String CREATE_EXPENSES_TABLE  = "CREATE TABLE " +
+        //ensure that foreign keys are activated
+        String FOREIGN_KEYS_ON = "PRAGMA foreign_keys = ON";
+
+        //----------initialize database tables ---------------
+
+        //initialize expenses table
+        //TODO change COLUMN_CATEGORY to an integer field
+        String CREATE_EXPENSES_TABLE = "CREATE TABLE " +
                 TABLE_EXPENSES + "("
                 + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_CATEGORY
                 + " TEXT," + COLUMN_VENDOR + " TEXT," + COLUMN_COST +
-                " REAL," + COLUMN_DATE +" DATETIME DEFAULT CURRENT_TIMESTAMP)";
+                " REAL," + COLUMN_DATE + " DATETIME DEFAULT CURRENT_TIMESTAMP," +
+                "FOREIGN KEY(" + COLUMN_CATEGORY + ") REFERENCES " + TABLE_CATEGORIES +
+                "("+ COLUMN_CATID + "))";
+
+        //initialize categories table
+        String CREATE_CATEGORIES_TABLE = "CREATE TABLE " +
+                TABLE_CATEGORIES + "("
+                + COLUMN_CATID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_CATDESC
+                + " TEXT UNIQUE)";
+
+        // ---------------------------------------------------
+
+        //execute the above sql statements
+        db.execSQL(FOREIGN_KEYS_ON);
         db.execSQL(CREATE_EXPENSES_TABLE);
+        db.execSQL(CREATE_CATEGORIES_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
 
         db.execSQL("DROP TABLE IF EXISTS" + TABLE_EXPENSES);
+        db.execSQL("DROP TABLE IF EXISTS" + TABLE_CATEGORIES);
         onCreate(db);
 
     }
@@ -61,6 +88,42 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.insert(TABLE_EXPENSES, null,values);
         db.close();
+
+    }
+    public void textCategoryValues(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues(5);
+        values.put(COLUMN_CATDESC, "Transportation");
+        db.insert(TABLE_CATEGORIES,null,values);
+        values.put(COLUMN_CATDESC, "Travel");
+        db.insert(TABLE_CATEGORIES,null,values);
+        values.put(COLUMN_CATDESC, "Gas");
+        db.insert(TABLE_CATEGORIES,null,values);
+        values.put(COLUMN_CATDESC, "Food");
+        db.insert(TABLE_CATEGORIES,null,values);
+        values.put(COLUMN_CATDESC, "Healthcare");
+        db.insert(TABLE_CATEGORIES,null,values);
+
+    }
+
+    public String[] getCategoriesStrings(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT " + COLUMN_CATDESC + " FROM " + TABLE_CATEGORIES,null);
+        if (cursor != null){
+            //store category text to a string
+            int i = 0;
+            String[] categories = new String[cursor.getCount()];
+            while(cursor.moveToNext()){
+                String category = cursor.getString(cursor.getColumnIndex(COLUMN_CATDESC));
+                categories[i] = category;
+                i++;
+            }
+            db.close();
+            return categories;
+        }
+        System.out.print("Error reading categories to string");
+        db.close();
+        return null;
 
     }
 
