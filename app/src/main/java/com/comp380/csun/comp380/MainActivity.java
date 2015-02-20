@@ -12,23 +12,24 @@ public class MainActivity extends ActionBarActivity {
     private static boolean mFirstRun = true;
     private static final int SPLASH_DURATION = 4000; // 4 milli?
 
-    // What is this going to be used for?
-    // DatabaseHandler dbHandler;
+//    DatabaseHandler dbHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(mFirstRun) {
+        DatabaseHandler db = new DatabaseHandler(this,null,null,1);
+        // no password, prompt user for one
+        if(db.hasPassword() == false) {
             setContentView(R.layout.activity_splash);
             new Handler().postDelayed(new Runnable() {
                 public void run(){
-                    startActivity(new Intent(MainActivity.this, AddExpenseActivity.class));
+                    startActivity(new Intent(MainActivity.this, WelcomeActivity.class));
                     overridePendingTransition(R.anim.abc_fade_out,R.anim.abc_fade_out);
                 }
             }, SPLASH_DURATION);
         }
         else{
-            startActivity(new Intent(this, AddExpenseActivity.class));
+            startActivity(new Intent(this, LoginActivity.class));
         }
     }
 }
