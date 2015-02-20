@@ -16,6 +16,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "expenseTracker.db";
     private static final String TABLE_EXPENSES = "expenses";
     private static final String TABLE_CATEGORIES = "categories";
+    private static final String TABLE_PASSWORD = "password";
 
     //column names
     private static final String COLUMN_ID = "_id";
@@ -23,6 +24,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String COLUMN_VENDOR = "vendor";
     private static final String COLUMN_COST = "cost";
     private static final String COLUMN_DATE = "date";
+    private static final String COLUMN_PASSWORD = "passwords";
 
     //category table column names
     private static final String COLUMN_CATID = "category_id";
@@ -60,17 +62,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         // ---------------------------------------------------
 
+        //password table
+        String CREATE_PASSWORD_TABLE  = "CREATE TABLE " +
+                TABLE_PASSWORD + "(" + COLUMN_ID
+                + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_PASSWORD
+                + " VARCHAR(255)" + ")";
         //execute the above sql statements
         db.execSQL(FOREIGN_KEYS_ON);
         db.execSQL(CREATE_EXPENSES_TABLE);
         db.execSQL(CREATE_CATEGORIES_TABLE);
+        db.execSQL(CREATE_PASSWORD_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
 
-        db.execSQL("DROP TABLE IF EXISTS" + TABLE_EXPENSES);
-        db.execSQL("DROP TABLE IF EXISTS" + TABLE_CATEGORIES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_EXPENSES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORIES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PASSWORD);
         onCreate(db);
 
     }
@@ -196,5 +205,45 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
         return result;
 
+    }
+
+    //Password
+    public void addPassword(String password) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PASSWORD, password);
+
+        //insert into password table
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.insert(TABLE_PASSWORD, null, values);
+        db.close();
+    }
+
+    // Checks to find if there is a password in the DB - TABLE_PASSWORD
+    public boolean hasPassword() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String[] columns = {COLUMN_ID, COLUMN_PASSWORD};
+        Cursor cursor = db.query(TABLE_PASSWORD, columns, null, null, null,
+                null, null);
+        cursor.getCount();
+        if (cursor.getCount() > 0){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public boolean checkPassword(String pw) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String[] columns = {COLUMN_ID, COLUMN_PASSWORD};
+        Cursor cursor = db.query(TABLE_PASSWORD, columns, null, null, null,
+                null, null);
+        cursor.moveToFirst();
+        if (cursor.getString(1).equals(pw)) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }
