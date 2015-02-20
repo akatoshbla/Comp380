@@ -1,49 +1,35 @@
 package com.comp380.csun.comp380;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
+import android.os.Handler;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Window;
+import android.view.WindowManager;
 
 
 public class MainActivity extends ActionBarActivity {
+    private static boolean mFirstRun = true;
+    private static final int SPLASH_DURATION = 4000; // 4 milli?
 
-    // What is this going to be used for?
-    DatabaseHandler dbHandler;
+//    DatabaseHandler dbHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        DatabaseHandler db = new DatabaseHandler(this,null,null,1);
+        // no password, prompt user for one
+        if(db.hasPassword() == false) {
+            setContentView(R.layout.activity_splash);
+            new Handler().postDelayed(new Runnable() {
+                public void run(){
+                    startActivity(new Intent(MainActivity.this, WelcomeActivity.class));
+                    overridePendingTransition(R.anim.abc_fade_out,R.anim.abc_fade_out);
+                }
+            }, SPLASH_DURATION);
         }
-        else if(id == R.id.action_add){
-            return true;
-        }
-        else {
-            return super.onOptionsItemSelected(item);
+        else{
+            startActivity(new Intent(this, LoginActivity.class));
         }
     }
 }
