@@ -21,11 +21,11 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         />
     <TextView
-        android:id="@+id/venderViewer"
+        android:id="@+id/vendorViewer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Vender"
+        android:text="Vendor"
         android:paddingRight="@dimen/activity_horizontal_margin"
         />
     <TextView

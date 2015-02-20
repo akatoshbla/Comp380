@@ -14,6 +14,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //database details
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "expenseTracker.db";
+
+    //table names
     private static final String TABLE_EXPENSES = "expenses";
     private static final String TABLE_CATEGORIES = "categories";
 
@@ -47,10 +49,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String CREATE_EXPENSES_TABLE = "CREATE TABLE " +
                 TABLE_EXPENSES + "("
                 + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_CATEGORY
-                + " TEXT," + COLUMN_VENDOR + " TEXT," + COLUMN_COST +
+                + " INTEGER," + COLUMN_VENDOR + " TEXT," + COLUMN_COST +
                 " REAL," + COLUMN_DATE + " DATETIME DEFAULT CURRENT_TIMESTAMP," +
                 "FOREIGN KEY(" + COLUMN_CATEGORY + ") REFERENCES " + TABLE_CATEGORIES +
-                "("+ COLUMN_CATID + "))";
+                "("+ COLUMN_CATID + ") ON DELETE RESTRICT)";
 
         //initialize categories table
         String CREATE_CATEGORIES_TABLE = "CREATE TABLE " +
@@ -79,7 +81,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void addExpense(Expense expense){
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_CATEGORY, expense.getCategory());
+        //insert category id into the table
+        values.put(COLUMN_CATEGORY, getCategoryID(expense.getCategory()));
         values.put(COLUMN_COST, expense.getCost());
         values.put(COLUMN_VENDOR, expense.getVendor());
         values.put(COLUMN_DATE, expense.getDate());
@@ -90,7 +93,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
 
     }
-    public void textCategoryValues(){
+
+    public void testCategoryValues(){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues(5);
         values.put(COLUMN_CATDESC, "Transportation");
@@ -124,6 +128,39 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         System.out.print("Error reading categories to string");
         db.close();
         return null;
+
+    }
+
+    //lookup to see if a category exists
+    public int getCategoryID(String category){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String categoryQuery = "SELECT * FROM " + TABLE_CATEGORIES
+                + " WHERE " + COLUMN_CATDESC + " = \"" + category +"\"";
+        //query the categories table for the specified value
+        Cursor cursor = db.rawQuery(categoryQuery,null);
+        //category does not exist, so add it to the table
+        if(!cursor.moveToFirst())
+        {
+            ContentValues catValue = new ContentValues();
+            catValue.put(COLUMN_CATDESC,category);
+            db.insert(TABLE_CATEGORIES,null,catValue);
+        }
+        //query the categories table for the specified category
+        cursor = db.rawQuery(categoryQuery,null);
+        //check for null cursor, indicating an error
+        if(cursor != null){
+            cursor.moveToFirst();
+            //return the integer specified at that location
+            return (cursor.getInt(cursor.getColumnIndex(COLUMN_CATID)));
+
+        }else{
+
+            //return a -1 to indicate an error
+            return -1;
+
+        }
+
 
     }
 

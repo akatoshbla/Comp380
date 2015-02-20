@@ -22,17 +22,21 @@ import android.widget.SimpleCursorAdapter;
         EditText costBox;
         EditText dateBox;
 
+
+
         @Override
         protected void onCreate(Bundle savedInstanceState){
             super.onCreate(savedInstanceState);
 
             //delete database when needed
-            //this.deleteDatabase("expenseTracker.db");
+            this.deleteDatabase("expenseTracker.db");
 
             DatabaseHandler dbHandler = new DatabaseHandler(this, null, null,1);
 
             //manually insert hardcoded categories for testing purposees
-            //dbHandler.textCategoryValues();
+            //dbHandler.testCategoryValues();
+
+
 
             setContentView(R.layout.activity_main);
 
@@ -119,11 +123,12 @@ import android.widget.SimpleCursorAdapter;
             DatabaseHandler dbHandler = new DatabaseHandler(this,null,null,1);
             Cursor cursor = dbHandler.getAllRows();
             String[] columns = dbHandler.tableNames();
-            int[] ids = new int[] {R.id.checkboxes, R.id.categoryViewer, R.id.venderViewer, R.id.costViewer, R.id.dateViewer};
+            int[] ids = new int[] {R.id.checkboxes, R.id.categoryViewer, R.id.vendorViewer, R.id.costViewer, R.id.dateViewer};
             SimpleCursorAdapter myCursorAdapter;
             myCursorAdapter = new SimpleCursorAdapter(getBaseContext(), R.layout.itemized_layout, cursor, columns, ids,0);
             ListView myList = (ListView) findViewById(R.id.listViewTasks);
             myList.setAdapter(myCursorAdapter);
+
         }
     }
 
