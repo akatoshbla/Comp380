@@ -13,7 +13,7 @@ public class MainActivity extends ActionBarActivity {
     private static final int SPLASH_DURATION = 4000; // 4 milli?
 
     // What is this going to be used for?
-//    DatabaseHandler dbHandler;
+    // DatabaseHandler dbHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
