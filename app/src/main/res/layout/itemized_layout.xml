@@ -1,46 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    >
     <TextView
         android:id="@+id/checkboxes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:text="IDs"
-        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:layout_weight="1"
+        android:paddingRight="10dp"
         />
-
     <TextView
         android:id="@+id/categoryViewer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:text="Category"
-        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:layout_weight="3"
+        android:paddingRight="10dp"
         />
     <TextView
-        android:id="@+id/venderViewer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Vender"
-        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:id="@+id/vendorViewer"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall"
+        android:text="Vendor"
+        android:layout_weight="3"
+        android:paddingRight="10dp"
         />
     <TextView
         android:id="@+id/costViewer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:text="Cost"
-        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:layout_weight="2"
+        android:paddingRight="10dp"
         />
     <TextView
         android:id="@+id/dateViewer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:text="Date"
+        android:layout_weight="2"
+        android:paddingRight="10dp"
         />
 </LinearLayout>

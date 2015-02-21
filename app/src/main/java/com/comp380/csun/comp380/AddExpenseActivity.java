@@ -119,7 +119,7 @@ import android.widget.SimpleCursorAdapter;
             DatabaseHandler dbHandler = new DatabaseHandler(this,null,null,1);
             Cursor cursor = dbHandler.getAllRows();
             String[] columns = dbHandler.tableNames();
-            int[] ids = new int[] {R.id.checkboxes, R.id.categoryViewer, R.id.venderViewer, R.id.costViewer, R.id.dateViewer};
+            int[] ids = new int[] {R.id.checkboxes, R.id.categoryViewer, R.id.vendorViewer, R.id.costViewer, R.id.dateViewer};
             SimpleCursorAdapter myCursorAdapter;
             myCursorAdapter = new SimpleCursorAdapter(getBaseContext(), R.layout.itemized_layout, cursor, columns, ids,0);
             ListView myList = (ListView) findViewById(R.id.listViewTasks);
