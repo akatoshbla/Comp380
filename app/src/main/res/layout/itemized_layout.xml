@@ -1,46 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/itemized">
 
-    <TextView
-        android:id="@+id/checkboxes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="IDs"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        />
+
 
     <TextView
         android:id="@+id/categoryViewer"
-        android:layout_width="wrap_content"
+        android:layout_width="110dp"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
         android:text="Category"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        />
+        android:editable="false" />
     <TextView
         android:id="@+id/vendorViewer"
-        android:layout_width="wrap_content"
+        android:layout_width="96dp"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
         android:text="Vendor"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        />
+        android:editable="false" />
     <TextView
         android:id="@+id/costViewer"
-        android:layout_width="wrap_content"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
         android:text="Cost"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        />
+        android:editable="false" />
     <TextView
         android:id="@+id/dateViewer"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
         android:text="Date"
-        />
+        android:editable="false" />
+
 </LinearLayout>

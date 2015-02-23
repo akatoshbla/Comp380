@@ -15,12 +15,11 @@ public class Expense {
 
     }
 
-    public Expense(int id, String category, String vendor, float cost, String date){
-        this._id = id;
+    public Expense(String category, String vendor, float cost){
+
         this._category = category;
         this._vendor = vendor;
         this._cost = cost;
-        this._date = date;
 
     }
 
@@ -69,7 +68,13 @@ public class Expense {
     public void setDate(String date){
         this._date = date;
     }
+
     public String getDate(){
-        return this._date;
+
+        if(this._date != null){
+            return this._date;
+        }else
+            return null;
+
     }
 }

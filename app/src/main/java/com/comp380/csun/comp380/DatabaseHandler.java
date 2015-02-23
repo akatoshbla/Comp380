@@ -5,6 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import java.sql.SQLDataException;
+import java.sql.SQLException;
 
 /**
  * Created by gdfairclough on 2/15/15.
@@ -39,20 +43,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //called when database is first created
     public void onCreate(SQLiteDatabase db) {
 
-        //ensure that foreign keys are activated
-        String FOREIGN_KEYS_ON = "PRAGMA foreign_keys = ON";
-
         //----------initialize database tables ---------------
 
         //initialize expenses table
-        //TODO change COLUMN_CATEGORY to an integer field
         String CREATE_EXPENSES_TABLE = "CREATE TABLE " +
                 TABLE_EXPENSES + "("
                 + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_CATEGORY
                 + " INTEGER," + COLUMN_VENDOR + " TEXT," + COLUMN_COST +
-                " REAL," + COLUMN_DATE + " DATETIME DEFAULT CURRENT_TIMESTAMP," +
+                " REAL," + COLUMN_DATE + " DATE DEFAULT CURRENT_DATE NOT NULL," +
                 "FOREIGN KEY(" + COLUMN_CATEGORY + ") REFERENCES " + TABLE_CATEGORIES +
-                "("+ COLUMN_CATID + ") ON DELETE RESTRICT)";
+                "("+ COLUMN_CATID + "))";
 
         //initialize categories table
         String CREATE_CATEGORIES_TABLE = "CREATE TABLE " +
@@ -63,16 +63,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // ---------------------------------------------------
 
         //execute the above sql statements
-        db.execSQL(FOREIGN_KEYS_ON);
+
         db.execSQL(CREATE_EXPENSES_TABLE);
         db.execSQL(CREATE_CATEGORIES_TABLE);
     }
 
     @Override
+    public void onConfigure(SQLiteDatabase db) {
+
+        //ensure that foreign keys are activated
+        String ENABLE_FOREIGN_KEYS = "PRAGMA foreign_keys = ON";
+        db.execSQL(ENABLE_FOREIGN_KEYS);
+    }
+
+
+    @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
 
-        db.execSQL("DROP TABLE IF EXISTS" + TABLE_EXPENSES);
-        db.execSQL("DROP TABLE IF EXISTS" + TABLE_CATEGORIES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_EXPENSES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORIES);
         onCreate(db);
 
     }
@@ -85,7 +94,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(COLUMN_CATEGORY, getCategoryID(expense.getCategory()));
         values.put(COLUMN_COST, expense.getCost());
         values.put(COLUMN_VENDOR, expense.getVendor());
-        values.put(COLUMN_DATE, expense.getDate());
+        if (expense.getDate() != null){
+            values.put(COLUMN_DATE, expense.getDate());
+        }
 
         //insert data into the writable database
         SQLiteDatabase db = this.getWritableDatabase();
@@ -107,6 +118,31 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.insert(TABLE_CATEGORIES,null,values);
         values.put(COLUMN_CATDESC, "Healthcare");
         db.insert(TABLE_CATEGORIES,null,values);
+
+    }
+
+    public void testExpenseValues(){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        //insert test expenses
+        values.put(COLUMN_CATEGORY, "4");
+        values.put(COLUMN_COST, "10");
+        values.put(COLUMN_VENDOR, "Five Guys");
+        values.put(COLUMN_DATE, "02/11/15");
+        db.insert(TABLE_EXPENSES, null,values);
+
+        values.put(COLUMN_CATEGORY, "2");
+        values.put(COLUMN_COST, "400");
+        values.put(COLUMN_VENDOR, "United");
+        values.put(COLUMN_DATE, "");
+        db.insert(TABLE_EXPENSES, null,values);
+
+        values.put(COLUMN_CATEGORY, "3");
+        values.put(COLUMN_COST, "28");
+        values.put(COLUMN_VENDOR, "Shell");
+        values.put(COLUMN_DATE, "02/20/15");
+        db.insert(TABLE_EXPENSES, null,values);
 
     }
 
@@ -166,22 +202,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     //Gets all the rows of the db on one cursor for ListView
     public Cursor getAllRows() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        String[] columns = {COLUMN_ID, COLUMN_CATEGORY, COLUMN_VENDOR, COLUMN_COST,
-                COLUMN_DATE};
-        Cursor cursor = db.query(true, TABLE_EXPENSES, columns, null, null,
-                null, null, null, null);
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        //join categories and expenses tables
+        String JOIN_TABLES_SQL = "SELECT " + COLUMN_ID +","+ COLUMN_CATDESC +","+COLUMN_VENDOR+","+COLUMN_COST+","
+                +COLUMN_DATE+ " FROM " + TABLE_EXPENSES +","+TABLE_CATEGORIES + " WHERE "
+                + TABLE_EXPENSES +"."+COLUMN_CATEGORY+"="+TABLE_CATEGORIES+"."+COLUMN_CATID;
+
+        Cursor cursor = db.rawQuery(JOIN_TABLES_SQL,null);
         if (cursor != null) {
             cursor.moveToFirst();
         }
 
         return cursor;
+
+
     }
 
     //Gets all String names of table
     public String[] tableNames() {
-        String[] names = new String[] {COLUMN_ID, COLUMN_CATEGORY, COLUMN_VENDOR, COLUMN_COST,
-                COLUMN_DATE};
+        String[] names = new String[] {COLUMN_CATDESC, COLUMN_VENDOR, COLUMN_COST,
+                COLUMN_DATE,COLUMN_ID};
         return names;
     }
 
@@ -211,27 +252,37 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     //delete an expense
-    public boolean deleteExpense(String category){
-        boolean result = false;
+    public void deleteExpense(int expenseId){
 
-        String query = "SELECT * FROM " + TABLE_EXPENSES +  " WHERE " + COLUMN_ID
-                + " = \"" + category + "\"";
+
+        String delete = "DELETE FROM " + TABLE_EXPENSES+  " WHERE " + COLUMN_ID
+                + " = \"" + expenseId + "\"";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        try{
+            db.execSQL(delete);
+        }catch(android.database.SQLException e){
+            Log.d("Exception",e.getLocalizedMessage());
+        }
+
+
+    }
+
+    //delete a category
+    public void deleteCategory(int categoryId){
+
+        String delete = "DELETE FROM " + TABLE_CATEGORIES+  " WHERE " + COLUMN_CATID
+                + " = " + categoryId + "";
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        Cursor cursor = db.rawQuery(query, null);
-
-        Expense expense = new Expense();
-
-        if (cursor.moveToFirst()){
-            expense.setID(Integer.parseInt(cursor.getString(1)));
-            db.delete(TABLE_EXPENSES, COLUMN_ID + "=?",
-                    new String[] {String.valueOf(expense.getId())} );
-            cursor.close();
-            result = true;
+        //try to delete the category, and throw an error if something goes wrong (printed to log)
+        try{
+            db.execSQL(delete);
+        }catch(android.database.SQLException e){
+            Log.d("Exception",e.getLocalizedMessage());
         }
-        db.close();
-        return result;
+
 
     }
 }
