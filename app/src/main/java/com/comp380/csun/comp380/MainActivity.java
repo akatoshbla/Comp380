@@ -20,7 +20,7 @@ public class MainActivity extends ActionBarActivity {
         DatabaseHandler db = new DatabaseHandler(this,null,null,1);
 
         //delete database when needed
-        this.deleteDatabase("expenseTracker.db");
+        //this.deleteDatabase("expenseTracker.db");
 
         // no password, prompt user for one
         if(db.hasPassword() == false) {
