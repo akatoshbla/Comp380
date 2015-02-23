@@ -290,4 +290,46 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
     }
+
+    //----------------------PASSWORD METHODS--------------------------------------
+
+    //Password
+    public void addPassword(String password) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PASSWORD, password);
+
+        //insert into password table
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.insert(TABLE_PASSWORD, null, values);
+        db.close();
+    }
+
+    // Checks to find if there is a password in the DB - TABLE_PASSWORD
+    public boolean hasPassword() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String[] columns = {COLUMN_ID, COLUMN_PASSWORD};
+        Cursor cursor = db.query(TABLE_PASSWORD, columns, null, null, null,
+                null, null);
+        cursor.getCount();
+        if (cursor.getCount() > 0){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public boolean checkPassword(String pw) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String[] columns = {COLUMN_ID, COLUMN_PASSWORD};
+        Cursor cursor = db.query(TABLE_PASSWORD, columns, null, null, null,
+                null, null);
+        cursor.moveToFirst();
+        if (cursor.getString(1).equals(pw)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 }

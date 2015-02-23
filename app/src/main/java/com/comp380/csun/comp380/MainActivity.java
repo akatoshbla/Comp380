@@ -18,6 +18,10 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DatabaseHandler db = new DatabaseHandler(this,null,null,1);
+
+        //delete database when needed
+        this.deleteDatabase("expenseTracker.db");
+
         // no password, prompt user for one
         if(db.hasPassword() == false) {
             setContentView(R.layout.activity_splash);

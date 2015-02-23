@@ -30,8 +30,7 @@ import android.widget.Toast;
         protected void onCreate(Bundle savedInstanceState){
             super.onCreate(savedInstanceState);
 
-            //delete database when needed
-            this.deleteDatabase("expenseTracker.db");
+
 
             DatabaseHandler dbHandler = new DatabaseHandler(this, null, null,1);
 
