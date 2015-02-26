@@ -2,6 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     style="@style/ExpenseBackground"
+    android:background="@color/splash_background"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" >
@@ -14,7 +15,8 @@
         android:paddingLeft="5dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:id="@+id/amountText" />
+        android:id="@+id/amountText"
+        android:textColor="@android:color/white" />
 
     <EditText
         android:id="@+id/amount_input"
@@ -23,7 +25,10 @@
         android:padding="5dp"
         android:hint="$100.00"
         android:layout_toRightOf="@id/amountText"
-        android:inputType="numberDecimal"/>
+        android:inputType="numberDecimal"
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/tertiary_text_light"
+        android:background="@android:color/white" />
 
     <TextView android:text="@string/category_text"
         android:textAppearance="?android:textAppearanceLarge"
@@ -32,7 +37,8 @@
         android:padding="5dp"
         android:paddingRight="100dp"
         android:id="@+id/categoryText"
-        android:layout_below="@id/amountText"/>
+        android:layout_below="@id/amountText"
+        android:textColor="@android:color/white" />
 
     <AutoCompleteTextView
         android:id="@+id/category_input"
@@ -43,7 +49,10 @@
         android:layout_alignTop="@+id/categoryText"
         android:layout_toRightOf="@+id/amountText"
         android:layout_toEndOf="@+id/amountText"
-        android:completionThreshold="1" />
+        android:completionThreshold="1"
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/tertiary_text_light"
+        android:background="@android:color/white" />
 
     <TextView android:text="@string/vendor_text"
         android:textAppearance="?android:textAppearanceLarge"
@@ -52,7 +61,8 @@
         android:padding="5dp"
         android:paddingRight="100dp"
         android:id="@+id/vendorText"
-        android:layout_below="@id/categoryText"/>
+        android:layout_below="@id/categoryText"
+        android:textColor="@android:color/white" />
 
     <EditText
         android:id="@+id/vendor_input"
@@ -63,7 +73,10 @@
         android:inputType="textAutoCorrect"
         android:layout_alignTop="@+id/vendorText"
         android:layout_alignLeft="@+id/category_input"
-        android:layout_alignStart="@+id/category_input" />
+        android:layout_alignStart="@+id/category_input"
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/tertiary_text_light"
+        android:background="@android:color/white" />
 
     <Button
         android:layout_width="160dp"
@@ -74,7 +87,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:onClick="onButtonClick"
-        style="@style/ExpenseButtons"/>
+        style="@style/ExpenseButtons"
+        android:background="@color/coin_gold" />
 
     <Button
         android:layout_width="160dp"
@@ -85,17 +99,20 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:onClick="onButtonClick"
-        style="@style/ExpenseButtons"/>
+        style="@style/ExpenseButtons"
+        android:background="@color/coin_gold"/>
 
     <TextView
-        android:text="@string/date_text"
+
+        android:id="@+id/dateText"
+        android:text="@string/dateText"
         android:textAppearance="?android:textAppearanceLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="5dp"
         android:paddingRight="100dp"
-        android:id="@+id/dateText"
-        android:layout_below="@id/vendorText"/>
+        android:layout_below="@id/vendorText"
+        android:textColor="@android:color/white" />
 
     <EditText
         android:id="@+id/date_input"
@@ -107,17 +124,10 @@
         android:padding="5dp"
         android:hint="YYYY-MM-DD"
         android:inputType="textAutoCorrect"
-        android:layout_alignTop="@+id/date_input"
-        />
+        android:layout_alignTop="@+id/dateText"
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/tertiary_text_light"
+        android:background="@android:color/white" />
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/listViewTasks"
-        android:layout_below="@+id/dateText"
-        android:layout_alignRight="@+id/submit_button"
-        android:layout_alignEnd="@+id/submit_button"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_above="@+id/reset_button"/>
+
 </RelativeLayout>

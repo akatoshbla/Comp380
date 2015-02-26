@@ -23,6 +23,10 @@ public class LoginActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        //-----------TEST----------bypass login screen, for testing purposes
+        startActivity(new Intent(LoginActivity.this, AddExpenseActivity.class));
+
     }
 
     public void onLogin(View view) {

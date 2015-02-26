@@ -2,4 +2,5 @@
 <resources>
     <color name="background">#c5e7e7</color>
     <color name="splash_background">#901a1d</color>
+    <color name="coin_gold">#ffffab15</color>
 </resources>

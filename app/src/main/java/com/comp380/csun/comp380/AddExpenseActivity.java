@@ -2,15 +2,15 @@ package com.comp380.csun.comp380;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 /**
@@ -19,11 +19,12 @@ import android.widget.Toast;
 
     public class AddExpenseActivity extends ActionBarActivity {
 
-        AutoCompleteTextView categoryBox;
-        EditText vendorBox;
-        EditText costBox;
-        EditText dateBox;
-
+        private AutoCompleteTextView categoryBox;
+        private EditText vendorBox;
+        private EditText costBox;
+        private EditText dateBox;
+        private DatabaseHandler dbHandler;
+        private Button buttonSubmit;
 
 
         @Override
@@ -32,21 +33,55 @@ import android.widget.Toast;
 
 
 
-            DatabaseHandler dbHandler = new DatabaseHandler(this, null, null,1);
+            dbHandler = new DatabaseHandler(this, null, null,1);
+
+
 
             //manually insert hardcoded categories for testing purposees
-            dbHandler.testCategoryValues();
-            dbHandler.testExpenseValues();
-            dbHandler.deleteCategory(4);
+            //dbHandler.testCategoryValues();
+            //dbHandler.testExpenseValues();
+            //dbHandler.deleteCategory(4);
 
 
-            setContentView(R.layout.activity_main);
+            setContentView(R.layout.activity_addexpense);
 
+            buttonSubmit = (Button) findViewById(R.id.submit_button);
             categoryBox = (AutoCompleteTextView) findViewById(R.id.category_input);
             vendorBox = (EditText) findViewById(R.id.vendor_input);
             costBox = (EditText) findViewById(R.id.amount_input);
             dateBox = (EditText) findViewById(R.id.date_input);
-            populateViewer();
+
+            //disable the button if the text has not been changed
+            buttonSubmit.setEnabled(false);
+            buttonSubmit.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+
+            //add text changed listener to the cost field;
+            costBox.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    //enable the button when the text has been changed
+                    buttonSubmit.setBackgroundColor(getResources().getColor
+                            (R.color.coin_gold));
+                    buttonSubmit.setEnabled(true);
+                    if(costBox.getText().toString().equals("")){
+                        buttonSubmit.setEnabled(false);
+                        buttonSubmit.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+                    }
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+
 
 
             //populate autocompletetextview
@@ -59,7 +94,6 @@ import android.widget.Toast;
         }
 
         public void newExpense (View view){
-            DatabaseHandler dbHandler = new DatabaseHandler(this, null, null,1);
             Expense expense;
             String category;
             String vendor;
@@ -73,8 +107,11 @@ import android.widget.Toast;
             //check that necessary fields have been filled out
             if(costBox.getText().toString().equals("")){
                 //cost is not filled out, so don't add to database
+
+                //TODO needs some serious field validation
                 text = "Please enter a cost";
                 Toast toast = Toast.makeText(context,text,duration);
+                toast.setMargin(5,5);
                 toast.show();
             }else{
                 //check if category field is blank
@@ -111,7 +148,6 @@ import android.widget.Toast;
             }
 
 
-            populateViewer();
         }
 
         public void onButtonClick(View view){
@@ -126,22 +162,17 @@ import android.widget.Toast;
             }
             else if(id == R.id.submit_button){
 
-                //currently no need to display the DataDisplayActivity, code commented out
+                //create intent for ExpenseDisplayActivity
+                Intent displayExpenses = new Intent(this, ExpenseDisplayActivity.class);
 
-                //Intent display = new Intent(this, DataDisplayActivity.class);
                 //add to the database
-                //display.putExtra("Cost", costBox.getText().toString());
-                //display.putExtra("Category", categoryBox.getText().toString());
-                //display.putExtra("Vendor", vendorBox.getText().toString());
-                //display.putExtra("Date", dateBox.getText().toString());
-
                 newExpense(view);
-                //startActivity(display);
+
+                startActivity(displayExpenses);
             }
         }
 
         public void lookupExpense(View view){
-            DatabaseHandler dbHandler = new DatabaseHandler(this,null,null,1);
 
             Expense expense = dbHandler.findExpense(categoryBox.getText().toString());
 
@@ -156,24 +187,8 @@ import android.widget.Toast;
 
         }
 
-        public void removeExpense(View view){
-            DatabaseHandler dbHandler = new DatabaseHandler(this,null,null,1);
 
-            //delete based on primary key from record display screen
 
-        }
 
-        public void populateViewer(){
-            DatabaseHandler dbHandler = new DatabaseHandler(this,null,null,1);
-            Cursor cursor = dbHandler.getAllRows();
-            String[] columns = dbHandler.tableNames();
-            int[] ids = new int[] {R.id.categoryViewer, R.id.vendorViewer, R.id.costViewer, R.id.dateViewer};
-            SimpleCursorAdapter myCursorAdapter;
-            //can change what is displayed using the last parameter here
-            myCursorAdapter = new SimpleCursorAdapter(this, R.layout.itemized_layout, cursor, columns, ids,0);
-            ListView myList = (ListView) findViewById(R.id.listViewTasks);
-            myList.setAdapter(myCursorAdapter);
-
-        }
     }
 
