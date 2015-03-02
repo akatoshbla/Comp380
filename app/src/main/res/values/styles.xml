@@ -8,10 +8,17 @@
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:background">@color/splash_background</item>
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
+    </style>
+    <style name="WelcomeScreen" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:background">@color/splash_background</item>
+        <item name="android:textColor">@color/background</item>
+        <item name="android:editTextBackground">@color/edit_text_background</item>
+        <item name="windowActionBar">false</item>
     </style>
     <style name="MyActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@drawable/ab_background</item>
@@ -22,9 +29,9 @@
         <item name="android:background">@color/background</item>
     </style>
 
-    <style name="ExpenseButtons">
-        <item name="android:background">#3b6c97</item>
-        <item name="android:textColor">@android:color/white</item>
+    <style name="Buttons">
+        <item name="android:background">@color/buttons</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:textStyle">bold</item>
     </style>
 
