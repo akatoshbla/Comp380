@@ -16,10 +16,16 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * Created by David on 2/18/2015.
+ * Class that handles the application login.
+ * This activity lives on its own and interfaces
+ * with the database. It does input validation on
+ * the password by comparing the hash of the user
+ * input to the hash found on the database.
+ * Once the password is valid it launches the next
+ * activity.
  */
 
-// This class is for if the user has a password in DB
+//TODO Make this activity be called upon application's onResumeS
 public class LoginActivity extends ActionBarActivity {
 
     private Button mSubmit;
@@ -45,14 +51,17 @@ public class LoginActivity extends ActionBarActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // enable the button since the text has changed
+                // and set the color.
                 mSubmit.setEnabled(true);
                 mSubmit.setBackgroundColor(getResources().getColor(R.color.buttons));
 
+                // if the user tries to input a blank field disable
+                // the button and change its color.
                 if (mPassword.getText().toString().equals("")) {
                     mSubmit.setEnabled(false);
                     mSubmit.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
                 }
-
             }
 
             @Override

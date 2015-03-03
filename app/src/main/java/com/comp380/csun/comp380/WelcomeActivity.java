@@ -15,8 +15,16 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * Created by David on 2/18/2015.
+ * Class that handles the creation of the password pin.
+ * Since we're doing activities this activity lives on its
+ * own little universe and interacts with the database.
+ * It contains a layout view which includes 3 TextViews,
+ * an ImageView, two EditTexts and a Button.
+ * It does input validation for the password, computes
+ * the password hash then writes the hash to the database,
+ * and finally launches the next activity.
  */
+
 public class WelcomeActivity extends ActionBarActivity {
 
     private Button mSubmit;
@@ -25,6 +33,7 @@ public class WelcomeActivity extends ActionBarActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         // wire up the view and the items
         setContentView(R.layout.activity_welcome);
         mPassword = (EditText) findViewById(R.id.textWelcomePassword);
@@ -70,6 +79,7 @@ public class WelcomeActivity extends ActionBarActivity {
      * Post-Condition: Initializes a new Activity.
      * @param view The view that was clicked.
      */
+
     public void onWelcomeEnter(View view) {
         DatabaseHandler db = new DatabaseHandler(this, null, null, 1);
         db.addPassword(md5(mPassword.getText().toString()));
