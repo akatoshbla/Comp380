@@ -4,15 +4,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Window;
-import android.view.WindowManager;
 
+/**
+ * Class that handles the application's start up.
+ * This Activity is called upon the application's onResume
+ * to handle the pin lock feature and interfaces with the
+ * database. Upon first run the application checks the
+ * database for a password hash, if there is one the
+ * appropriate activity is launched, otherwise a different
+ * activity is called which would prompt the user to create
+ * a new password.
+ */
 
-public class MainActivity extends ActionBarActivity {
-    private static boolean mFirstRun = true;
-    private static final int SPLASH_DURATION = 4000; // 4 milli?
-
-//    DatabaseHandler dbHandler;
+public class SplashActivity extends ActionBarActivity {
+    private static final int SPLASH_DURATION = 2000; // 2 milli?
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,12 +32,15 @@ public class MainActivity extends ActionBarActivity {
             setContentView(R.layout.activity_splash);
             new Handler().postDelayed(new Runnable() {
                 public void run(){
-                    startActivity(new Intent(MainActivity.this, WelcomeActivity.class));
-                    overridePendingTransition(R.anim.abc_fade_out,R.anim.abc_fade_out);
+                    finish();
+                    startActivity(new Intent(SplashActivity.this, WelcomeActivity.class));
+                    overridePendingTransition(R.anim.activityfadein,R.anim.splashfadeout);
                 }
             }, SPLASH_DURATION);
         }
+        // password exists, force user to login.
         else{
+            finish();
             startActivity(new Intent(this, LoginActivity.class));
         }
     }

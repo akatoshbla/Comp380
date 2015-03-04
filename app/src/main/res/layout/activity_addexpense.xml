@@ -1,10 +1,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    style="@style/ExpenseBackground"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" >
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:background="@color/app_background">
 
     <TextView android:text="@string/amount_text"
         android:textAppearance="?android:textAppearanceLarge"
@@ -74,7 +75,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:onClick="onButtonClick"
-        style="@style/ExpenseButtons"/>
+        style="@style/Buttons"/>
 
     <Button
         android:layout_width="160dp"
@@ -85,7 +86,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:onClick="onButtonClick"
-        style="@style/ExpenseButtons"/>
+        style="@style/Buttons"/>
 
     <TextView
         android:text="@string/date_text"
