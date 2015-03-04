@@ -3,7 +3,10 @@ package com.comp380.csun.comp380;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -17,6 +20,9 @@ import java.security.NoSuchAlgorithmException;
 
 // This class is for if the user has a password in DB
 public class LoginActivity extends ActionBarActivity {
+
+    private Button mSubmit;
+    private EditText mPassword;
 
     DatabaseHandler db;
     @Override

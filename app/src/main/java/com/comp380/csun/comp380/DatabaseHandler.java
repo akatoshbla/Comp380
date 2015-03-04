@@ -149,19 +149,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         //insert test expenses
         values.put(COLUMN_CATEGORY, "4");
         values.put(COLUMN_COST, "10");
-        values.put(COLUMN_VENDOR, "Five Guys");
+        values.put(COLUMN_VENDOR, "1");
         values.put(COLUMN_DATE, "02/11/15");
         db.insert(TABLE_EXPENSES, null,values);
 
         values.put(COLUMN_CATEGORY, "2");
         values.put(COLUMN_COST, "400");
-        values.put(COLUMN_VENDOR, "United");
+        values.put(COLUMN_VENDOR, "2");
         values.put(COLUMN_DATE, "");
         db.insert(TABLE_EXPENSES, null,values);
 
         values.put(COLUMN_CATEGORY, "3");
         values.put(COLUMN_COST, "28");
-        values.put(COLUMN_VENDOR, "Shell");
+        values.put(COLUMN_VENDOR, "3");
         values.put(COLUMN_DATE, "02/20/15");
         db.insert(TABLE_EXPENSES, null,values);
 

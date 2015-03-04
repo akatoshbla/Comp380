@@ -22,7 +22,7 @@
             android:label="@string/app_name">
         </activity>
         <activity
-            android:name=".DataDisplayActivity"
+            android:name=".ExpenseDisplayActivity"
             android:label="@string/app_name" >
         </activity>
         <activity android:name=".LoginActivity"

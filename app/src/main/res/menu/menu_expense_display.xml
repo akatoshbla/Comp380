@@ -4,8 +4,5 @@
     tools:context="com.comp380.csun.comp380.ExpenseDisplayActivity">
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />
-<<<<<<< HEAD
 </menu>
-=======
-</menu>
->>>>>>> origin/master
+
