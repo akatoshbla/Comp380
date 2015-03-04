@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="background">#c5e7e7</color>
-    <color name="splash_background">#901a1d</color>
-    <color name="coin_gold">#ffffab15</color>
+    <color name="text_color">#c5e7e7</color>
+    <color name="app_background">#901a1d</color>
+    <color name="edit_text_background">#e8eaf6</color>
+    <color name="buttons">#ffffab15</color>
+    <color name="white">#ffffff</color>
 </resources>

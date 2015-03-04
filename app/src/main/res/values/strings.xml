@@ -9,12 +9,14 @@
     <string name="reset_button_text">Reset</string>
     <string name="category_text">Category</string>
     <string name="vendor_text">Vendor</string>
-    <string name="dateText">Date</string>
+    <string name="date_text">Date</string>
     <string name="show_table">Show DB</string>
     <string name="label_password">Please enter your password:</string>
     <string name="label_new_password">Please enter a password to help us better protect your data:</string>
     <string name="welcome_text">Welcome new user to myBudget!</string>
     <string name="label_retype_password">Please retype your password:</string>
     <string name="title_activity_expense_display">Total Monthly Expenses</string>
+    <string name="enter_password">Password</string>
+    
 
 </resources>

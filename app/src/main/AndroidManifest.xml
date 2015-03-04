@@ -8,9 +8,9 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
-            android:noHistory="true"
-            android:theme="@style/SplashTheme" >
+            android:name=".SplashActivity"
+            android:theme="@style/PasswordsTheme"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,15 +19,17 @@
         </activity>
         <activity
             android:name=".AddExpenseActivity"
-            android:label="@string/app_name" >
-        </activity>
-        <activity android:name=".LoginActivity" >
-        </activity>
-        <activity android:name=".WelcomeActivity" >
+            android:label="@string/app_name">
         </activity>
         <activity
-            android:name=".ExpenseDisplayActivity"
-            android:label="@string/title_activity_expense_display" >
+            android:name=".DataDisplayActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity android:name=".LoginActivity"
+            android:theme="@style/PasswordsTheme">
+        </activity>
+        <activity android:name=".WelcomeActivity">
+
         </activity>
     </application>
 

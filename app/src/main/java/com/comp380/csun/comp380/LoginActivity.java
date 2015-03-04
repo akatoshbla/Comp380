@@ -23,10 +23,39 @@ public class LoginActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        mPassword = (EditText)findViewById(R.id.textPassword);
+        mSubmit = (Button)findViewById(R.id.buttonPassword);
 
-        //-----------TEST----------bypass login screen, for testing purposes
-        //startActivity(new Intent(LoginActivity.this, AddExpenseActivity.class));
+        // set the submit button to be off initially.
+        mSubmit.setEnabled(false);
+        mSubmit.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
 
+        //region register a text listener
+        mPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // enable the button since the text has changed
+                // and set the color.
+                mSubmit.setEnabled(true);
+                mSubmit.setBackgroundColor(getResources().getColor(R.color.buttons));
+
+                // if the user tries to input a blank field disable
+                // the button and change its color.
+                if (mPassword.getText().toString().equals("")) {
+                    mSubmit.setEnabled(false);
+                    mSubmit.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+        //endregion
     }
 
     public void onLogin(View view) {
