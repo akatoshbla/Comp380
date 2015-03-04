@@ -20,6 +20,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "expenseTracker.db";
     private static final String TABLE_EXPENSES = "expenses";
     private static final String TABLE_CATEGORIES = "categories";
+    private static final String TABLE_VENDORS = "vendors";
     private static final String TABLE_PASSWORD = "password";
 
     //column names
@@ -34,6 +35,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String COLUMN_CATID = "category_id";
     private static final String COLUMN_CATDESC = "category_desc";
 
+    //vendors table column names
+    private static final String COLUMN_VENDID = "vendor_id";
+    private static final String COLUMN_VENDDESC = "vendor_desc";
+
 
     public DatabaseHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
@@ -47,14 +52,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         //----------initialize database tables ---------------
 
-        //initialize expenses table
+        //strings to initialize database tables
         String CREATE_EXPENSES_TABLE = "CREATE TABLE " +
                 TABLE_EXPENSES + "("
                 + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_CATEGORY
-                + " Integer," + COLUMN_VENDOR + " TEXT," + COLUMN_COST +
+                + " Integer," + COLUMN_VENDOR + " INTEGER," + COLUMN_COST +
                 " REAL," + COLUMN_DATE + " DATE DEFAULT CURRENT_DATE NOT NULL,"+
                 "FOREIGN KEY(" + COLUMN_CATEGORY + ") REFERENCES " + TABLE_CATEGORIES +
-                "("+ COLUMN_CATID + "))";
+                "("+ COLUMN_CATID + "), " +
+                "FOREIGN KEY(" + COLUMN_VENDOR + ") REFERENCES " + TABLE_VENDORS +
+                "("+ COLUMN_VENDID + ") )";
 
         //initialize categories table
         String CREATE_CATEGORIES_TABLE = "CREATE TABLE " +
@@ -62,17 +69,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + COLUMN_CATID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_CATDESC
                 + " TEXT UNIQUE)";
 
-        // ---------------------------------------------------
-
         //password table
         String CREATE_PASSWORD_TABLE  = "CREATE TABLE " +
                 TABLE_PASSWORD + "(" + COLUMN_ID
                 + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_PASSWORD
                 + " VARCHAR(255)" + ")";
+
+        //vendors table
+        String CREATE_VENDORS_TABLE = "CREATE TABLE " +
+                TABLE_VENDORS + "(" + COLUMN_VENDID
+                + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_VENDDESC
+                + " VARCHAR(255) UNIQUE" + ")";
+
+        // ---------------------------------------------------
+
         //execute the above sql statements
 
         db.execSQL(CREATE_EXPENSES_TABLE);
         db.execSQL(CREATE_CATEGORIES_TABLE);
+        db.execSQL(CREATE_VENDORS_TABLE);
         db.execSQL(CREATE_PASSWORD_TABLE);
     }
 
@@ -100,7 +115,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COLUMN_CATEGORY, getCategoryID(expense.getCategory()));
         values.put(COLUMN_COST, expense.getCost());
-        values.put(COLUMN_VENDOR, expense.getVendor());
+        values.put(COLUMN_VENDOR, getVendorID(expense.getVendor()));
         if (expense.getDate() != null){
             values.put(COLUMN_DATE, expense.getDate());
         }
@@ -134,21 +149,34 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         //insert test expenses
         values.put(COLUMN_CATEGORY, "4");
         values.put(COLUMN_COST, "10");
-        values.put(COLUMN_VENDOR, "Five Guys");
+        values.put(COLUMN_VENDOR, "1");
         values.put(COLUMN_DATE, "02/11/15");
         db.insert(TABLE_EXPENSES, null,values);
 
         values.put(COLUMN_CATEGORY, "2");
         values.put(COLUMN_COST, "400");
-        values.put(COLUMN_VENDOR, "United");
+        values.put(COLUMN_VENDOR, "2");
         values.put(COLUMN_DATE, "");
         db.insert(TABLE_EXPENSES, null,values);
 
         values.put(COLUMN_CATEGORY, "3");
         values.put(COLUMN_COST, "28");
-        values.put(COLUMN_VENDOR, "Shell");
+        values.put(COLUMN_VENDOR, "3");
         values.put(COLUMN_DATE, "02/20/15");
         db.insert(TABLE_EXPENSES, null,values);
+
+    }
+
+    public void testVendors(){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_VENDDESC, "Five Guys");
+        db.insert(TABLE_VENDORS,null,values);
+        values.put(COLUMN_VENDDESC, "United");
+        db.insert(TABLE_VENDORS,null,values);
+        values.put(COLUMN_VENDDESC, "Shell");
+        db.insert(TABLE_VENDORS,null,values);
 
     }
 
@@ -206,14 +234,70 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
+    public String[] getVendorStrings(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT " + COLUMN_VENDDESC+ " FROM " + TABLE_VENDORS,null);
+        if (cursor != null){
+            //store vendor text to a string
+            int i = 0;
+            String[] vendors = new String[cursor.getCount()];
+            while(cursor.moveToNext()){
+                String vendor = cursor.getString(cursor.getColumnIndex(COLUMN_VENDDESC));
+                vendors[i] = vendor;
+                i++;
+            }
+            db.close();
+            return vendors;
+        }
+        Log.d("Vendor String Error","Error reading vendors to string");
+        db.close();
+        return null;
+
+    }
+
+    //lookup to see if a category exists
+    public int getVendorID(String vendor){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String vendorQuery = "SELECT * FROM " + TABLE_VENDORS
+                + " WHERE " + COLUMN_VENDDESC + " = \"" + vendor +"\"";
+        //query the vendors table for the specified value
+        Cursor cursor = db.rawQuery(vendorQuery,null);
+        //vendor does not exist, so add it to the table
+        if(!cursor.moveToFirst())
+        {
+            ContentValues vendorValue = new ContentValues();
+            vendorValue.put(COLUMN_VENDDESC,vendor);
+            db.insert(TABLE_VENDORS,null,vendorValue);
+        }
+        //query the vendors table for the specified vendor
+        cursor = db.rawQuery(vendorQuery,null);
+        //check for null cursor, indicating an error
+        if(cursor != null){
+            cursor.moveToFirst();
+            //return the integer specified at that location
+            return (cursor.getInt(cursor.getColumnIndex(COLUMN_VENDID)));
+
+        }else{
+
+            //return a -1 to indicate an error
+            return -1;
+
+        }
+
+
+    }
+
     //Gets all the rows of the db on one cursor for ListView
     public Cursor getAllRows() {
         SQLiteDatabase db = this.getReadableDatabase();
 
         //join categories and expenses tables
-        String JOIN_TABLES_SQL = "SELECT " + COLUMN_ID +","+ COLUMN_CATDESC +","+COLUMN_VENDOR+","+COLUMN_COST+","
-                +COLUMN_DATE+ " FROM " + TABLE_EXPENSES +","+TABLE_CATEGORIES + " WHERE "
-                + TABLE_EXPENSES +"."+COLUMN_CATEGORY+"="+TABLE_CATEGORIES+"."+COLUMN_CATID;
+        String JOIN_TABLES_SQL = "SELECT " + COLUMN_ID +","+ COLUMN_CATDESC +","+COLUMN_VENDDESC
+                +","+COLUMN_COST+","+COLUMN_DATE+ " FROM " + TABLE_EXPENSES +","+TABLE_CATEGORIES
+                + "," + TABLE_VENDORS + " WHERE "+ TABLE_EXPENSES +"."+COLUMN_CATEGORY+"="
+                +TABLE_CATEGORIES+"."+COLUMN_CATID +" AND " + TABLE_EXPENSES + "." + COLUMN_VENDOR
+                + "=" + TABLE_VENDORS+"."+COLUMN_VENDID;
 
         Cursor cursor = db.rawQuery(JOIN_TABLES_SQL,null);
         if (cursor != null) {
@@ -225,7 +309,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     //Gets all String names of table
     public String[] tableNames() {
-        String[] names = new String[] {COLUMN_CATDESC, COLUMN_VENDOR, COLUMN_COST,
+        String[] names = new String[] {COLUMN_CATDESC, COLUMN_VENDDESC, COLUMN_COST,
                 COLUMN_DATE,COLUMN_ID};
         return names;
     }
