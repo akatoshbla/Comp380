@@ -64,7 +64,7 @@
         android:layout_below="@id/categoryText"
         android:textColor="@android:color/white" />
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/vendor_input"
         android:layout_width="170dp"
         android:layout_height="wrap_content"
@@ -76,7 +76,8 @@
         android:layout_alignStart="@+id/category_input"
         android:textColor="@android:color/black"
         android:textColorHint="@android:color/tertiary_text_light"
-        android:background="@android:color/white" />
+        android:background="@android:color/white"
+        android:completionThreshold="1" />
 
     <Button
         android:layout_width="160dp"
