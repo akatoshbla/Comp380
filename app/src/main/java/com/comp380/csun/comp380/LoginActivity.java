@@ -34,6 +34,7 @@ public class LoginActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         // set the layout, button and text field
         setContentView(R.layout.activity_login);
         mPassword = (EditText)findViewById(R.id.textPassword);

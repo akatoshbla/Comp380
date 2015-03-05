@@ -5,11 +5,11 @@
         <!-- Customize your theme here. -->
         <item name="android:actionBarStyle">@style/MyActionBar</item>
         <item name="actionBarStyle">@style/MyActionBar</item>
-        <item name="android:textColor">@color/text_color</item>
         <item name="android:editTextBackground">@color/edit_text_background</item>
     </style>
     <style name="PasswordsTheme" parent="AppTheme">
         <item name="android:background">@color/app_background</item>
+        <item name="android:textColor">@color/text_color</item>
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item>
@@ -24,4 +24,14 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:textStyle">bold</item>
     </style>
+    <style name="TextStyle">
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+        <item name="android:textColor">@color/text_color</item>
+    </style>
+
+    <style name="ItemizedStyle">
+        <item name="android:textAppearance">@android:style/TextAppearance.DeviceDefault.Small</item>
+        <item name="android:textColor">@color/text_color</item>
+    </style>
+
 </resources>
