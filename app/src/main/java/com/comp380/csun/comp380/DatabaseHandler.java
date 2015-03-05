@@ -105,6 +105,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_EXPENSES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORIES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PASSWORD);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_VENDORS);
         onCreate(db);
 
     }
@@ -379,6 +380,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     //Password
     public void addPassword(String password) {
+        System.out.println("Password " + password);
         ContentValues values = new ContentValues();
         values.put(COLUMN_PASSWORD, password);
 

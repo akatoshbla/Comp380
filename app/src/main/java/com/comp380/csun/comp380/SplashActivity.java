@@ -23,16 +23,13 @@ public class SplashActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DatabaseHandler db = new DatabaseHandler(this,null,null,1);
-
-        //delete database when needed
-        //this.deleteDatabase("expenseTracker.db");
-
         // no password, prompt user for one
         if(db.hasPassword() == false) {
             setContentView(R.layout.activity_splash);
             new Handler().postDelayed(new Runnable() {
                 public void run(){
                     finish();
+                    // this activity call the WelcomeActivity
                     startActivity(new Intent(SplashActivity.this, WelcomeActivity.class));
                     overridePendingTransition(R.anim.activityfadein,R.anim.splashfadeout);
                 }
@@ -41,6 +38,7 @@ public class SplashActivity extends ActionBarActivity {
         // password exists, force user to login.
         else{
             finish();
+            // start the login activity.
             startActivity(new Intent(this, LoginActivity.class));
         }
     }

@@ -1,5 +1,4 @@
 package com.comp380.csun.comp380;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,7 +35,7 @@ public class AddExpenseActivity extends ActionBarActivity {
         dbHandler = new DatabaseHandler(this, null, null,1);
 
         //manually insert hardcoded categories for testing purposees
-        this.deleteDatabase("expenseTracker.db");
+        //this.deleteDatabase("expenseTracker.db");
         dbHandler.testCategoryValues();
         dbHandler.testExpenseValues();
         dbHandler.testVendors();
