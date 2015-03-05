@@ -13,8 +13,7 @@
         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
         android:text="Category"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:editable="false"
-        android:textColor="@android:color/white" />
+        android:editable="false" />
     <TextView
         android:id="@+id/vendorViewer"
         android:layout_width="96dp"
@@ -22,8 +21,7 @@
         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
         android:text="Vendor"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:editable="false"
-        android:textColor="@android:color/white" />
+        android:editable="false" />
     <TextView
         android:id="@+id/costViewer"
         android:layout_width="60dp"
@@ -31,15 +29,13 @@
         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
         android:text="Cost"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:editable="false"
-        android:textColor="@android:color/white" />
+        android:editable="false" />
     <TextView
         android:id="@+id/dateViewer"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
         android:text="Date"
-        android:editable="false"
-        android:textColor="@android:color/white" />
+        android:editable="false" />
 
 </LinearLayout>
