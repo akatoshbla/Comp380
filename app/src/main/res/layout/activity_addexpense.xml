@@ -1,12 +1,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:layout_height="match_parent" 
-    style="@style/PasswordsTheme"
-    android:background="@color/app_background"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" >
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:background="@color/app_background">
 
     <TextView android:text="@string/amount_text"
         android:textAppearance="?android:textAppearanceLarge"
@@ -25,8 +24,7 @@
         android:padding="5dp"
         android:hint="$100.00"
         android:layout_toRightOf="@id/amountText"
-        android:inputType="numberDecimal"
-        android:background="@android:color/white" />
+        android:inputType="numberDecimal"/>
 
     <TextView android:text="@string/category_text"
         android:textAppearance="?android:textAppearanceLarge"
@@ -57,7 +55,7 @@
         android:id="@+id/vendorText"
         android:layout_below="@id/categoryText"/>
 
-    <AutoCompleteTextView
+    <EditText
         android:id="@+id/vendor_input"
         android:layout_width="170dp"
         android:layout_height="wrap_content"
@@ -104,11 +102,23 @@
         android:id="@+id/date_input"
         android:layout_width="170dp"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/dateText"
         android:layout_alignLeft="@+id/vendor_input"
         android:layout_alignStart="@+id/vendor_input"
         android:padding="5dp"
         android:hint="YYYY-MM-DD"
-        android:layout_alignTop="@+id/dateText"
-        android:background="@android:color/white" />
+        android:inputType="textAutoCorrect"
+        android:layout_alignTop="@+id/date_input"
+        />
 
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listViewTasks"
+        android:layout_below="@+id/dateText"
+        android:layout_alignRight="@+id/submit_button"
+        android:layout_alignEnd="@+id/submit_button"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/reset_button"/>
 </RelativeLayout>

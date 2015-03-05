@@ -20,7 +20,7 @@ import android.widget.Toast;
 public class AddExpenseActivity extends ActionBarActivity {
 
     private AutoCompleteTextView categoryBox;
-    private AutoCompleteTextView vendorBox;
+    private EditText vendorBox;
     private EditText costBox;
     private EditText dateBox;
     private DatabaseHandler dbHandler;
@@ -35,11 +35,11 @@ public class AddExpenseActivity extends ActionBarActivity {
 
         dbHandler = new DatabaseHandler(this, null, null,1);
 
+
+
         //manually insert hardcoded categories for testing purposees
-        this.deleteDatabase("expenseTracker.db");
-        dbHandler.testCategoryValues();
-        dbHandler.testExpenseValues();
-        dbHandler.testVendors();
+        //dbHandler.testCategoryValues();
+        //dbHandler.testExpenseValues();
         //dbHandler.deleteCategory(4);
 
 
@@ -47,7 +47,7 @@ public class AddExpenseActivity extends ActionBarActivity {
 
         buttonSubmit = (Button) findViewById(R.id.submit_button);
         categoryBox = (AutoCompleteTextView) findViewById(R.id.category_input);
-        vendorBox = (AutoCompleteTextView) findViewById(R.id.vendor_input);
+        vendorBox = (EditText) findViewById(R.id.vendor_input);
         costBox = (EditText) findViewById(R.id.amount_input);
         dateBox = (EditText) findViewById(R.id.date_input);
 
@@ -84,18 +84,12 @@ public class AddExpenseActivity extends ActionBarActivity {
 
 
 
-        //populate autocompletetextview for category
+        //populate autocompletetextview
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<String>(this,R.layout.autocomplete_dropdown_item,
                         dbHandler.getCategoriesStrings());
 
         categoryBox.setAdapter(adapter);
-
-        //populate autocompletetextview for vendor
-        adapter = new ArrayAdapter<String>(this,R.layout.autocomplete_dropdown_item,
-                dbHandler.getVendorStrings());
-
-        vendorBox.setAdapter(adapter);
 
     }
 
@@ -105,42 +99,56 @@ public class AddExpenseActivity extends ActionBarActivity {
         String vendor;
         Float cost;
 
+        //prepare for toast
+        Context context = getApplicationContext();
+        CharSequence text;
+        int duration = Toast.LENGTH_SHORT;
 
-        //check if category field is blank
-        if(categoryBox.getText().toString().equals("")){
-            category = "Uncategorized";
+        //check that necessary fields have been filled out
+        if(costBox.getText().toString().equals("")){
+            //cost is not filled out, so don't add to database
+
+            //TODO needs some serious field validation
+            text = "Please enter a cost";
+            Toast toast = Toast.makeText(context,text,duration);
+            toast.setMargin(5,5);
+            toast.show();
         }else{
-            category = categoryBox.getText().toString();
+            //check if category field is blank
+            if(categoryBox.getText().toString().equals("")){
+                category = "Uncategorized";
+            }else{
+                category = categoryBox.getText().toString();
+            }
+            //check if vendor field is blank
+            if(vendorBox.getText().toString().equals("")){
+                vendor = "Unspecified";
+            }else{
+                vendor = vendorBox.getText().toString();
+            }
+
+            //set cost equal to the current value in the editText field
+            cost = Float.parseFloat(costBox.getText().toString());
+
+            //set default date to today if nothing is in the editText field
+            if (!dateBox.getText().toString().equals("")){
+                String date  = dateBox.getText().toString();
+                expense = new Expense(category,vendor,cost,date);
+            }else{
+                expense = new Expense(category,vendor,cost);
+            }
+
+
+            dbHandler.addExpense(expense);
+            categoryBox.setText("");
+            vendorBox.setText("");
+            costBox.setText("");
+            dateBox.setText("");
+
         }
-        //check if vendor field is blank
-        if(vendorBox.getText().toString().equals("")){
-            vendor = "Unspecified";
-        }else{
-            vendor = vendorBox.getText().toString();
-        }
 
-        //set cost equal to the current value in the editText field
-        cost = Float.parseFloat(costBox.getText().toString());
-
-        //set default date to today if nothing is in the editText field
-        if (!dateBox.getText().toString().equals("")){
-            String date  = dateBox.getText().toString();
-            expense = new Expense(category,vendor,cost,date);
-        }else{
-            expense = new Expense(category,vendor,cost);
-        }
-
-
-        dbHandler.addExpense(expense);
-        categoryBox.setText("");
-        vendorBox.setText("");
-        costBox.setText("");
-        dateBox.setText("");
 
     }
-
-
-
 
     public void onButtonClick(View view){
 
@@ -183,4 +191,3 @@ public class AddExpenseActivity extends ActionBarActivity {
 
 
 }
-
