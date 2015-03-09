@@ -15,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -27,20 +26,24 @@ public class MainActivity extends ActionBarActivity {
     private Toolbar toolbar;
     private ViewPager mPager;
     private SlidingTabLayout mTabs;
+    private DatabaseHandler db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Init DataBaseHandler
+        db = new DatabaseHandler(this, null, null, 1);
+
         // Init ToolBar
-        toolbar= (Toolbar) findViewById(R.id.app_bar);
+        toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
 
         // Init mPager and mTabs
-        mPager= (ViewPager) findViewById(R.id.pager);
+        mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
-        mTabs= (SlidingTabLayout) findViewById(R.id.tabs);
+        mTabs = (SlidingTabLayout) findViewById(R.id.tabs);
         mTabs.setViewPager(mPager);
 
 
@@ -80,42 +83,29 @@ public class MainActivity extends ActionBarActivity {
 
     class MyPagerAdapter extends FragmentPagerAdapter {
 
-        private DatabaseHandler db;
         private ArrayList<String> tabs;
-        String[] temp;
+        private String[] temp;
 
+        // This method populates the Tabs and Fragments
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
             tabs = new ArrayList<>();
             if (tabs.size() == 0) {
                 tabs.add("All");
-                tabs.add("tab2");
-                tabs.add("tab3");
-                tabs.add("tab4");
-                tabs.add("tab5");
-                tabs.add("tab6");
-                tabs.add("tab7");
-                tabs.add("tab8");
-                tabs.add("tab9");
-                tabs.add("tab10");
             }
-            try {
+
+            if (db.getCategoriesStrings() != null) {
                 temp = new String[db.getCategoriesStrings().length];
                 temp = db.getCategoriesStrings();
-                Toast.makeText(getApplicationContext(), "Working! " +temp[0],
-                        Toast.LENGTH_LONG).show();
-                for (int i = 0; i < db.getCategoriesStrings().length;i++) {
-                tabs.add(temp[i]);
+                for (int i = 0; i < db.getCategoriesStrings().length; i++) {
+                    tabs.add(temp[i]);
                 }
-            } catch(NullPointerException e) {
-                Toast.makeText(getApplicationContext(), "DataBase has no Categories",
-                        Toast.LENGTH_LONG).show();
             }
         }
 
         @Override
         public Fragment getItem(int position) {
-            MyFragment myFragment=MyFragment.getInstance(position);
+            MyFragment myFragment = MyFragment.getInstance(position);
             return myFragment;
         }
 
@@ -131,9 +121,10 @@ public class MainActivity extends ActionBarActivity {
 
     public static class MyFragment extends Fragment {
         private TextView textView;
-        public static MyFragment getInstance(int position)  {
-            MyFragment myFragment=new MyFragment();
-            Bundle args=new Bundle();
+
+        public static MyFragment getInstance(int position) {
+            MyFragment myFragment = new MyFragment();
+            Bundle args = new Bundle();
             args.putInt("position", position);
             myFragment.setArguments(args);
             return myFragment;
@@ -141,11 +132,11 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            View layout=inflater.inflate(R.layout.fragment_layout, container, false);
-            textView= (TextView) layout.findViewById(R.id.position);
-            Bundle bundle=getArguments();
-            if(bundle!=null) {
-                textView.setText("The page selected is "+bundle.getInt("position"));
+            View layout = inflater.inflate(R.layout.fragment_layout, container, false);
+            textView = (TextView) layout.findViewById(R.id.position);
+            Bundle bundle = getArguments();
+            if (bundle != null) {
+                textView.setText("The page selected is " + bundle.getInt("position"));
             }
             return layout;
         }
