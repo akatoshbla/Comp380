@@ -1,5 +1,4 @@
 package com.comp380.csun.comp380;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -10,7 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 /**
  * Created by gdfairclough on 2/15/15.
@@ -36,9 +34,9 @@ public class AddExpenseActivity extends ActionBarActivity {
 
         //manually insert hardcoded categories for testing purposees
         //this.deleteDatabase("expenseTracker.db");
-        dbHandler.testCategoryValues();
-        dbHandler.testExpenseValues();
-        dbHandler.testVendors();
+        //dbHandler.testCategoryValues();
+        //dbHandler.testExpenseValues();
+        //dbHandler.testVendors();
         //dbHandler.deleteCategory(4);
 
 
