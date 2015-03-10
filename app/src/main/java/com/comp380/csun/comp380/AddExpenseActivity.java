@@ -1,7 +1,8 @@
 package com.comp380.csun.comp380;
-import android.content.Context;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -9,8 +10,17 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Toast;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Created by gdfairclough on 2/15/15.
@@ -30,15 +40,12 @@ public class AddExpenseActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
-
-
         dbHandler = new DatabaseHandler(this, null, null,1);
 
         //manually insert hardcoded categories for testing purposees
-        //this.deleteDatabase("expenseTracker.db");
-        dbHandler.testCategoryValues();
-        dbHandler.testExpenseValues();
-        dbHandler.testVendors();
+        //dbHandler.testCategoryValues();
+        //dbHandler.testVendors();
+        //dbHandler.testExpenseValues();
         //dbHandler.deleteCategory(4);
 
 
@@ -118,12 +125,19 @@ public class AddExpenseActivity extends ActionBarActivity {
             vendor = vendorBox.getText().toString();
         }
 
+        //check if category is in the database, if not, show a dialog for choosing the budget
+        if(dbHandler.getCategoryID(categoryBox.getText().toString()) < 0){
+            //show a dialog fragment for choosing a budget
+
+        };
+
         //set cost equal to the current value in the editText field
         cost = Float.parseFloat(costBox.getText().toString());
 
         //set default date to today if nothing is in the editText field
         if (!dateBox.getText().toString().equals("")){
             String date  = dateBox.getText().toString();
+            date = convertDateToYMD(date);
             expense = new Expense(category,vendor,cost,date);
         }else{
             expense = new Expense(category,vendor,cost);
@@ -138,6 +152,26 @@ public class AddExpenseActivity extends ActionBarActivity {
 
     }
 
+    public String convertDateToYMD(String dateString) {
+
+        try{
+            //convert to Date
+            DateFormat df = new SimpleDateFormat("MM-dd-yyyy", Locale.US);
+            Date result = df.parse(dateString);
+
+            //convert Date to a new String
+            DateFormat convert = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+            dateString = convert.format(result);
+
+            return dateString;
+
+        }catch(ParseException pe){
+
+            pe.printStackTrace();
+            return null;
+        }
+
+    }
 
 
 
@@ -161,7 +195,47 @@ public class AddExpenseActivity extends ActionBarActivity {
 
             startActivity(displayExpenses);
         }
+        else if(id == R.id.showDatePicker){
+
+            showDatePicker();
+        }
     }
+
+    /**
+     * display the date oicker for the user when the "Choose Date" button is pressed
+     */
+    private void showDatePicker(){
+
+        DatePickerFragment date = new DatePickerFragment();
+
+        //set up the current date in the dialog box (based on Los Angeles)
+        Calendar calendar = new GregorianCalendar(TimeZone.getTimeZone("America/Los_Angeles"));
+        Bundle args = new Bundle();
+        args.putInt("year",calendar.get(Calendar.YEAR));
+        args.putInt("month",calendar.get(Calendar.MONTH));
+        args.putInt("day",calendar.get(Calendar.DAY_OF_MONTH));
+
+        date.setArguments(args);
+
+        //set call back to capt
+        // ure the selected date
+        date.setCallBack(onDate);
+        date.show(getFragmentManager(), "Date Picker");
+    }
+
+    DatePickerDialog.OnDateSetListener onDate = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+
+            //convert the date to a string
+            String dateString = String.format("%02d",monthOfYear+1)+"-"
+                    +String.format("%02d",dayOfMonth)+"-"+String.valueOf(year);
+
+            //insert this date into the date box in month-day-year format
+            dateBox.setText(dateString);
+        }
+    };
 
     public void lookupExpense(View view){
 
