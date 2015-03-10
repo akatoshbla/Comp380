@@ -118,6 +118,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(COLUMN_COST, expense.getCost());
         values.put(COLUMN_VENDOR, getVendorID(expense.getVendor()));
         if (expense.getDate() != null){
+
             values.put(COLUMN_DATE, expense.getDate());
         }
 
@@ -151,19 +152,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(COLUMN_CATEGORY, "4");
         values.put(COLUMN_COST, "10");
         values.put(COLUMN_VENDOR, "1");
-        values.put(COLUMN_DATE, "02/11/15");
+        values.put(COLUMN_DATE, "2015-03-03");
         db.insert(TABLE_EXPENSES, null,values);
 
         values.put(COLUMN_CATEGORY, "2");
         values.put(COLUMN_COST, "400");
         values.put(COLUMN_VENDOR, "2");
-        values.put(COLUMN_DATE, "");
+        values.put(COLUMN_DATE, "2015-03-03");
         db.insert(TABLE_EXPENSES, null,values);
 
         values.put(COLUMN_CATEGORY, "3");
         values.put(COLUMN_COST, "28");
         values.put(COLUMN_VENDOR, "3");
-        values.put(COLUMN_DATE, "02/20/15");
+        values.put(COLUMN_DATE, "2015-03-07");
         db.insert(TABLE_EXPENSES, null,values);
 
     }
@@ -289,7 +290,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
-    //Gets all the rows of the db on one cursor for ListView
+    //Gets all the rows of the expense table on one cursor for ListView
     public Cursor getAllRows() {
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -298,7 +299,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 +","+COLUMN_COST+","+COLUMN_DATE+ " FROM " + TABLE_EXPENSES +","+TABLE_CATEGORIES
                 + "," + TABLE_VENDORS + " WHERE "+ TABLE_EXPENSES +"."+COLUMN_CATEGORY+"="
                 +TABLE_CATEGORIES+"."+COLUMN_CATID +" AND " + TABLE_EXPENSES + "." + COLUMN_VENDOR
-                + "=" + TABLE_VENDORS+"."+COLUMN_VENDID;
+                + "=" + TABLE_VENDORS+"."+COLUMN_VENDID +" ORDER BY " + COLUMN_DATE + " DESC,"
+                + COLUMN_ID +" DESC";
 
         Cursor cursor = db.rawQuery(JOIN_TABLES_SQL,null);
         if (cursor != null) {

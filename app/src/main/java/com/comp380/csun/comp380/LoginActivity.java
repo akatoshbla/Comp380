@@ -35,6 +35,14 @@ public class LoginActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //TEST open the expense viewer FOR TESTING PURPOSES ---------------------
+        //create intent for ExpenseDisplayActivity
+        Intent displayExpenses = new Intent(this, ExpenseDisplayActivity.class);
+
+        //startActivity(displayExpenses);
+
+        //------------------------------------------
+
         // set the layout, button and text field
         setContentView(R.layout.activity_login);
         mPassword = (EditText)findViewById(R.id.textPassword);

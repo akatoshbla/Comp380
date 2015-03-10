@@ -22,9 +22,10 @@
         android:layout_width="170dp"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:hint="$100.00"
+        android:hint="Enter Cost"
         android:layout_toRightOf="@id/amountText"
-        android:inputType="numberDecimal" />
+        android:inputType="numberDecimal"
+        android:background="@android:color/white" />
 
     <TextView android:text="@string/category_text"
         style="@style/TextStyle"
@@ -40,11 +41,12 @@
         android:layout_width="170dp"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:hint="Food"
+        android:hint="Enter Category"
         android:layout_alignTop="@+id/categoryText"
         android:layout_toRightOf="@+id/amountText"
         android:layout_toEndOf="@+id/amountText"
-        android:completionThreshold="1" />
+        android:completionThreshold="1"
+        android:background="@android:color/white" />
 
     <TextView android:text="@string/vendor_text"
         style="@style/TextStyle"
@@ -60,11 +62,12 @@
         android:layout_width="170dp"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:hint="In-n-Out"
+        android:hint="Enter Vendor"
         android:inputType="textAutoCorrect"
         android:layout_alignTop="@+id/vendorText"
         android:layout_alignLeft="@+id/category_input"
-        android:layout_alignStart="@+id/category_input" />
+        android:layout_alignStart="@+id/category_input"
+        android:background="@android:color/white" />
 
     <Button
         android:layout_width="160dp"
@@ -106,5 +109,19 @@
         android:layout_alignLeft="@+id/vendor_input"
         android:layout_alignStart="@+id/vendor_input"
         android:padding="5dp"
-        android:hint="YYYY-MM-DD" />
+        android:enabled="false"
+        android:hint="MM-DD-YYYY"
+        android:background="@android:color/white" />
+
+    <Button
+        android:id="@+id/showDatePicker"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choose Date"
+        android:onClick="onButtonClick"
+        android:layout_below="@+id/dateText"
+        android:layout_alignRight="@+id/submit_button"
+        android:layout_alignEnd="@+id/submit_button" />
+
 </RelativeLayout>
