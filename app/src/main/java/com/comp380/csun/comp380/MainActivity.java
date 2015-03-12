@@ -48,7 +48,7 @@ public class MainActivity extends ActionBarActivity {
         mTabs.setViewPager(mPager);
     }
 
-    // Need to repopulate tabs on insert of new category
+    // TODO: Need to repopulate tabs on insert of new category
     public void onRestart() {
         super.onRestart();
     }
