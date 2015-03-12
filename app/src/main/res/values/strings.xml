@@ -17,8 +17,15 @@
     <string name="label_retype_password">Please retype your password:</string>
     <string name="title_activity_expense_display">Total Monthly Expenses</string>
     <string name="enter_password">Password</string>
+    <string name="title_activity_all_budgets">AllBudgetsActivity</string>
+    <string name="status">DefCom Level</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="position">Information for Tab X</string>
+    <string name="top_five">Top Five Expenditures</string>
+    <string name="expense_one">Expense 1</string>
+    <string name="expense_two">Expense 2</string>
+    <string name="expense_three">Expense 3</string>
+    <string name="expense_four">Expense 4</string>
+    <string name="expense_five">Expense 5</string>
 
-    <string-array name="tabs">
-        <item>Main</item>
-    </string-array>
 </resources>

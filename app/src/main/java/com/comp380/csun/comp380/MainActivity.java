@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -45,8 +46,6 @@ public class MainActivity extends ActionBarActivity {
         mPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
         mTabs = (SlidingTabLayout) findViewById(R.id.tabs);
         mTabs.setViewPager(mPager);
-
-
     }
 
     // Need to repopulate tabs on insert of new category
@@ -120,7 +119,18 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public static class MyFragment extends Fragment {
-        private TextView textView;
+
+        private TextView textViewStatus;
+        private TextView textViewFraction;
+        private ProgressBar progressBar;
+        private TextView textViewTopOne;
+        private TextView textViewTopTwo;
+        private TextView textViewTopThree;
+        private TextView textViewTopFour;
+        private TextView textViewtopFive;
+        private DatabaseHandler db;
+        private String[] categories;
+        private BudgetReport budgetReport;
 
         public static MyFragment getInstance(int position) {
             MyFragment myFragment = new MyFragment();
@@ -130,13 +140,47 @@ public class MainActivity extends ActionBarActivity {
             return myFragment;
         }
 
+        // Edit Fragments here
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+            db = new DatabaseHandler(this.getActivity(), null, null, 1);
+            categories = db.getCategoriesStrings();
             View layout = inflater.inflate(R.layout.fragment_layout, container, false);
-            textView = (TextView) layout.findViewById(R.id.position);
+
+            textViewStatus = (TextView) layout.findViewById(R.id.status);
+            textViewFraction = (TextView) layout.findViewById(R.id.position);
+            progressBar = (ProgressBar) layout.findViewById(R.id.pBar);
+            textViewTopOne = (TextView) layout.findViewById(R.id.numOne);
+            textViewTopTwo = (TextView) layout.findViewById(R.id.numTwo);
+            textViewTopThree = (TextView) layout.findViewById(R.id.numThree);
+            textViewTopFour = (TextView) layout.findViewById(R.id.numFour);
+            textViewtopFive = (TextView) layout.findViewById(R.id.numFive);
+
             Bundle bundle = getArguments();
             if (bundle != null) {
-                textView.setText("The page selected is " + bundle.getInt("position"));
+                if (bundle.getInt("position") == 0) {
+                    budgetReport = new BudgetReport(db, true);
+                    textViewStatus.setBackgroundColor(budgetReport.getStatus());
+                    textViewFraction.setText(budgetReport.getBudgetCurrent() + "/" + budgetReport.getBudgetMax());
+                    progressBar.setProgress(budgetReport.getProgressBar());
+                    textViewTopOne.setText(budgetReport.getTopFiveCategories(0));
+                    textViewTopTwo.setText(budgetReport.getTopFiveCategories(1));
+                    textViewTopThree.setText(budgetReport.getTopFiveCategories(2));
+                    textViewTopFour.setText(budgetReport.getTopFiveCategories(3));
+                    textViewtopFive.setText(budgetReport.getTopFiveCategories(4));
+                }
+                else {
+/*                    budgetReport = new BudgetReport(db, false);
+                    textViewStatus.setBackgroundColor(budgetReport.getStatus());
+                    textViewFraction.setText(budgetReport.getBudgetCurrent() + "/" + budgetReport.getBudgetMax());
+                    progressBar.setProgress(budgetReport.getProgressBar());
+                    textViewTopOne.setText(budgetReport.getTopFiveVendor(0));
+                    textViewTopTwo.setText(budgetReport.getTopFiveVendor(1));
+                    textViewTopThree.setText(budgetReport.getTopFiveVendor(2));
+                    textViewTopFour.setText(budgetReport.getTopFiveVendor(3));
+                    textViewtopFive.setText(budgetReport.getTopFiveVendor(4));*/
+                }
             }
             return layout;
         }
