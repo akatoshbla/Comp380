@@ -160,7 +160,7 @@ public class MainActivity extends ActionBarActivity {
             Bundle bundle = getArguments();
             if (bundle != null) {
                 if (bundle.getInt("position") == 0) {
-                    budgetReport = new BudgetReport(db, true);
+                    budgetReport = new BudgetReport(db, "All");
                     textViewStatus.setBackgroundColor(budgetReport.getStatus());
                     textViewFraction.setText(budgetReport.getBudgetCurrent() + "/" + budgetReport.getBudgetMax());
                     progressBar.setProgress(budgetReport.getProgressBar());
@@ -171,15 +171,15 @@ public class MainActivity extends ActionBarActivity {
                     textViewtopFive.setText(budgetReport.getTopFiveCategories(4));
                 }
                 else {
-/*                    budgetReport = new BudgetReport(db, false);
+                    budgetReport = new BudgetReport(db, categories[bundle.getInt("position")]);
                     textViewStatus.setBackgroundColor(budgetReport.getStatus());
                     textViewFraction.setText(budgetReport.getBudgetCurrent() + "/" + budgetReport.getBudgetMax());
                     progressBar.setProgress(budgetReport.getProgressBar());
-                    textViewTopOne.setText(budgetReport.getTopFiveVendor(0));
-                    textViewTopTwo.setText(budgetReport.getTopFiveVendor(1));
-                    textViewTopThree.setText(budgetReport.getTopFiveVendor(2));
-                    textViewTopFour.setText(budgetReport.getTopFiveVendor(3));
-                    textViewtopFive.setText(budgetReport.getTopFiveVendor(4));*/
+                    textViewTopOne.setText(budgetReport.getTopFiveVendors(0));
+                    textViewTopTwo.setText(budgetReport.getTopFiveVendors(1));
+                    textViewTopThree.setText(budgetReport.getTopFiveVendors(2));
+                    textViewTopFour.setText(budgetReport.getTopFiveVendors(3));
+                    textViewtopFive.setText(budgetReport.getTopFiveVendors(4));
                 }
             }
             return layout;
