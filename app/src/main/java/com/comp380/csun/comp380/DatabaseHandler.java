@@ -34,6 +34,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //category table column names
     private static final String COLUMN_CATID = "category_id";
     private static final String COLUMN_CATDESC = "category_desc";
+    private static final String COLUMN_BUDGET = "budget";
 
     //vendors table column names
     private static final String COLUMN_VENDID = "vendor_id";
@@ -57,8 +58,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 TABLE_EXPENSES + "("
                 + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_CATEGORY
                 + " Integer," + COLUMN_VENDOR + " INTEGER," + COLUMN_COST +
-                " REAL," + COLUMN_DATE + " DATE DEFAULT CURRENT_DATE NOT NULL,"+
-                "FOREIGN KEY(" + COLUMN_CATEGORY + ") REFERENCES " + TABLE_CATEGORIES +
+                " REAL," + COLUMN_DATE + " DATE DEFAULT CURRENT_DATE NOT NULL,"+ COLUMN_BUDGET
+                + "Integer DEFAULT 10,"
+                + "FOREIGN KEY(" + COLUMN_CATEGORY + ") REFERENCES " + TABLE_CATEGORIES +
                 "("+ COLUMN_CATID + "), " +
                 "FOREIGN KEY(" + COLUMN_VENDOR + ") REFERENCES " + TABLE_VENDORS +
                 "("+ COLUMN_VENDID + ") )";
@@ -341,6 +343,160 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         db.close();
         return expense;
+    }
+
+    /**
+     * Get a vendor String from the vendor table based on the provided Id
+     * @param vendorId
+     * @return
+     */
+    public String vendorIdToString(int vendorId){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String VENDOR_ID_SQL = "SELECT " + COLUMN_VENDDESC + " FROM " + TABLE_VENDORS + "WHERE "
+                + COLUMN_VENDID + "=" + vendorId;
+
+        Cursor cursor = db.rawQuery(VENDOR_ID_SQL,null);
+
+
+        if(cursor.moveToFirst()){
+
+            //return the vendor name as a string
+            return cursor.getString(0);
+
+        }else{
+
+
+            //return null when no vendors match the provided Id
+            return null;
+        }
+
+    }
+
+    /**
+     * Function for retrieving a category name based on a provided id
+     * @param categoryId
+     * @return
+     */
+    public String categoryToString(int categoryId){
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String CATEGORY_ID_SQL = "SELECT " + COLUMN_CATDESC + " FROM " + TABLE_CATEGORIES
+                + " WHERE " + COLUMN_CATID + "=" + categoryId;
+
+        Cursor cursor = db.rawQuery(CATEGORY_ID_SQL,null);
+
+        if(cursor.moveToFirst()){
+
+            //return the category name as a string
+            return cursor.getString(0);
+
+        }else{
+
+            //no category matches the id passed in, so return null
+            return null;
+        }
+    }
+
+
+    /**
+     * Method for retrieving the top categories in terms of expenditures from ALL HISTORICAL DATA
+     * @param category
+     * @return cursor
+     */
+
+    public Cursor vendorByCost(String category){
+
+        int categoryId = getCategoryID(category);
+
+        if(categoryId > 0){
+
+            //selects vendor column (which is saved as an id) and "Total" column from expenses table
+            String VENDOR_COST_SQL = "SELECT " + COLUMN_VENDOR + ",SUM(" + COLUMN_COST + ") AS Total"
+                    + " FROM " + TABLE_EXPENSES + " WHERE " + COLUMN_CATEGORY + "=" + categoryId
+                    + " GROUP BY " + COLUMN_VENDOR + " ORDER BY " + COLUMN_COST + "DESC";
+
+            SQLiteDatabase db = this.getReadableDatabase();
+
+            Cursor cursor = db.rawQuery(VENDOR_COST_SQL,null);
+
+            if(cursor.moveToFirst()){
+
+                return cursor;
+            }else{
+
+                //nothing in the table, so return null
+                return null;
+
+            }
+
+        }else{
+
+            //nonexistent category string was entered
+            return null;
+        }
+
+    }
+
+    /**
+     * Method for retrieving the categories and the amount spent in each category
+     * currently not sorted by date and will return all historical data
+     * @return cursor
+     */
+    public Cursor categoryByCost(){
+
+
+        //this select statement will give you a "category" (which is saved as an id
+        // and "Total" column from the expenses table
+        String COST_SORT_SQL =  "SELECT " + COLUMN_CATEGORY + ",SUM(" + COLUMN_COST + ") AS Total FROM"
+                + TABLE_EXPENSES + " GROUP BY " + COLUMN_CATEGORY + " ORDER BY " + COLUMN_COST
+                + " DESC";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+
+        Cursor cursor  = db.rawQuery(COST_SORT_SQL, null);
+
+        if (cursor.moveToFirst()){
+
+            return cursor;
+        }
+
+        return null;
+
+    }
+
+    /**
+     * Function for accessing the budget for a supplied category
+     * @param category
+     * @return
+     */
+    public int getBudget(String category){
+
+        int categoryId = getCategoryID(category);
+
+        //get the budget max for a supplied category
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String BUDGET_SQL = "SELECT " + COLUMN_BUDGET + "FROM " + TABLE_CATEGORIES+ " WHERE "
+                + COLUMN_CATID + "=" + categoryId;
+
+        Cursor cursor = db.rawQuery(BUDGET_SQL,null);
+
+        if(cursor.moveToFirst()){
+
+            //return the budget amount as an integer
+            return Integer.parseInt(cursor.getString(0));
+
+        }else{
+
+            //return -1 if their is an error reading the cursor
+            return -1;
+        }
+
+
     }
 
     //delete an expense
