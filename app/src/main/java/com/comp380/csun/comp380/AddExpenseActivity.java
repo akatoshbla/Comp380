@@ -129,7 +129,7 @@ public class AddExpenseActivity extends ActionBarActivity {
         if(dbHandler.getCategoryID(categoryBox.getText().toString()) < 0){
             //show a dialog fragment for choosing a budget
 
-        };
+        }
 
         //set cost equal to the current value in the editText field
         cost = Float.parseFloat(costBox.getText().toString());
