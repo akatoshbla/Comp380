@@ -10,6 +10,7 @@ import java.util.Comparator;
  * Created by David on 3/11/2015.
  */
 
+// TODO: Need to label methods
 public class BudgetReport {
 
     private DatabaseHandler db;
@@ -51,7 +52,6 @@ public class BudgetReport {
         return progressBar;
     }
 
-    // TODO: Null if doesn't exist in ArrayList (Fixed)
     public String getTopFiveVendors(int position) {
         if (topFiveVendors != null && position < topFiveVendors.size()) {
             return topFiveVendors.get(position).toString();
@@ -59,7 +59,6 @@ public class BudgetReport {
         return "";
     }
 
-    // TODO: Null if doesn't exist in ArrayList (Fixed)
     public String getTopFiveCategories(int position) {
         if (topFiveCategories != null && position < topFiveCategories.size()) {
             return topFiveCategories.get(position).toString();
@@ -99,7 +98,6 @@ public class BudgetReport {
 
         int totalVendorSum = 0;
         topFiveVendors = new ArrayList<>();
-        // TODO: Cursor gets all vendors from db under category tabName instead of rows? (Fixed)
         Cursor cursor = db.vendorByCost(tabName);
         //cursor.moveToPrevious();
 
@@ -119,7 +117,6 @@ public class BudgetReport {
     // This method will setup the Top 5 Categories and costs in a TreeMap with a
     // Transaction object as the value.
     private void sortTransactions(ArrayList<Transaction> alist) {
-        // TODO: Need to create sorting algorithm for ArrayList<Transaction>
         TransactionComparator comparator = new TransactionComparator();
         Collections.sort(alist, comparator);
     }

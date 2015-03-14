@@ -23,6 +23,8 @@ import java.util.ArrayList;
 /**
  * Created by David on 3/8/2015.
  */
+
+// TODO: Need to label methods
 public class MainActivity extends ActionBarActivity {
 
     private Toolbar toolbar;
@@ -150,7 +152,6 @@ public class MainActivity extends ActionBarActivity {
             Resources resources = getResources();
             View layout = inflater.inflate(R.layout.fragment_layout, container, false);
 
-            //textViewStatus = (TextView) layout.findViewById(R.id.status);
             textViewFraction = (TextView) layout.findViewById(R.id.position);
             progressBar = (ProgressBar) layout.findViewById(R.id.pBar);
             textViewTopOne = (TextView) layout.findViewById(R.id.numOne);
@@ -163,7 +164,6 @@ public class MainActivity extends ActionBarActivity {
             if (bundle != null) {
                 if (bundle.getInt("position") == 0) {
                     budgetReport = new BudgetReport(db, "All");
-                    //textViewStatus.setBackgroundColor(budgetReport.getStatus());
                     textViewFraction.setText(budgetReport.getBudgetCurrent() + "/" + budgetReport.getBudgetMax());
                     progressBar.setProgress(budgetReport.getProgressBar());
                     progressBar.setProgressDrawable(resources.getDrawable(budgetReport.getStatus()));
@@ -175,7 +175,6 @@ public class MainActivity extends ActionBarActivity {
                 }
                 else {
                     budgetReport = new BudgetReport(db, categories[bundle.getInt("position") - 1]);
-                    //textViewStatus.setBackgroundColor(budgetReport.getStatus());
                     textViewFraction.setText(budgetReport.getBudgetCurrent() + "/" + budgetReport.getBudgetMax());
                     progressBar.setProgress(budgetReport.getProgressBar());
                     progressBar.setProgressDrawable(resources.getDrawable(budgetReport.getStatus()));
