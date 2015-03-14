@@ -73,7 +73,7 @@ public class BudgetReport {
         int totalBudgetSum = 0;
         topFiveCategories = new ArrayList<>();
         Cursor cursor = db.categoryByCost();
-        cursor.moveToPrevious();
+        //cursor.moveToPrevious();
 
             // Linear search through list to get total Budget and
             while (cursor.moveToNext()) {
@@ -101,7 +101,7 @@ public class BudgetReport {
         topFiveVendors = new ArrayList<>();
         // TODO: Cursor gets all vendors from db under category tabName instead of rows? (Fixed)
         Cursor cursor = db.vendorByCost(tabName);
-        cursor.moveToPrevious();
+        //cursor.moveToPrevious();
 
         // Linear search through list to get total Budget and
         while (cursor.moveToNext()) {
@@ -139,13 +139,13 @@ public class BudgetReport {
     private void setStatus() {
 
         if (progressBar < 40) {
-            status = R.color.good;
-        } else if (progressBar > 40 && progressBar < 60) {
-            status = R.color.caution;
-        } else if (progressBar > 60 && progressBar < 99) {
-            status = R.color.danger;
+            status = R.drawable.greenprogressbar;
+        } else if (progressBar >= 40 && progressBar < 60) {
+            status = R.drawable.yellowprogressbar;
+        } else if (progressBar >= 60 && progressBar <= 99) {
+            status = R.drawable.orangeprogressbar;
         } else {
-            status = R.color.bad;
+            status = R.drawable.redprogressbar;
         }
     }
 
@@ -186,10 +186,10 @@ public class BudgetReport {
             Float costTwo = tTwo.getCost();
 
             if (costOne > costTwo) {
-                return 1;
+                return -1;
             }
             else if (costOne  < costTwo) {
-                return -1;
+                return 1;
             }
             else {
                 return 0;

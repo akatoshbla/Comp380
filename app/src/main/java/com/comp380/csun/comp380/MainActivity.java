@@ -1,7 +1,7 @@
 package com.comp380.csun.comp380;
 
 import android.content.Intent;
-import android.graphics.PorterDuff;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -147,6 +147,7 @@ public class MainActivity extends ActionBarActivity {
 
             db = new DatabaseHandler(this.getActivity(), null, null, 1);
             categories = db.getCategoriesStrings();
+            Resources resources = getResources();
             View layout = inflater.inflate(R.layout.fragment_layout, container, false);
 
             //textViewStatus = (TextView) layout.findViewById(R.id.status);
@@ -165,7 +166,7 @@ public class MainActivity extends ActionBarActivity {
                     //textViewStatus.setBackgroundColor(budgetReport.getStatus());
                     textViewFraction.setText(budgetReport.getBudgetCurrent() + "/" + budgetReport.getBudgetMax());
                     progressBar.setProgress(budgetReport.getProgressBar());
-                    progressBar.getProgressDrawable().setColorFilter(budgetReport.getStatus(), PorterDuff.Mode.SRC_IN);
+                    progressBar.setProgressDrawable(resources.getDrawable(budgetReport.getStatus()));
                     textViewTopOne.setText(budgetReport.getTopFiveCategories(0));
                     textViewTopTwo.setText(budgetReport.getTopFiveCategories(1));
                     textViewTopThree.setText(budgetReport.getTopFiveCategories(2));
@@ -177,7 +178,7 @@ public class MainActivity extends ActionBarActivity {
                     //textViewStatus.setBackgroundColor(budgetReport.getStatus());
                     textViewFraction.setText(budgetReport.getBudgetCurrent() + "/" + budgetReport.getBudgetMax());
                     progressBar.setProgress(budgetReport.getProgressBar());
-                    progressBar.getProgressDrawable().setColorFilter(budgetReport.getStatus(), PorterDuff.Mode.SRC_IN);
+                    progressBar.setProgressDrawable(resources.getDrawable(budgetReport.getStatus()));
                     textViewTopOne.setText(budgetReport.getTopFiveVendors(0));
                     textViewTopTwo.setText(budgetReport.getTopFiveVendors(1));
                     textViewTopThree.setText(budgetReport.getTopFiveVendors(2));
