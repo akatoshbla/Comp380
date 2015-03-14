@@ -5,14 +5,14 @@
     android:background="@color/app_background"
     android:orientation="vertical">
 
-    <TextView
+<!--    <TextView
         android:id="@+id/status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/status"
         android:textColor="@color/black"
         android:textSize="16sp"
-        android:background="@color/good"/>
+        android:background="@color/good"/>-->
 
     <TextView
         android:id="@+id/position"
@@ -22,19 +22,19 @@
         android:textColor="@color/black"
         android:textSize="20sp"
         android:paddingTop="100dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_below="@+id/status"/>
+        android:layout_centerHorizontal="true"/>
+        <!--android:layout_below="@+id/status"/>-->
 
     <ProgressBar
         android:id="@+id/pBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/position"
+        android:background="@color/colorPrimary"
         android:indeterminate="false"
         android:max="100"
-        android:padding="10dip"
+        android:padding="2dip"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"/>
 

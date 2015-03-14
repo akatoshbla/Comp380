@@ -3,13 +3,14 @@ package com.comp380.csun.comp380;
 import android.database.Cursor;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by David on 3/11/2015.
  */
 
-// TODO: Need to test once methods are finished (Cases only 1 ven or cat - 2 3 4)
-public class BudgetReport  {
+public class BudgetReport {
 
     private DatabaseHandler db;
     private int budgetCurrent;
@@ -24,16 +25,14 @@ public class BudgetReport  {
 
         if (tabName.equals("All")) {
             setTotalAllBudgets();
-            setBudgetMax(tabName);
-            setStatus();
-            setProgressBar();
         }
         else {
             setTotalBudget(tabName);
-            setBudgetMax(tabName);
-            setStatus();
-            setProgressBar();
         }
+
+        setBudgetMax(tabName);
+        setProgressBar();
+        setStatus();
     }
 
     public int getBudgetCurrent() {
@@ -52,61 +51,77 @@ public class BudgetReport  {
         return progressBar;
     }
 
-    // TODO: Null if doesn't exist in ArrayList
+    // TODO: Null if doesn't exist in ArrayList (Fixed)
     public String getTopFiveVendors(int position) {
-        return topFiveVendors.get(position).toString();
+        if (topFiveVendors != null && position < topFiveVendors.size()) {
+            return topFiveVendors.get(position).toString();
+        }
+        return "";
     }
 
-    // TODO: Null if doesn't exist in ArrayList
+    // TODO: Null if doesn't exist in ArrayList (Fixed)
     public String getTopFiveCategories(int position) {
-        return topFiveCategories.get(position).toString();
+        if (topFiveCategories != null && position < topFiveCategories.size()) {
+            return topFiveCategories.get(position).toString();
+        }
+        return "";
     }
 
     // This method will set the budgetCurrent and topFiveCategories ArrayList
     private void setTotalAllBudgets() {
 
         int totalBudgetSum = 0;
-        Cursor cursor = db.getAllRows();
-        cursor.moveToFirst();
+        topFiveCategories = new ArrayList<>();
+        Cursor cursor = db.categoryByCost();
+        cursor.moveToPrevious();
 
-        // Linear search through list to get total Budget and
-        while (cursor.moveToNext()){
-            Transaction transaction = new Transaction(cursor.getString(1),
-                    Float.parseFloat(cursor.getString(3)));
-            topFiveCategories.add(transaction);
-            totalBudgetSum += Float.parseFloat(cursor.getString(3));
+            // Linear search through list to get total Budget and
+            while (cursor.moveToNext()) {
+                Transaction transaction = new Transaction(db.categoryToString(cursor.getInt(0)),
+                        Float.parseFloat(cursor.getString(1)));
+                topFiveCategories.add(transaction);
+                totalBudgetSum += Float.parseFloat(cursor.getString(1));
+            }
+
+            budgetCurrent = totalBudgetSum;
+            sortTransactions(topFiveCategories);
+            budgetMax = 150;
+
+        if (totalBudgetSum == 0) {
+            budgetCurrent = 0;
+            budgetMax = 150;
+            topFiveCategories = null;
         }
-
-        budgetCurrent = totalBudgetSum;
-        sortTransactions(topFiveCategories);
     }
 
     // This method will setup the budgetCurrent, progressBar, and status vars
     private void setTotalBudget(String tabName) {
 
         int totalVendorSum = 0;
-        // TODO: Cursor gets all vendors from db under category tabName instead of rows?
-        Cursor cursor = db.getAllRows();
-        cursor.moveToFirst();
+        topFiveVendors = new ArrayList<>();
+        // TODO: Cursor gets all vendors from db under category tabName instead of rows? (Fixed)
+        Cursor cursor = db.vendorByCost(tabName);
+        cursor.moveToPrevious();
 
         // Linear search through list to get total Budget and
         while (cursor.moveToNext()) {
-            if (cursor.getString(2).equals(tabName)) {
-                Transaction transaction = new Transaction(cursor.getString(2),
-                        Float.parseFloat(cursor.getString(3)));
+                Transaction transaction = new Transaction(db.vendorIdToString(cursor.getInt(0)),
+                        Float.parseFloat(cursor.getString(1)));
                 topFiveVendors.add(transaction);
-                totalVendorSum += Float.parseFloat(cursor.getString(3));
-            }
+                totalVendorSum += Float.parseFloat(cursor.getString(1));
         }
 
         budgetCurrent = totalVendorSum;
         sortTransactions(topFiveVendors);
+        budgetMax = 150;//db.getBudget(tabName);
     }
 
     // This method will setup the Top 5 Categories and costs in a TreeMap with a
     // Transaction object as the value.
     private void sortTransactions(ArrayList<Transaction> alist) {
         // TODO: Need to create sorting algorithm for ArrayList<Transaction>
+        TransactionComparator comparator = new TransactionComparator();
+        Collections.sort(alist, comparator);
     }
 
     // Access the db and sets the budgetMax based on tabName shown
@@ -122,24 +137,25 @@ public class BudgetReport  {
 
     // Sets the status color of the defCom textView in fragment layout
     private void setStatus() {
-        int temp = (int)(budgetCurrent / budgetMax);
-        if (temp < 40) {
+
+        if (progressBar < 40) {
             status = R.color.good;
-        }
-        else if (temp > 40 && temp < 60) {
+        } else if (progressBar > 40 && progressBar < 60) {
             status = R.color.caution;
-        }
-        else if (temp > 60 && temp < 99) {
+        } else if (progressBar > 60 && progressBar < 99) {
             status = R.color.danger;
-        }
-        else {
+        } else {
             status = R.color.bad;
         }
     }
 
     // Sets the progressBar in the fragment layout
     private void setProgressBar() {
-        progressBar = (int)(budgetCurrent / budgetMax);
+        if (budgetMax == 0) {
+            progressBar = 0;
+        } else {
+            progressBar = (int)((double)(budgetCurrent) / budgetMax * 100);
+        }
     }
 
     // Object for the Transactions that are put into an ArrayList(DataStructure)
@@ -159,6 +175,25 @@ public class BudgetReport  {
 
         public String toString() {
             return transactionName + " " + transactionCost;
+        }
+    }
+
+    public static class TransactionComparator implements Comparator<Transaction> {
+
+        @Override
+        public int compare(Transaction tOne, Transaction tTwo) {
+            Float costOne = tOne.getCost();
+            Float costTwo = tTwo.getCost();
+
+            if (costOne > costTwo) {
+                return 1;
+            }
+            else if (costOne  < costTwo) {
+                return -1;
+            }
+            else {
+                return 0;
+            }
         }
     }
 }

@@ -351,7 +351,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        String VENDOR_ID_SQL = "SELECT " + COLUMN_VENDDESC + " FROM " + TABLE_VENDORS + "WHERE "
+        String VENDOR_ID_SQL = "SELECT " + COLUMN_VENDDESC + " FROM " + TABLE_VENDORS + " WHERE "
                 + COLUMN_VENDID + "=" + vendorId;
 
         Cursor cursor = db.rawQuery(VENDOR_ID_SQL,null);
@@ -411,9 +411,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if(categoryId > 0){
 
             //selects vendor column (which is saved as an id) and "Total" column from expenses table
-            String VENDOR_COST_SQL = "SELECT " + COLUMN_VENDOR + ",SUM(" + COLUMN_COST + ") AS Total"
-                    + " FROM " + TABLE_EXPENSES + " WHERE " + COLUMN_CATEGORY + "=" + categoryId
-                    + " GROUP BY " + COLUMN_VENDOR + " ORDER BY " + COLUMN_COST + "DESC";
+            String VENDOR_COST_SQL = "SELECT " + COLUMN_VENDOR + ",SUM(" + COLUMN_COST + ") AS Total From "
+                    + TABLE_EXPENSES + " WHERE " + COLUMN_CATEGORY + " = " + categoryId
+                    + " GROUP BY " + COLUMN_VENDOR + " ORDER BY " + COLUMN_COST + " DESC";
 
             SQLiteDatabase db = this.getReadableDatabase();
 
@@ -447,7 +447,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         //this select statement will give you a "category" (which is saved as an id
         // and "Total" column from the expenses table
-        String COST_SORT_SQL =  "SELECT " + COLUMN_CATEGORY + ",SUM(" + COLUMN_COST + ") AS Total FROM"
+        String COST_SORT_SQL =  "SELECT " + COLUMN_CATEGORY + ",SUM(" + COLUMN_COST + ") AS Total FROM "
                 + TABLE_EXPENSES + " GROUP BY " + COLUMN_CATEGORY + " ORDER BY " + COLUMN_COST
                 + " DESC";
 
@@ -477,7 +477,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         //get the budget max for a supplied category
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String BUDGET_SQL = "SELECT " + COLUMN_BUDGET + "FROM " + TABLE_CATEGORIES+ " WHERE "
+        String BUDGET_SQL = "SELECT " + COLUMN_BUDGET + " FROM " + TABLE_CATEGORIES+ " WHERE "
                 + COLUMN_CATID + "=" + categoryId;
 
         Cursor cursor = db.rawQuery(BUDGET_SQL,null);

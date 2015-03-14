@@ -1,6 +1,7 @@
 package com.comp380.csun.comp380;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -120,7 +121,7 @@ public class MainActivity extends ActionBarActivity {
 
     public static class MyFragment extends Fragment {
 
-        private TextView textViewStatus;
+        //private TextView textViewStatus;
         private TextView textViewFraction;
         private ProgressBar progressBar;
         private TextView textViewTopOne;
@@ -148,7 +149,7 @@ public class MainActivity extends ActionBarActivity {
             categories = db.getCategoriesStrings();
             View layout = inflater.inflate(R.layout.fragment_layout, container, false);
 
-            textViewStatus = (TextView) layout.findViewById(R.id.status);
+            //textViewStatus = (TextView) layout.findViewById(R.id.status);
             textViewFraction = (TextView) layout.findViewById(R.id.position);
             progressBar = (ProgressBar) layout.findViewById(R.id.pBar);
             textViewTopOne = (TextView) layout.findViewById(R.id.numOne);
@@ -161,9 +162,10 @@ public class MainActivity extends ActionBarActivity {
             if (bundle != null) {
                 if (bundle.getInt("position") == 0) {
                     budgetReport = new BudgetReport(db, "All");
-                    textViewStatus.setBackgroundColor(budgetReport.getStatus());
+                    //textViewStatus.setBackgroundColor(budgetReport.getStatus());
                     textViewFraction.setText(budgetReport.getBudgetCurrent() + "/" + budgetReport.getBudgetMax());
                     progressBar.setProgress(budgetReport.getProgressBar());
+                    progressBar.getProgressDrawable().setColorFilter(budgetReport.getStatus(), PorterDuff.Mode.SRC_IN);
                     textViewTopOne.setText(budgetReport.getTopFiveCategories(0));
                     textViewTopTwo.setText(budgetReport.getTopFiveCategories(1));
                     textViewTopThree.setText(budgetReport.getTopFiveCategories(2));
@@ -171,10 +173,11 @@ public class MainActivity extends ActionBarActivity {
                     textViewtopFive.setText(budgetReport.getTopFiveCategories(4));
                 }
                 else {
-                    budgetReport = new BudgetReport(db, categories[bundle.getInt("position")]);
-                    textViewStatus.setBackgroundColor(budgetReport.getStatus());
+                    budgetReport = new BudgetReport(db, categories[bundle.getInt("position") - 1]);
+                    //textViewStatus.setBackgroundColor(budgetReport.getStatus());
                     textViewFraction.setText(budgetReport.getBudgetCurrent() + "/" + budgetReport.getBudgetMax());
                     progressBar.setProgress(budgetReport.getProgressBar());
+                    progressBar.getProgressDrawable().setColorFilter(budgetReport.getStatus(), PorterDuff.Mode.SRC_IN);
                     textViewTopOne.setText(budgetReport.getTopFiveVendors(0));
                     textViewTopTwo.setText(budgetReport.getTopFiveVendors(1));
                     textViewTopThree.setText(budgetReport.getTopFiveVendors(2));
