@@ -126,6 +126,7 @@ public class MainActivity extends ActionBarActivity {
         //private TextView textViewStatus;
         private TextView textViewFraction;
         private ProgressBar progressBar;
+        private TextView textProgressBar;
         private TextView textViewTopOne;
         private TextView textViewTopTwo;
         private TextView textViewTopThree;
@@ -154,6 +155,7 @@ public class MainActivity extends ActionBarActivity {
 
             textViewFraction = (TextView) layout.findViewById(R.id.position);
             progressBar = (ProgressBar) layout.findViewById(R.id.pBar);
+            textProgressBar = (TextView) layout.findViewById(R.id.textPBar);
             textViewTopOne = (TextView) layout.findViewById(R.id.numOne);
             textViewTopTwo = (TextView) layout.findViewById(R.id.numTwo);
             textViewTopThree = (TextView) layout.findViewById(R.id.numThree);
@@ -164,9 +166,6 @@ public class MainActivity extends ActionBarActivity {
             if (bundle != null) {
                 if (bundle.getInt("position") == 0) {
                     budgetReport = new BudgetReport(db, "All");
-                    textViewFraction.setText(budgetReport.getBudgetCurrent() + "/" + budgetReport.getBudgetMax());
-                    progressBar.setProgress(budgetReport.getProgressBar());
-                    progressBar.setProgressDrawable(resources.getDrawable(budgetReport.getStatus()));
                     textViewTopOne.setText(budgetReport.getTopFiveCategories(0));
                     textViewTopTwo.setText(budgetReport.getTopFiveCategories(1));
                     textViewTopThree.setText(budgetReport.getTopFiveCategories(2));
@@ -175,14 +174,20 @@ public class MainActivity extends ActionBarActivity {
                 }
                 else {
                     budgetReport = new BudgetReport(db, categories[bundle.getInt("position") - 1]);
-                    textViewFraction.setText(budgetReport.getBudgetCurrent() + "/" + budgetReport.getBudgetMax());
-                    progressBar.setProgress(budgetReport.getProgressBar());
-                    progressBar.setProgressDrawable(resources.getDrawable(budgetReport.getStatus()));
                     textViewTopOne.setText(budgetReport.getTopFiveVendors(0));
                     textViewTopTwo.setText(budgetReport.getTopFiveVendors(1));
                     textViewTopThree.setText(budgetReport.getTopFiveVendors(2));
                     textViewTopFour.setText(budgetReport.getTopFiveVendors(3));
                     textViewtopFive.setText(budgetReport.getTopFiveVendors(4));
+                }
+                textViewFraction.setText(budgetReport.getBudgetCurrent() + " / " +
+                        budgetReport.getBudgetMax());
+                progressBar.setProgress(budgetReport.getProgressBar());
+                progressBar.setProgressDrawable(resources.getDrawable(budgetReport.getStatus()));
+                textProgressBar.setText(budgetReport.getProgressBar() + "%");
+
+                if (budgetReport.getProgressBar() < 100) {
+                    textProgressBar.setTextColor(getResources().getColor(R.color.white));
                 }
             }
             return layout;
