@@ -34,6 +34,7 @@ public class BudgetReport {
         setBudgetMax(tabName);
         setProgressBar();
         setStatus();
+        db.close();
     }
 
     public int getBudgetCurrent() {
@@ -72,7 +73,7 @@ public class BudgetReport {
         int totalBudgetSum = 0;
         topFiveCategories = new ArrayList<>();
         Cursor cursor = db.categoryByCost();
-        //cursor.moveToPrevious();
+        cursor.moveToPrevious();
 
             // Linear search through list to get total Budget and
             while (cursor.moveToNext()) {
@@ -99,7 +100,7 @@ public class BudgetReport {
         int totalVendorSum = 0;
         topFiveVendors = new ArrayList<>();
         Cursor cursor = db.vendorByCost(tabName);
-        //cursor.moveToPrevious();
+        cursor.moveToPrevious();
 
         // Linear search through list to get total Budget and
         while (cursor.moveToNext()) {
@@ -171,7 +172,9 @@ public class BudgetReport {
         }
 
         public String toString() {
-            return transactionName + " " + transactionCost;
+
+            String temp = String.format("%-20s%6.2f", transactionName, transactionCost);
+            return temp;
         }
     }
 

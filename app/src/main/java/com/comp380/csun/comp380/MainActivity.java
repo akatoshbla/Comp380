@@ -2,6 +2,7 @@ package com.comp380.csun.comp380;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -161,6 +162,11 @@ public class MainActivity extends ActionBarActivity {
             textViewTopThree = (TextView) layout.findViewById(R.id.numThree);
             textViewTopFour = (TextView) layout.findViewById(R.id.numFour);
             textViewtopFive = (TextView) layout.findViewById(R.id.numFive);
+            textViewTopOne.setTypeface(Typeface.MONOSPACE);
+            textViewTopTwo.setTypeface(Typeface.MONOSPACE);
+            textViewTopThree.setTypeface(Typeface.MONOSPACE);
+            textViewTopFour.setTypeface(Typeface.MONOSPACE);
+            textViewtopFive.setTypeface(Typeface.MONOSPACE);
 
             Bundle bundle = getArguments();
             if (bundle != null) {
@@ -186,7 +192,7 @@ public class MainActivity extends ActionBarActivity {
                 progressBar.setProgressDrawable(resources.getDrawable(budgetReport.getStatus()));
                 textProgressBar.setText(budgetReport.getProgressBar() + "%");
 
-                if (budgetReport.getProgressBar() < 100) {
+                if (budgetReport.getProgressBar() < 1000) {
                     textProgressBar.setTextColor(getResources().getColor(R.color.white));
                 }
             }

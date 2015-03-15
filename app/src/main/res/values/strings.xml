@@ -23,6 +23,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="position">Information for Tab X</string>
     <string name="top_five">Top Five Expenditures</string>
+    <string name="currentMax">Current Expenses verses Budget</string>
     <string name="textPBar">0 / 100</string>
     <string name="expense_one">Expense 1</string>
     <string name="expense_two">Expense 2</string>
