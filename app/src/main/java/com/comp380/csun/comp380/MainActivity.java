@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -29,8 +30,8 @@ import java.util.ArrayList;
 public class MainActivity extends ActionBarActivity {
 
     private Toolbar toolbar;
-    private ViewPager mPager;
-    private SlidingTabLayout mTabs;
+    private ViewPager myPager;
+    private SlidingTabLayout myTabs;
     private DatabaseHandler db;
 
     @Override
@@ -45,11 +46,11 @@ public class MainActivity extends ActionBarActivity {
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
 
-        // Init mPager and mTabs
-        mPager = (ViewPager) findViewById(R.id.pager);
-        mPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
-        mTabs = (SlidingTabLayout) findViewById(R.id.tabs);
-        mTabs.setViewPager(mPager);
+        // Init myPager and myTabs
+        myPager = (ViewPager) findViewById(R.id.pager);
+        myPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+        myTabs = (SlidingTabLayout) findViewById(R.id.tabs);
+        myTabs.setViewPager(myPager);
     }
 
     // TODO: Need to repopulate tabs on insert of new category
@@ -76,7 +77,7 @@ public class MainActivity extends ActionBarActivity {
             return true;
         }
 
-        // Switch to addexpenseactivity if the plus button is pushed
+        // Switch to addExpenseActivity if the plus button is pushed
         if (id == R.id.action_add) {
             startActivity(new Intent(this, AddExpenseActivity.class));
         }
@@ -124,7 +125,6 @@ public class MainActivity extends ActionBarActivity {
 
     public static class MyFragment extends Fragment {
 
-        //private TextView textViewStatus;
         private TextView textViewFraction;
         private ProgressBar progressBar;
         private TextView textProgressBar;
@@ -132,10 +132,12 @@ public class MainActivity extends ActionBarActivity {
         private TextView textViewTopTwo;
         private TextView textViewTopThree;
         private TextView textViewTopFour;
-        private TextView textViewtopFive;
+        private TextView textViewTopFive;
         private DatabaseHandler db;
         private String[] categories;
         private BudgetReport budgetReport;
+        private MyPieChart myPieChart;
+        String tab;
 
         public static MyFragment getInstance(int position) {
             MyFragment myFragment = new MyFragment();
@@ -149,11 +151,17 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+            // Declaring variables
             db = new DatabaseHandler(this.getActivity(), null, null, 1);
             categories = db.getCategoriesStrings();
+
+            // Grabs resources to dynamically change the color of the progress bar
             Resources resources = getResources();
+
+            // Inflater for linking the fragment layout xml to a view
             View layout = inflater.inflate(R.layout.fragment_layout, container, false);
 
+            // Linking the declared variables to xml objects
             textViewFraction = (TextView) layout.findViewById(R.id.position);
             progressBar = (ProgressBar) layout.findViewById(R.id.pBar);
             textProgressBar = (TextView) layout.findViewById(R.id.textPBar);
@@ -161,41 +169,61 @@ public class MainActivity extends ActionBarActivity {
             textViewTopTwo = (TextView) layout.findViewById(R.id.numTwo);
             textViewTopThree = (TextView) layout.findViewById(R.id.numThree);
             textViewTopFour = (TextView) layout.findViewById(R.id.numFour);
-            textViewtopFive = (TextView) layout.findViewById(R.id.numFive);
+            textViewTopFive = (TextView) layout.findViewById(R.id.numFive);
+
+            // Sets the TypeFace (font) so that java string format works for
+            // toString prints.
             textViewTopOne.setTypeface(Typeface.MONOSPACE);
             textViewTopTwo.setTypeface(Typeface.MONOSPACE);
             textViewTopThree.setTypeface(Typeface.MONOSPACE);
             textViewTopFour.setTypeface(Typeface.MONOSPACE);
-            textViewtopFive.setTypeface(Typeface.MONOSPACE);
+            textViewTopFive.setTypeface(Typeface.MONOSPACE);
 
+            // Creates a bundle with arguments from myFragment bundle
             Bundle bundle = getArguments();
             if (bundle != null) {
+
+                // Creates a BudgetReport object based on current tab
                 if (bundle.getInt("position") == 0) {
                     budgetReport = new BudgetReport(db, "All");
-                    textViewTopOne.setText(budgetReport.getTopFiveCategories(0));
-                    textViewTopTwo.setText(budgetReport.getTopFiveCategories(1));
-                    textViewTopThree.setText(budgetReport.getTopFiveCategories(2));
-                    textViewTopFour.setText(budgetReport.getTopFiveCategories(3));
-                    textViewtopFive.setText(budgetReport.getTopFiveCategories(4));
+                    tab = "All";
                 }
                 else {
                     budgetReport = new BudgetReport(db, categories[bundle.getInt("position") - 1]);
-                    textViewTopOne.setText(budgetReport.getTopFiveVendors(0));
-                    textViewTopTwo.setText(budgetReport.getTopFiveVendors(1));
-                    textViewTopThree.setText(budgetReport.getTopFiveVendors(2));
-                    textViewTopFour.setText(budgetReport.getTopFiveVendors(3));
-                    textViewtopFive.setText(budgetReport.getTopFiveVendors(4));
+                    tab = categories[bundle.getInt("position") - 1];
                 }
+
+                // Sets the top viewer in the Main Screen Fragment
                 textViewFraction.setText(budgetReport.getBudgetCurrent() + " / " +
                         budgetReport.getBudgetMax());
+
+                // Setup of the progress bar (color, percent, progress)
                 progressBar.setProgress(budgetReport.getProgressBar());
-                progressBar.setProgressDrawable(resources.getDrawable(budgetReport.getStatus()));
+                progressBar.setProgressDrawable(resources.getDrawable(budgetReport.getProgressBarColor()));
                 textProgressBar.setText(budgetReport.getProgressBar() + "%");
 
+                // Testing white color percent over the progress color
                 if (budgetReport.getProgressBar() < 1000) {
                     textProgressBar.setTextColor(getResources().getColor(R.color.white));
                 }
+
+                // Sets TextViews for top five expenses
+                textViewTopOne.setText(budgetReport.getTopFiveExpenses(0));
+                textViewTopTwo.setText(budgetReport.getTopFiveExpenses(1));
+                textViewTopThree.setText(budgetReport.getTopFiveExpenses(2));
+                textViewTopFour.setText(budgetReport.getTopFiveExpenses(3));
+                textViewTopFive.setText(budgetReport.getTopFiveExpenses(4));
+                String[] names = {budgetReport.getExpenseNames(0).getTransactionName(), budgetReport.getExpenseNames(1).getTransactionName(),
+                        budgetReport.getExpenseNames(2).getTransactionName(), budgetReport.getExpenseNames(3).getTransactionName(),
+                        budgetReport.getExpenseNames(4).getTransactionName()};
+
+                // Sets the pie chart up
+                RelativeLayout linearLayout = (RelativeLayout) layout.findViewById(R.id.pieChart);
+                MyPieChart myPieChart = new MyPieChart(this.getActivity(), budgetReport.getMyPieChartData(), names);
+                linearLayout.addView(myPieChart);
             }
+
+            db.close();
             return layout;
         }
     }

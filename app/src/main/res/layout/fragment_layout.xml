@@ -116,4 +116,14 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true" />
 
+    <RelativeLayout
+        android:id="@+id/pieChart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_below="@+id/numFive"
+        android:paddingLeft="70dp" />
+
 </RelativeLayout>

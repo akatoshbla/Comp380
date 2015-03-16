@@ -16,24 +16,20 @@ public class BudgetReport {
     private DatabaseHandler db;
     private int budgetCurrent;
     private int budgetMax;
-    private int status;
+    private int progressBarColor;
     private int progressBar;
-    private ArrayList<Transaction> topFiveVendors;
-    private ArrayList<Transaction> topFiveCategories;
+    private float[] myPieChartData;
+    private ArrayList<Transaction> topFiveExpenses;
 
     public BudgetReport(DatabaseHandler db, String tabName) {
         this.db = db;
 
-        if (tabName.equals("All")) {
-            setTotalAllBudgets();
-        }
-        else {
-            setTotalBudget(tabName);
-        }
-
+        setBudgetReport(tabName);
         setBudgetMax(tabName);
         setProgressBar();
-        setStatus();
+        setProgressBarColor();
+        //setBudgetMax();
+        setMyPieChartData();
         db.close();
     }
 
@@ -45,74 +41,76 @@ public class BudgetReport {
         return budgetMax;
     }
 
-    public int getStatus() {
-        return status;
+    public int getProgressBarColor() {
+        return progressBarColor;
     }
 
     public int getProgressBar() {
         return progressBar;
     }
 
-    public String getTopFiveVendors(int position) {
-        if (topFiveVendors != null && position < topFiveVendors.size()) {
-            return topFiveVendors.get(position).toString();
+    public String getTopFiveExpenses(int position) {
+        if (topFiveExpenses != null && position < topFiveExpenses.size()) {
+            return topFiveExpenses.get(position).toString();
         }
         return "";
     }
 
-    public String getTopFiveCategories(int position) {
-        if (topFiveCategories != null && position < topFiveCategories.size()) {
-            return topFiveCategories.get(position).toString();
+    public Transaction getExpenseNames(int position) {
+        if (topFiveExpenses != null && position < topFiveExpenses.size()) {
+            return topFiveExpenses.get(position);
         }
-        return "";
+        return new Transaction("", 0);
     }
 
-    // This method will set the budgetCurrent and topFiveCategories ArrayList
-    private void setTotalAllBudgets() {
+
+    public float[] getMyPieChartData() { return myPieChartData; }
+
+    // This method will set the budgetCurrent and topFiveExpenses ArrayList
+    private void setBudgetReport(String tabName) {
 
         int totalBudgetSum = 0;
-        topFiveCategories = new ArrayList<>();
-        Cursor cursor = db.categoryByCost();
-        cursor.moveToPrevious();
+        topFiveExpenses = new ArrayList<>();
+        Cursor cursor;
+        Transaction transaction;
 
-            // Linear search through list to get total Budget and
+        if (tabName.equals("All")) {
+            cursor = db.categoryByCost();
+            cursor.moveToPrevious();
+            budgetMax = 150; // Testing purposes
+
+            // Linear search through list to get total Budget - Categories
+            cursor.moveToPrevious();
             while (cursor.moveToNext()) {
-                Transaction transaction = new Transaction(db.categoryToString(cursor.getInt(0)),
+                transaction = new Transaction(db.categoryToString(cursor.getInt(0)),
                         Float.parseFloat(cursor.getString(1)));
-                topFiveCategories.add(transaction);
+                topFiveExpenses.add(transaction);
                 totalBudgetSum += Float.parseFloat(cursor.getString(1));
             }
+        }
+        else {
+                cursor = db.vendorByCost(tabName);
+                cursor.moveToPrevious();
+                budgetMax = 150; //  Testing Purposes
 
-            budgetCurrent = totalBudgetSum;
-            sortTransactions(topFiveCategories);
-            budgetMax = 150;
+                // Linear search through list to get total Budget - Vendors
+                cursor.moveToPrevious();
+                while (cursor.moveToNext()) {
+                    transaction = new Transaction(db.vendorIdToString(cursor.getInt(0)),
+                            Float.parseFloat(cursor.getString(1)));
+                    topFiveExpenses.add(transaction);
+                    totalBudgetSum += Float.parseFloat(cursor.getString(1));
+                }
+            }
+
+        budgetCurrent = totalBudgetSum;
+        sortTransactions(topFiveExpenses);
 
         if (totalBudgetSum == 0) {
             budgetCurrent = 0;
             budgetMax = 150;
-            topFiveCategories = null;
+            topFiveExpenses = null;
         }
-    }
-
-    // This method will setup the budgetCurrent, progressBar, and status vars
-    private void setTotalBudget(String tabName) {
-
-        int totalVendorSum = 0;
-        topFiveVendors = new ArrayList<>();
-        Cursor cursor = db.vendorByCost(tabName);
-        cursor.moveToPrevious();
-
-        // Linear search through list to get total Budget and
-        while (cursor.moveToNext()) {
-                Transaction transaction = new Transaction(db.vendorIdToString(cursor.getInt(0)),
-                        Float.parseFloat(cursor.getString(1)));
-                topFiveVendors.add(transaction);
-                totalVendorSum += Float.parseFloat(cursor.getString(1));
-        }
-
-        budgetCurrent = totalVendorSum;
-        sortTransactions(topFiveVendors);
-        budgetMax = 150;//db.getBudget(tabName);
     }
 
     // This method will setup the Top 5 Categories and costs in a TreeMap with a
@@ -123,27 +121,27 @@ public class BudgetReport {
     }
 
     // Access the db and sets the budgetMax based on tabName shown
-    private void setBudgetMax(String incomeBudgetName) {
-        if (incomeBudgetName.equals("All")) {
+    private void setBudgetMax(String tabName) {
+        if (tabName.equals("All")) {
             // TODO: Add all the category incomes up and set to budgetMax
         } else {
             // TODO: Need a method to get user set BudgetMax from db
-            //budgetMax = db.getBudgetMax(incomeBudgetName);
+            //budgetMax = db.getBudgetMax(tabName);
 
         }
     }
 
     // Sets the status color of the defCom textView in fragment layout
-    private void setStatus() {
+    private void setProgressBarColor() {
 
         if (progressBar < 40) {
-            status = R.drawable.greenprogressbar;
+            progressBarColor = R.drawable.greenprogressbar;
         } else if (progressBar >= 40 && progressBar < 60) {
-            status = R.drawable.yellowprogressbar;
+            progressBarColor = R.drawable.yellowprogressbar;
         } else if (progressBar >= 60 && progressBar <= 99) {
-            status = R.drawable.orangeprogressbar;
+            progressBarColor = R.drawable.orangeprogressbar;
         } else {
-            status = R.drawable.redprogressbar;
+            progressBarColor = R.drawable.redprogressbar;
         }
     }
 
@@ -156,6 +154,25 @@ public class BudgetReport {
         }
     }
 
+    private void setMyPieChartData() {
+        float total = 0;
+
+        if (topFiveExpenses != null) {
+            myPieChartData = new float[topFiveExpenses.size()];
+            for (int i = 0; i < myPieChartData.length; i++) {
+                total += topFiveExpenses.get(i).getCost();
+            }
+            for (int i = 0; i < myPieChartData.length; i++) {
+                myPieChartData[i] = 360 * (topFiveExpenses.get(i).getCost() / total);
+            }
+        }
+        else {
+            myPieChartData = new float[2];
+            myPieChartData[0] = 50;
+            myPieChartData[1] = 50;
+        }
+    }
+
     // Object for the Transactions that are put into an ArrayList(DataStructure)
     public static class Transaction {
 
@@ -165,6 +182,10 @@ public class BudgetReport {
         public Transaction(String name, float cost) {
             transactionName = name;
             transactionCost = cost;
+        }
+
+        public String getTransactionName() {
+            return transactionName;
         }
 
         public float getCost()  {
