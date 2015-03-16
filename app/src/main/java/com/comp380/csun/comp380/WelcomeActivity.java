@@ -8,7 +8,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -59,7 +58,8 @@ public class WelcomeActivity extends ActionBarActivity {
                 }
                 // check to see if the passwords match
                 // turn on the button if they match
-                else if(mPassword.getText().toString().equals(mRetryPassword.getText().toString())){
+                else if(mPassword.getText().toString().equals(mRetryPassword.getText().toString()) &&
+                        mRetryPassword.getText().toString().equals(mPassword.getText().toString())){
                     mSubmit.setEnabled(true);
                     mSubmit.setBackgroundColor(getResources().getColor(R.color.buttons));
                 }
@@ -84,7 +84,7 @@ public class WelcomeActivity extends ActionBarActivity {
         DatabaseHandler db = new DatabaseHandler(this, null, null, 1);
         db.addPassword(md5(mPassword.getText().toString()));
         finish();
-        startActivity(new Intent(WelcomeActivity.this, AddExpenseActivity.class));
+        startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
     }//endregion
 
     //region MD5 Hash Functions Section

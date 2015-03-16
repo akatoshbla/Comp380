@@ -1,5 +1,7 @@
 package com.comp380.csun.comp380;
+
 import android.app.DatePickerDialog;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -13,6 +15,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,6 +24,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
+
 
 /**
  * Created by gdfairclough on 2/15/15.
@@ -43,11 +47,10 @@ public class AddExpenseActivity extends ActionBarActivity {
         dbHandler = new DatabaseHandler(this, null, null,1);
 
         //manually insert hardcoded categories for testing purposees
+
         //dbHandler.testCategoryValues();
         //dbHandler.testVendors();
         //dbHandler.testExpenseValues();
-        //dbHandler.deleteCategory(4);
-
 
         setContentView(R.layout.activity_addexpense);
 

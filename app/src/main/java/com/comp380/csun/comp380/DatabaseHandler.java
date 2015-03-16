@@ -7,9 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import java.sql.SQLDataException;
-import java.sql.SQLException;
-
 /**
  * Created by gdfairclough on 2/15/15.
  */
