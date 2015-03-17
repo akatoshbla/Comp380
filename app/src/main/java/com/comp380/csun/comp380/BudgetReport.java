@@ -76,30 +76,32 @@ public class BudgetReport {
 
         if (tabName.equals("All")) {
             cursor = db.categoryByCost();
-            cursor.moveToPrevious();
             budgetMax = 150; // Testing purposes
 
-            // Linear search through list to get total Budget - Categories
-            cursor.moveToPrevious();
-            while (cursor.moveToNext()) {
-                transaction = new Transaction(db.categoryToString(cursor.getInt(0)),
-                        Float.parseFloat(cursor.getString(1)));
-                topFiveExpenses.add(transaction);
-                totalBudgetSum += Float.parseFloat(cursor.getString(1));
+            if (cursor != null) {
+                // Linear search through list to get total Budget - Categories
+                cursor.moveToPrevious();
+                while (cursor.moveToNext()) {
+                    transaction = new Transaction(db.categoryToString(cursor.getInt(0)),
+                            Float.parseFloat(cursor.getString(1)));
+                    topFiveExpenses.add(transaction);
+                    totalBudgetSum += Float.parseFloat(cursor.getString(1));
+                }
             }
         }
         else {
                 cursor = db.vendorByCost(tabName);
-                cursor.moveToPrevious();
                 budgetMax = 150; //  Testing Purposes
 
-                // Linear search through list to get total Budget - Vendors
-                cursor.moveToPrevious();
-                while (cursor.moveToNext()) {
-                    transaction = new Transaction(db.vendorIdToString(cursor.getInt(0)),
-                            Float.parseFloat(cursor.getString(1)));
-                    topFiveExpenses.add(transaction);
-                    totalBudgetSum += Float.parseFloat(cursor.getString(1));
+                if (cursor != null) {
+                    // Linear search through list to get total Budget - Vendors
+                    cursor.moveToPrevious();
+                    while (cursor.moveToNext()) {
+                        transaction = new Transaction(db.vendorIdToString(cursor.getInt(0)),
+                                Float.parseFloat(cursor.getString(1)));
+                        topFiveExpenses.add(transaction);
+                        totalBudgetSum += Float.parseFloat(cursor.getString(1));
+                    }
                 }
             }
 
