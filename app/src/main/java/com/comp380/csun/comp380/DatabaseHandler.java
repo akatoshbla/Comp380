@@ -55,8 +55,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 TABLE_EXPENSES + "("
                 + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_CATEGORY
                 + " Integer," + COLUMN_VENDOR + " INTEGER," + COLUMN_COST +
-                " REAL," + COLUMN_DATE + " DATE DEFAULT CURRENT_DATE NOT NULL,"+ COLUMN_BUDGET
-                + "Integer DEFAULT 10,"
+                " REAL," + COLUMN_DATE + " DATE DEFAULT CURRENT_DATE NOT NULL,"
                 + "FOREIGN KEY(" + COLUMN_CATEGORY + ") REFERENCES " + TABLE_CATEGORIES +
                 "("+ COLUMN_CATID + "), " +
                 "FOREIGN KEY(" + COLUMN_VENDOR + ") REFERENCES " + TABLE_VENDORS +
@@ -66,7 +65,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String CREATE_CATEGORIES_TABLE = "CREATE TABLE " +
                 TABLE_CATEGORIES + "("
                 + COLUMN_CATID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_CATDESC
-                + " TEXT UNIQUE)";
+                + " TEXT UNIQUE," + COLUMN_BUDGET + " Integer DEFAULT 10)";
 
         //password table
         String CREATE_PASSWORD_TABLE  = "CREATE TABLE " +
@@ -220,8 +219,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         //query the categories table for the specified category
         cursor = db.rawQuery(categoryQuery,null);
         //check for null cursor, indicating an error
-        if(cursor != null){
-            cursor.moveToFirst();
+        if(cursor.moveToFirst()){
             //return the integer specified at that location
             return (cursor.getInt(cursor.getColumnIndex(COLUMN_CATID)));
 
@@ -232,6 +230,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         }
 
+
+    }
+
+    public boolean isCategory(String category){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String categoryQuery = "SELECT * FROM " + TABLE_CATEGORIES
+                + " WHERE " + COLUMN_CATDESC + " = \"" + category +"\"";
+        //query the categories table for the specified value
+        Cursor cursor = db.rawQuery(categoryQuery,null);
+        //category does not exist, so add it to the table
+        if(cursor.moveToFirst())
+        {
+            return true;
+        }else{
+
+            return false;
+        }
 
     }
 
@@ -286,6 +302,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         }
 
+    }
+
+    public void addCategory(String category, int budget){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String CREATE_CATEGORY_SQL = "INSERT INTO " + TABLE_CATEGORIES + " (" + COLUMN_CATDESC
+                + "," + COLUMN_BUDGET + ") VALUES ('" + category + "'," + budget + ")";
+
+        db.execSQL(CREATE_CATEGORY_SQL);
+
+        db.close();
 
     }
 

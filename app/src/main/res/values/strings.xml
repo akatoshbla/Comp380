@@ -18,6 +18,8 @@
     <string name="title_activity_expense_display">Total Monthly Expenses</string>
     <string name="enter_password">Password</string>
     <string name="title_activity_expense_test">ExpenseTestActivity</string>
+    <string name="cancel_button_text">Cancel</string>
+    <string name="createCat_button_text">Create</string>
 
 
     <string-array name="tabs">

@@ -60,6 +60,7 @@ public class AddExpenseActivity extends ActionBarActivity {
         costBox = (EditText) findViewById(R.id.amount_input);
         dateBox = (EditText) findViewById(R.id.date_input);
 
+
         //disable the button if the text has not been changed
         buttonSubmit.setEnabled(false);
         buttonSubmit.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
@@ -193,10 +194,23 @@ public class AddExpenseActivity extends ActionBarActivity {
             //create intent for ExpenseDisplayActivity
             Intent displayExpenses = new Intent(this, ExpenseDisplayActivity.class);
 
-            //add to the database
-            newExpense(view);
+            if(!dbHandler.isCategory(categoryBox.getText().toString())){
 
-            startActivity(displayExpenses);
+                showBudgetDialog();
+
+
+            }
+            else{
+
+                //add to the database
+                newExpense(view);
+
+                startActivity(displayExpenses);
+
+
+            }
+
+
         }
         else if(id == R.id.showDatePicker){
 
@@ -204,8 +218,40 @@ public class AddExpenseActivity extends ActionBarActivity {
         }
     }
 
+
     /**
-     * display the date oicker for the user when the "Choose Date" button is pressed
+     * display the budgetDialog when a new category is entered
+     */
+    private void showBudgetDialog(){
+
+        BudgetDialogFragment budgetDialog = new BudgetDialogFragment();
+
+        //create a bundle to pass information to the fragment
+        Bundle args = new Bundle();
+
+        args.putString("title","Create New Category?");
+
+        //set dialog text for the category name (Uncategorized if nothing is set
+        if(categoryBox.getText().toString().equals("")){
+
+            args.putString("category","Uncategorized");
+
+        }else{
+
+            args.putString("category",categoryBox.getText().toString());
+        }
+
+        args.putString("cost",costBox.getText().toString());
+        args.putString("vendor",vendorBox.getText().toString());
+        args.putString("date",dateBox.getText().toString());
+
+        budgetDialog.setArguments(args);
+
+        budgetDialog.show(getFragmentManager(), "Create a category");
+    }
+
+    /**
+     * display the date picker for the user when the "Choose Date" button is pressed
      */
     private void showDatePicker(){
 
