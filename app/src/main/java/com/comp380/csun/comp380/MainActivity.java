@@ -53,9 +53,11 @@ public class MainActivity extends ActionBarActivity {
         myTabs.setViewPager(myPager);
     }
 
-    // TODO: Need to repopulate tabs on insert of new category
-    public void onRestart() {
-        super.onRestart();
+    // Refreshes Tabs and Fragments when coming from another activity
+    public void onResume() {
+        super.onResume();
+        myPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+        myTabs.setViewPager(myPager);
     }
 
     @Override
@@ -122,6 +124,7 @@ public class MainActivity extends ActionBarActivity {
             return tabs.size();
         }
     }
+
 
     public static class MyFragment extends Fragment {
 
