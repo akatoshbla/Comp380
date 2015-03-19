@@ -2,14 +2,12 @@ package com.comp380.csun.comp380;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -34,6 +32,14 @@ public class LoginActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //TEST open the expense viewer FOR TESTING PURPOSES ---------------------
+        //create intent for ExpenseDisplayActivity
+        Intent displayExpenses = new Intent(this, ExpenseDisplayActivity.class);
+
+        //startActivity(displayExpenses);
+
+        //------------------------------------------
 
         // set the layout, button and text field
         setContentView(R.layout.activity_login);
@@ -84,7 +90,7 @@ public class LoginActivity extends ActionBarActivity {
         DatabaseHandler db = new DatabaseHandler(this,null,null,1);
         if (db.checkPassword(md5(mPassword.getText().toString()))) {
             finish();
-            startActivity(new Intent(LoginActivity.this, AddExpenseActivity.class));
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
         }
         else {
             mPassword.setText(null);

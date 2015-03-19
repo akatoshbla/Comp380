@@ -51,17 +51,17 @@ public class WelcomeActivity extends ActionBarActivity {
             }
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // check to see if the retry field is empty
-                // turn off the button if it is
-                if(mRetryPassword.getText().toString().equals("")) {
-                    mSubmit.setEnabled(false);
-                    mSubmit.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
-                }
                 // check to see if the passwords match
-                // turn on the button if they match
-                else if(mPassword.getText().toString().equals(mRetryPassword.getText().toString())){
+                // turn on the button only if there is a match
+                if(mPassword.getText().toString().equals(mRetryPassword.getText().toString()) &&
+                        mRetryPassword.getText().toString().equals(mPassword.getText().toString())){
                     mSubmit.setEnabled(true);
                     mSubmit.setBackgroundColor(getResources().getColor(R.color.buttons));
+                }
+                // passwords mismatch disable the button
+                else{
+                    mSubmit.setEnabled(false);
+                    mSubmit.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
                 }
             }
             @Override
