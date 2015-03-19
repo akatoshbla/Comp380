@@ -43,6 +43,7 @@
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:layout_above="@+id/labelRetypePassword"
+        android:background="@color/white"
         />
     <TextView
         android:id="@+id/labelRetypePassword"
@@ -63,6 +64,7 @@
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:layout_above="@+id/buttonCheckPassword"
+        android:background="@color/white"
         />
     <Button
         android:id="@+id/buttonCheckPassword"

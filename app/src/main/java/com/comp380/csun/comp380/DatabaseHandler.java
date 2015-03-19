@@ -7,9 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import java.sql.SQLDataException;
-import java.sql.SQLException;
-
 /**
  * Created by gdfairclough on 2/15/15.
  */
@@ -143,7 +140,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.insert(TABLE_CATEGORIES,null,values);
         values.put(COLUMN_CATDESC, "Healthcare");
         db.insert(TABLE_CATEGORIES,null,values);
-
+        db.close();
     }
 
     public void testExpenseValues(){
@@ -168,7 +165,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(COLUMN_VENDOR, "3");
         values.put(COLUMN_DATE, "2015-03-07");
         db.insert(TABLE_EXPENSES, null,values);
-
+        db.close();
     }
 
     public void testVendors(){
@@ -181,7 +178,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.insert(TABLE_VENDORS,null,values);
         values.put(COLUMN_VENDDESC, "Shell");
         db.insert(TABLE_VENDORS,null,values);
-
+        db.close();
     }
 
     public String[] getCategoriesStrings(){
@@ -226,11 +223,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if(cursor != null){
             cursor.moveToFirst();
             //return the integer specified at that location
+            db.close();
             return (cursor.getInt(cursor.getColumnIndex(COLUMN_CATID)));
 
         }else{
 
             //return a -1 to indicate an error
+            db.close();
             return -1;
 
         }
@@ -280,11 +279,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if(cursor != null){
             cursor.moveToFirst();
             //return the integer specified at that location
+            db.close();
             return (cursor.getInt(cursor.getColumnIndex(COLUMN_VENDID)));
 
         }else{
 
             //return a -1 to indicate an error
+            db.close();
             return -1;
 
         }
@@ -309,6 +310,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             cursor.moveToFirst();
         }
 
+        db.close();
         return cursor;
     }
 
@@ -354,7 +356,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        String VENDOR_ID_SQL = "SELECT " + COLUMN_VENDDESC + " FROM " + TABLE_VENDORS + "WHERE "
+        String VENDOR_ID_SQL = "SELECT " + COLUMN_VENDDESC + " FROM " + TABLE_VENDORS + " WHERE "
                 + COLUMN_VENDID + "=" + vendorId;
 
         Cursor cursor = db.rawQuery(VENDOR_ID_SQL,null);
@@ -363,12 +365,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if(cursor.moveToFirst()){
 
             //return the vendor name as a string
+            db.close();
             return cursor.getString(0);
 
         }else{
 
 
             //return null when no vendors match the provided Id
+            db.close();
             return null;
         }
 
@@ -391,11 +395,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if(cursor.moveToFirst()){
 
             //return the category name as a string
+            db.close();
             return cursor.getString(0);
 
         }else{
 
             //no category matches the id passed in, so return null
+            db.close();
             return null;
         }
     }
@@ -414,9 +420,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if(categoryId > 0){
 
             //selects vendor column (which is saved as an id) and "Total" column from expenses table
-            String VENDOR_COST_SQL = "SELECT " + COLUMN_VENDOR + ",SUM(" + COLUMN_COST + ") AS Total"
-                    + " FROM " + TABLE_EXPENSES + " WHERE " + COLUMN_CATEGORY + "=" + categoryId
-                    + " GROUP BY " + COLUMN_VENDOR + " ORDER BY " + COLUMN_COST + "DESC";
+            String VENDOR_COST_SQL = "SELECT " + COLUMN_VENDOR + ",SUM(" + COLUMN_COST + ") AS Total From "
+                    + TABLE_EXPENSES + " WHERE " + COLUMN_CATEGORY + " = " + categoryId
+                    + " GROUP BY " + COLUMN_VENDOR + " ORDER BY " + COLUMN_COST + " DESC";
 
             SQLiteDatabase db = this.getReadableDatabase();
 
@@ -428,6 +434,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             }else{
 
                 //nothing in the table, so return null
+                db.close();
                 return null;
 
             }
@@ -450,7 +457,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         //this select statement will give you a "category" (which is saved as an id
         // and "Total" column from the expenses table
-        String COST_SORT_SQL =  "SELECT " + COLUMN_CATEGORY + ",SUM(" + COLUMN_COST + ") AS Total FROM"
+        String COST_SORT_SQL =  "SELECT " + COLUMN_CATEGORY + ",SUM(" + COLUMN_COST + ") AS Total FROM "
                 + TABLE_EXPENSES + " GROUP BY " + COLUMN_CATEGORY + " ORDER BY " + COLUMN_COST
                 + " DESC";
 
@@ -461,9 +468,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()){
 
+            db.close();
             return cursor;
         }
 
+        db.close();
         return null;
 
     }
@@ -480,7 +489,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         //get the budget max for a supplied category
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String BUDGET_SQL = "SELECT " + COLUMN_BUDGET + "FROM " + TABLE_CATEGORIES+ " WHERE "
+        String BUDGET_SQL = "SELECT " + COLUMN_BUDGET + " FROM " + TABLE_CATEGORIES+ " WHERE "
                 + COLUMN_CATID + "=" + categoryId;
 
         Cursor cursor = db.rawQuery(BUDGET_SQL,null);
@@ -488,11 +497,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if(cursor.moveToFirst()){
 
             //return the budget amount as an integer
+            db.close();
             return Integer.parseInt(cursor.getString(0));
 
         }else{
 
             //return -1 if their is an error reading the cursor
+            db.close();
             return -1;
         }
 
@@ -512,7 +523,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }catch(android.database.SQLException e){
             Log.d("Exception",e.getLocalizedMessage());
         }
-
+        db.close();
 
     }
 
@@ -530,7 +541,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }catch(android.database.SQLException e){
             Log.d("Exception",e.getLocalizedMessage());
         }
-
+        db.close();
 
     }
 
@@ -556,9 +567,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 null, null);
         cursor.getCount();
         if (cursor.getCount() > 0){
+            db.close();
             return true;
         }
         else{
+            db.close();
             return false;
         }
     }
@@ -570,9 +583,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 null, null);
         cursor.moveToFirst();
         if (cursor.getString(1).equals(pw)) {
+            db.close();
             return true;
         }
         else {
+            db.close();
             return false;
         }
     }
