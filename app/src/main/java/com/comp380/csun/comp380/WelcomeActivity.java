@@ -84,7 +84,7 @@ public class WelcomeActivity extends ActionBarActivity {
         DatabaseHandler db = new DatabaseHandler(this, null, null, 1);
         db.addPassword(md5(mPassword.getText().toString()));
         finish();
-        startActivity(new Intent(WelcomeActivity.this, AddExpenseActivity.class));
+        startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
     }//endregion
 
     //region MD5 Hash Functions Section
