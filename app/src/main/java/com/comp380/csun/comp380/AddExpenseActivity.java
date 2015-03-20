@@ -48,9 +48,9 @@ public class AddExpenseActivity extends ActionBarActivity {
 
         //manually insert hardcoded categories for testing purposees
 
-        //dbHandler.testCategoryValues();
-        //dbHandler.testVendors();
-        //dbHandler.testExpenseValues();
+        dbHandler.testCategoryValues();
+        dbHandler.testVendors();
+        dbHandler.testExpenseValues();
 
         setContentView(R.layout.activity_addexpense);
 
@@ -194,10 +194,14 @@ public class AddExpenseActivity extends ActionBarActivity {
             //create intent for ExpenseDisplayActivity
             Intent displayExpenses = new Intent(this, ExpenseDisplayActivity.class);
 
-            if(!dbHandler.isCategory(categoryBox.getText().toString())){
+            String category = categoryBox.getText().toString();
+            if(category.equals("")){
+
+                category = "Uncategorized";
+            }
+            if(!dbHandler.isCategory(category)){
 
                 showBudgetDialog();
-
 
             }
             else{
@@ -206,7 +210,6 @@ public class AddExpenseActivity extends ActionBarActivity {
                 newExpense(view);
 
                 startActivity(displayExpenses);
-
 
             }
 

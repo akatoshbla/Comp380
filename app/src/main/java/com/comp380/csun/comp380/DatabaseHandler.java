@@ -342,6 +342,34 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return cursor;
     }
 
+    public Cursor getAllRowsForCategory(int categoryId){
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        //join categories, vendor and expense tables for a specific category
+
+        String CATEGORY_SELECT_SQL = "SELECT " + COLUMN_ID +","+ COLUMN_CATDESC +","+COLUMN_VENDDESC
+                +","+COLUMN_COST+","+COLUMN_DATE+ " FROM " + TABLE_EXPENSES +","+TABLE_CATEGORIES
+                + "," + TABLE_VENDORS + " WHERE "+ TABLE_EXPENSES +"."+COLUMN_CATEGORY+"="
+                +TABLE_CATEGORIES+"."+COLUMN_CATID +" AND " + TABLE_EXPENSES + "." + COLUMN_VENDOR
+                + "=" + TABLE_VENDORS+"."+COLUMN_VENDID +" AND "+ COLUMN_CATID +"="+categoryId
+                + " ORDER BY " + COLUMN_DATE + " DESC,"+COLUMN_ID +" DESC";
+
+        Cursor cursor = db.rawQuery(CATEGORY_SELECT_SQL,null);
+
+
+        if (cursor != null){
+            cursor.moveToFirst();
+            db.close();
+            return cursor;
+        }else{
+            Log.d("Cursor Error", "Problem creating the cursor");
+            db.close();
+            return null;
+        }
+
+    }
+
     //Gets all String names of table
     public String[] tableNames() {
         String[] names = new String[] {COLUMN_CATDESC, COLUMN_VENDDESC, COLUMN_COST,

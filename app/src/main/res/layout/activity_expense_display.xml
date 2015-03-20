@@ -15,4 +15,32 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="94dp" />
 
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/budgetEdit"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:text="Click to Sort by Category"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:background="@color/buttons"
+        android:clickable="true"
+        android:onClick="onClick"
+        android:editable="false"
+        android:inputType="none" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="No expenses for that category!"
+        android:id="@+id/noExpenses"
+        android:layout_marginTop="28dp"
+        android:visibility="gone"
+        android:textColor="@android:color/white"
+        android:layout_below="@+id/budgetEdit"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

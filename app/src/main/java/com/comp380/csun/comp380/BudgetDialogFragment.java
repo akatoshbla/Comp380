@@ -34,13 +34,7 @@ public class BudgetDialogFragment extends DialogFragment implements View.OnClick
     private DatabaseHandler dbHandler;
     Button create;
 
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-
-
-        return super.onCreateDialog(savedInstanceState);
-    }
 
     @Nullable
     @Override

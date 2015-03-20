@@ -1,15 +1,18 @@
 package com.comp380.csun.comp380;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,11 +27,12 @@ import java.util.Locale;
 /**
  * Created by gdfairclough on 3/7/15.
  */
-public class ExpenseDisplayActivity extends Activity {
+public class ExpenseDisplayActivity extends Activity implements View.OnClickListener, BudgetPickerFragment.BudgetPickerListener {
 
 
     //the projection of the column names
     String[] mColumns;
+    DatabaseHandler dbHandler;
 
 
     @Override
@@ -36,7 +40,7 @@ public class ExpenseDisplayActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_expense_display);
 
-        DatabaseHandler dbHandler = new DatabaseHandler(this,null,null,1);
+        dbHandler = new DatabaseHandler(this,null,null,1);
         //set up the database cursor
         Cursor cursor = dbHandler.getAllRows();
 
@@ -47,6 +51,65 @@ public class ExpenseDisplayActivity extends Activity {
 
         ListView listview = (ListView) findViewById(R.id.listViewTasks);
         listview.setAdapter(adapter);
+
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        switch(v.getId()){
+
+            case R.id.budgetEdit:
+                showBudgetPicker();
+                break;
+            default:
+                Log.d("Button Error", "Button doesn't match any known buttons");
+
+        }
+
+    }
+
+    public void showBudgetPicker(){
+
+        BudgetPickerFragment budgetPicker = new BudgetPickerFragment();
+
+        //start the budget picker fragment
+
+        budgetPicker.show(getFragmentManager(), "Budget Picker");
+
+    }
+
+
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog, String category) {
+
+        //display categories in the list view based on the chosen category
+
+        TextView categoryText = (TextView)findViewById(R.id.budgetEdit);
+        categoryText.setText(category);
+        Cursor cursor;
+        TextView noExpenses = (TextView)findViewById(R.id.noExpenses);
+
+        if(dbHandler.isCategory(category))
+        {
+            noExpenses.setVisibility(View.GONE);
+            cursor = dbHandler.getAllRowsForCategory(dbHandler.getCategoryID(category));
+            if(!cursor.moveToFirst()){
+
+                noExpenses.setVisibility(View.VISIBLE);
+            }
+        }else{
+            noExpenses.setVisibility(View.GONE);
+            cursor = dbHandler.getAllRows();
+        }
+
+
+        //set up the adapter for the listView
+        CustomAdapter adapter = new CustomAdapter(this,cursor);
+
+        ListView listview = (ListView) findViewById(R.id.listViewTasks);
+        listview.setAdapter(adapter);
+
 
     }
 

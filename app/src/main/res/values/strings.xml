@@ -30,5 +30,8 @@
     <string name="expense_three">Expense 3</string>
     <string name="expense_four">Expense 4</string>
     <string name="expense_five">Expense 5</string>
+    <string name="cancel_button_text">Cancel</string>
+    <string name="createCat_button_text">Create</string>
+
 
 </resources>
