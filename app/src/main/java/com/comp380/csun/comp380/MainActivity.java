@@ -1,5 +1,6 @@
 package com.comp380.csun.comp380;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Typeface;
@@ -51,6 +52,7 @@ public class MainActivity extends ActionBarActivity {
         myPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
         myTabs = (SlidingTabLayout) findViewById(R.id.tabs);
         myTabs.setViewPager(myPager);
+
     }
 
     // Refreshes Tabs and Fragments when coming from another activity
@@ -85,6 +87,10 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void displayDetails(View view) {
+        startActivity(new Intent(this, ExpenseDisplayActivity.class));
     }
 
     class MyPagerAdapter extends FragmentPagerAdapter {

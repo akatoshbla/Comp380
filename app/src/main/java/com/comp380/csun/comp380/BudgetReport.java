@@ -28,7 +28,7 @@ public class BudgetReport {
         setBudgetMax(tabName);
         setProgressBar();
         setProgressBarColor();
-        //setBudgetMax();
+        setBudgetMax(tabName);
         setMyPieChartData();
         db.close();
     }
@@ -126,10 +126,17 @@ public class BudgetReport {
     private void setBudgetMax(String tabName) {
         if (tabName.equals("All")) {
             // TODO: Add all the category incomes up and set to budgetMax
-        } else {
-            // TODO: Need a method to get user set BudgetMax from db
-            //budgetMax = db.getBudgetMax(tabName);
+            int sum = 0;
+            String[] temp = db.getCategoriesStrings();
 
+            for (int i = 0; i < temp.length; i++) {
+                sum += db.getBudget(temp[i]);
+            }
+
+            budgetMax = sum;
+        }
+        else {
+            budgetMax = db.getBudget(tabName);
         }
     }
 

@@ -126,7 +126,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
 
     }
-    public void testCategoryValues(){
+/*    public void testCategoryValues(){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues(5);
         values.put(COLUMN_CATDESC, "Transportation");
@@ -140,9 +140,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(COLUMN_CATDESC, "Healthcare");
         db.insert(TABLE_CATEGORIES,null,values);
         db.close();
-    }
+    } */
 
-    public void testExpenseValues(){
+/*    public void testExpenseValues(){
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -165,9 +165,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(COLUMN_DATE, "2015-03-07");
         db.insert(TABLE_EXPENSES, null,values);
         db.close();
-    }
+    }*/
 
-    public void testVendors(){
+/*    public void testVendors(){
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -178,7 +178,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(COLUMN_VENDDESC, "Shell");
         db.insert(TABLE_VENDORS,null,values);
         db.close();
-    }
+    }*/
 
     public String[] getCategoriesStrings(){
         SQLiteDatabase db = this.getWritableDatabase();

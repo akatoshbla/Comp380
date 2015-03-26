@@ -1,10 +1,13 @@
 package com.comp380.csun.comp380;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.support.v7.app.ActionBarActivity;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,18 +30,23 @@ import java.util.Locale;
 /**
  * Created by gdfairclough on 3/7/15.
  */
-public class ExpenseDisplayActivity extends Activity implements View.OnClickListener, BudgetPickerFragment.BudgetPickerListener {
+public class ExpenseDisplayActivity extends ActionBarActivity implements View.OnClickListener, BudgetPickerFragment.BudgetPickerListener {
 
 
     //the projection of the column names
     String[] mColumns;
     DatabaseHandler dbHandler;
 
+    Toolbar toolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_expense_display);
+
+        toolbar = (Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
 
         dbHandler = new DatabaseHandler(this,null,null,1);
         //set up the database cursor
@@ -261,16 +269,29 @@ public class ExpenseDisplayActivity extends Activity implements View.OnClickList
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
+
+        // Switch to addExpenseActivity if the plus button is pushed
+        if (id == R.id.action_add) {
+            startActivity(new Intent(this, AddExpenseActivity.class));
+            finish();
+        }
+
         return super.onOptionsItemSelected(item);
     }
 }
