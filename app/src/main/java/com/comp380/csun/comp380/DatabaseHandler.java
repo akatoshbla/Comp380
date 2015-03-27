@@ -7,6 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  * Created by gdfairclough on 2/15/15.
  */
@@ -55,8 +58,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 TABLE_EXPENSES + "("
                 + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_CATEGORY
                 + " Integer," + COLUMN_VENDOR + " INTEGER," + COLUMN_COST +
-                " REAL," + COLUMN_DATE + " DATE DEFAULT CURRENT_DATE NOT NULL,"+ COLUMN_BUDGET
-                + "Integer DEFAULT 10,"
+                " REAL," + COLUMN_DATE + " DATE DEFAULT CURRENT_DATE NOT NULL,"
                 + "FOREIGN KEY(" + COLUMN_CATEGORY + ") REFERENCES " + TABLE_CATEGORIES +
                 "("+ COLUMN_CATID + "), " +
                 "FOREIGN KEY(" + COLUMN_VENDOR + ") REFERENCES " + TABLE_VENDORS +
@@ -66,7 +68,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String CREATE_CATEGORIES_TABLE = "CREATE TABLE " +
                 TABLE_CATEGORIES + "("
                 + COLUMN_CATID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_CATDESC
-                + " TEXT UNIQUE)";
+                + " TEXT UNIQUE," + COLUMN_BUDGET + " Integer DEFAULT 10)";
 
         //password table
         String CREATE_PASSWORD_TABLE  = "CREATE TABLE " +
@@ -127,7 +129,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
 
     }
-    public void testCategoryValues(){
+/*    public void testCategoryValues(){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues(5);
         values.put(COLUMN_CATDESC, "Transportation");
@@ -141,9 +143,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(COLUMN_CATDESC, "Healthcare");
         db.insert(TABLE_CATEGORIES,null,values);
         db.close();
-    }
+    } */
 
-    public void testExpenseValues(){
+/*    public void testExpenseValues(){
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -166,9 +168,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(COLUMN_DATE, "2015-03-07");
         db.insert(TABLE_EXPENSES, null,values);
         db.close();
-    }
+    }*/
 
-    public void testVendors(){
+/*    public void testVendors(){
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -179,7 +181,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(COLUMN_VENDDESC, "Shell");
         db.insert(TABLE_VENDORS,null,values);
         db.close();
-    }
+    }*/
 
     public String[] getCategoriesStrings(){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -220,8 +222,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         //query the categories table for the specified category
         cursor = db.rawQuery(categoryQuery,null);
         //check for null cursor, indicating an error
-        if(cursor != null){
-            cursor.moveToFirst();
+        if(cursor.moveToFirst()){
             //return the integer specified at that location
             db.close();
             return (cursor.getInt(cursor.getColumnIndex(COLUMN_CATID)));
@@ -234,6 +235,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         }
 
+
+    }
+
+    public boolean isCategory(String category){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String categoryQuery = "SELECT * FROM " + TABLE_CATEGORIES
+                + " WHERE " + COLUMN_CATDESC + " = \"" + category +"\"";
+        //query the categories table for the specified value
+        Cursor cursor = db.rawQuery(categoryQuery,null);
+        //category does not exist, so add it to the table
+        if(cursor.moveToFirst())
+        {
+            return true;
+        }else{
+
+            return false;
+        }
 
     }
 
@@ -290,6 +309,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         }
 
+    }
+
+    public void addCategory(String category, int budget){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String CREATE_CATEGORY_SQL = "INSERT INTO " + TABLE_CATEGORIES + " (" + COLUMN_CATDESC
+                + "," + COLUMN_BUDGET + ") VALUES ('" + category + "'," + budget + ")";
+
+        db.execSQL(CREATE_CATEGORY_SQL);
+
+        db.close();
 
     }
 
@@ -312,6 +343,34 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         db.close();
         return cursor;
+    }
+
+    public Cursor getAllRowsForCategory(int categoryId){
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        //join categories, vendor and expense tables for a specific category
+
+        String CATEGORY_SELECT_SQL = "SELECT " + COLUMN_ID +","+ COLUMN_CATDESC +","+COLUMN_VENDDESC
+                +","+COLUMN_COST+","+COLUMN_DATE+ " FROM " + TABLE_EXPENSES +","+TABLE_CATEGORIES
+                + "," + TABLE_VENDORS + " WHERE "+ TABLE_EXPENSES +"."+COLUMN_CATEGORY+"="
+                +TABLE_CATEGORIES+"."+COLUMN_CATID +" AND " + TABLE_EXPENSES + "." + COLUMN_VENDOR
+                + "=" + TABLE_VENDORS+"."+COLUMN_VENDID +" AND "+ COLUMN_CATID +"="+categoryId
+                + " ORDER BY " + COLUMN_DATE + " DESC,"+COLUMN_ID +" DESC";
+
+        Cursor cursor = db.rawQuery(CATEGORY_SELECT_SQL,null);
+
+
+        if (cursor != null){
+            cursor.moveToFirst();
+            db.close();
+            return cursor;
+        }else{
+            Log.d("Cursor Error", "Problem creating the cursor");
+            db.close();
+            return null;
+        }
+
     }
 
     //Gets all String names of table
@@ -482,6 +541,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * @param category
      * @return
      */
+    //TODO: return should be changed to a double, budgets should be stored as doubles
     public int getBudget(String category){
 
         int categoryId = getCategoryID(category);
@@ -494,20 +554,103 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         Cursor cursor = db.rawQuery(BUDGET_SQL,null);
 
+        int budgetAmount;
+
         if(cursor.moveToFirst()){
 
-            //return the budget amount as an integer
-            db.close();
-            return Integer.parseInt(cursor.getString(0));
+            //assign the budget amount as an integer
+            budgetAmount = Integer.parseInt(cursor.getString(0));
 
         }else{
 
             //return -1 if their is an error reading the cursor
-            db.close();
-            return -1;
+            budgetAmount= -1;
+        }
+        cursor.close();
+        db.close();
+
+        return budgetAmount;
+
+
+    }
+
+    public double getTotalOfBudgets(){
+
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String BUDGET_TOTAL_SQL = "SELECT SUM(" + COLUMN_BUDGET + ") FROM " + TABLE_CATEGORIES;
+        Cursor cursor = db.rawQuery(BUDGET_TOTAL_SQL,null);
+
+        double budgetTotal;
+        if(cursor.moveToFirst()){
+
+            budgetTotal = Double.parseDouble(cursor.getString(0));
+        }else{
+            budgetTotal = 0;
+
         }
 
+        cursor.close();
+        db.close();
 
+        return budgetTotal;
+    }
+
+    public double getExpensesForMonth(Date prevDate, Date curDate){
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(prevDate);
+        int prevMonth = cal.get(Calendar.MONTH) + 1 ;
+        int prevYear = cal.get(Calendar.YEAR) ;
+
+        String stringPrevMonth ;
+
+        //prepend a zero to months less that 10 for sorting purposes
+        if (prevMonth < 10){
+
+             stringPrevMonth = "0" + String.valueOf(prevMonth);
+        }else{
+            stringPrevMonth = String.valueOf(prevMonth);
+        }
+
+        cal.setTime(curDate);
+        int curMonth = cal.get(Calendar.MONTH) + 1;
+        int curYear = cal.get(Calendar.YEAR);
+
+        String stringCurMonth;
+
+        if (curMonth < 10){
+            stringCurMonth = "0" + String.valueOf(curMonth);
+        }
+        else{
+            stringCurMonth = String.valueOf(curMonth);
+        }
+
+        String prevDateWithMonth = String.valueOf(prevYear) + "-" + stringPrevMonth;
+        String curDateWithMonth = String.valueOf(curYear) + "-" + stringCurMonth;
+
+        //sql to get expenses where date is greater than prevDateWithMonth and less than curDateWithMonth
+        String MONTH_EXPENSES_SQL = "SELECT SUM(" + COLUMN_COST + ") FROM " + TABLE_EXPENSES +
+                " WHERE " + COLUMN_DATE + " > '" + prevDateWithMonth + "' AND " +
+                COLUMN_DATE + " < '" + curDateWithMonth+ "'";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(MONTH_EXPENSES_SQL,null);
+
+        double expenseTotal;
+        if (cursor.moveToFirst()){
+
+            expenseTotal = Double.parseDouble(cursor.getString(0));
+
+        }else{
+
+            expenseTotal = 0;
+        }
+        cursor.close();
+        db.close();
+
+        return expenseTotal;
     }
 
     //delete an expense

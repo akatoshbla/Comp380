@@ -1,17 +1,23 @@
 package com.comp380.csun.comp380;
+
 import android.app.DatePickerDialog;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -21,6 +27,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
+
 
 /**
  * Created by gdfairclough on 2/15/15.
@@ -34,7 +41,7 @@ public class AddExpenseActivity extends ActionBarActivity {
     private EditText dateBox;
     private DatabaseHandler dbHandler;
     private Button buttonSubmit;
-
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -43,13 +50,16 @@ public class AddExpenseActivity extends ActionBarActivity {
         dbHandler = new DatabaseHandler(this, null, null,1);
 
         //manually insert hardcoded categories for testing purposees
-        //dbHandler.testCategoryValues();
-        //dbHandler.testVendors();
-        //dbHandler.testExpenseValues();
-        //dbHandler.deleteCategory(4);
 
+/*        dbHandler.testCategoryValues();
+        dbHandler.testVendors();
+        dbHandler.testExpenseValues();*/
 
         setContentView(R.layout.activity_addexpense);
+
+        // Init ToolBar
+        toolbar = (Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
 
         buttonSubmit = (Button) findViewById(R.id.submit_button);
         categoryBox = (AutoCompleteTextView) findViewById(R.id.category_input);
@@ -103,6 +113,35 @@ public class AddExpenseActivity extends ActionBarActivity {
 
         vendorBox.setAdapter(adapter);
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        menu.removeItem(R.id.action_add);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        // Switch to GoalsActivity if the goals button is pushed
+        if (id == R.id.goals) {
+            startActivity(new Intent(this, GoalsActivity.class));
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public void newExpense (View view){
@@ -190,10 +229,26 @@ public class AddExpenseActivity extends ActionBarActivity {
             //create intent for ExpenseDisplayActivity
             Intent displayExpenses = new Intent(this, ExpenseDisplayActivity.class);
 
-            //add to the database
-            newExpense(view);
+            String category = categoryBox.getText().toString();
+            if(category.equals("")){
 
-            startActivity(displayExpenses);
+                category = "Uncategorized";
+            }
+            if(!dbHandler.isCategory(category)){
+
+                showBudgetDialog();
+
+            }
+            else{
+
+                //add to the database
+                newExpense(view);
+
+                startActivity(displayExpenses);
+                finish();
+            }
+
+
         }
         else if(id == R.id.showDatePicker){
 
@@ -201,8 +256,40 @@ public class AddExpenseActivity extends ActionBarActivity {
         }
     }
 
+
     /**
-     * display the date oicker for the user when the "Choose Date" button is pressed
+     * display the budgetDialog when a new category is entered
+     */
+    private void showBudgetDialog(){
+
+        BudgetDialogFragment budgetDialog = new BudgetDialogFragment();
+
+        //create a bundle to pass information to the fragment
+        Bundle args = new Bundle();
+
+        args.putString("title","Create New Category?");
+
+        //set dialog text for the category name (Uncategorized if nothing is set
+        if(categoryBox.getText().toString().equals("")){
+
+            args.putString("category","Uncategorized");
+
+        }else{
+
+            args.putString("category",categoryBox.getText().toString());
+        }
+
+        args.putString("cost",costBox.getText().toString());
+        args.putString("vendor",vendorBox.getText().toString());
+        args.putString("date",dateBox.getText().toString());
+
+        budgetDialog.setArguments(args);
+
+        budgetDialog.show(getFragmentManager(), "Create a category");
+    }
+
+    /**
+     * display the date picker for the user when the "Choose Date" button is pressed
      */
     private void showDatePicker(){
 

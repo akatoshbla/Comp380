@@ -1,9 +1,13 @@
 package com.comp380.csun.comp380;
 
-import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,8 +16,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -24,11 +26,14 @@ import java.util.Locale;
 /**
  * Created by gdfairclough on 3/7/15.
  */
-public class ExpenseDisplayActivity extends Activity {
+public class ExpenseDisplayActivity extends ActionBarActivity implements View.OnClickListener, BudgetPickerFragment.BudgetPickerListener {
 
 
     //the projection of the column names
     String[] mColumns;
+    DatabaseHandler dbHandler;
+
+    Toolbar toolbar;
 
 
     @Override
@@ -36,9 +41,32 @@ public class ExpenseDisplayActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_expense_display);
 
-        DatabaseHandler dbHandler = new DatabaseHandler(this,null,null,1);
-        //set up the database cursor
-        Cursor cursor = dbHandler.getAllRows();
+        toolbar = (Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
+
+        Intent intent = getIntent();
+        String sortType = intent.getStringExtra("key");
+
+        dbHandler = new DatabaseHandler(this, null, null, 1);
+
+        //set up the database cursor based on sort type
+        Cursor cursor;
+
+        if (sortType != null) {
+
+            if (sortType.equals("All")) {
+                cursor = dbHandler.getAllRows();
+                TextView categoryText = (TextView)findViewById(R.id.budgetEdit);
+                categoryText.setText("All Categories");
+            } else {
+                cursor = dbHandler.getAllRowsForCategory(dbHandler.getCategoryID(sortType));
+                TextView categoryText = (TextView)findViewById(R.id.budgetEdit);
+                categoryText.setText(sortType);
+            }
+        }
+        else {
+            cursor = dbHandler.getAllRows();
+        }
 
         mColumns = dbHandler.tableNames();
 
@@ -48,6 +76,63 @@ public class ExpenseDisplayActivity extends Activity {
         ListView listview = (ListView) findViewById(R.id.listViewTasks);
         listview.setAdapter(adapter);
 
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        switch(v.getId()){
+
+            case R.id.budgetEdit:
+                showBudgetPicker();
+                break;
+            default:
+                Log.d("Button Error", "Button doesn't match any known buttons");
+
+        }
+
+    }
+
+    public void showBudgetPicker(){
+
+        BudgetPickerFragment budgetPicker = new BudgetPickerFragment();
+
+        //start the budget picker fragment
+
+        budgetPicker.show(getFragmentManager(), "Budget Picker");
+
+    }
+
+
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog, String category) {
+
+        //display categories in the list view based on the chosen category
+
+        TextView categoryText = (TextView)findViewById(R.id.budgetEdit);
+        categoryText.setText(category);
+        Cursor cursor;
+        TextView noExpenses = (TextView)findViewById(R.id.noExpenses);
+
+        if(dbHandler.isCategory(category))
+        {
+            noExpenses.setVisibility(View.GONE);
+            cursor = dbHandler.getAllRowsForCategory(dbHandler.getCategoryID(category));
+            if(!cursor.moveToFirst()){
+
+                noExpenses.setVisibility(View.VISIBLE);
+            }
+        }else{
+            noExpenses.setVisibility(View.GONE);
+            cursor = dbHandler.getAllRows();
+        }
+
+
+        //set up the adapter for the listView
+        CustomAdapter adapter = new CustomAdapter(this,cursor);
+
+        ListView listview = (ListView) findViewById(R.id.listViewTasks);
+        listview.setAdapter(adapter);
     }
 
     /**
@@ -198,16 +283,35 @@ public class ExpenseDisplayActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
+
+        // Switch to addExpenseActivity if the plus button is pushed
+        if (id == R.id.action_add) {
+            startActivity(new Intent(this, AddExpenseActivity.class));
+            finish();
+        }
+
+        // Switch to GoalsActivity if the goals button is pushed
+        if (id == R.id.goals) {
+            startActivity(new Intent(this, GoalsActivity.class));
+            finish();
+        }
+
         return super.onOptionsItemSelected(item);
     }
 }

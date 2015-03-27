@@ -7,5 +7,5 @@
     android:layout_height="wrap_content"
     android:background="@color/colorPrimary"
     app:theme="@style/MyCustomToolbarTheme"
-    app:popupTheme="@style/ThemeOverlay.AppCompat.Dark">
+    app:popupTheme="@style/MyCustomPopup" >
 </android.support.v7.widget.Toolbar>
