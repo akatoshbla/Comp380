@@ -29,7 +29,8 @@
         android:layout_marginBottom="26dp"
         android:layout_alignBottom="@+id/amountText"
         android:layout_toRightOf="@+id/amountText"
-        android:layout_toEndOf="@+id/amountText" />
+        android:layout_toEndOf="@+id/amountText"
+        android:maxLength="12" />
 
     <TextView android:text="@string/category_text"
         style="@style/TextStyle"
@@ -55,7 +56,8 @@
         android:layout_toLeftOf="@+id/showDatePicker"
         android:layout_toStartOf="@+id/showDatePicker"
         android:layout_alignParentEnd="false"
-        android:dropDownSelector="#ffffab15" />
+        android:dropDownSelector="#ffffab15"
+        android:maxLength="20" />
 
     <TextView android:text="@string/vendor_text"
         style="@style/TextStyle"
@@ -83,7 +85,8 @@
         android:paddingTop="30dp"
         android:layout_alignParentRight="false"
         android:dropDownSelector="#ffffab15"
-        android:completionThreshold="1" />
+        android:completionThreshold="1"
+        android:maxLength="20" />
 
     <Button
         android:layout_width="160dp"
@@ -130,7 +133,8 @@
         android:layout_alignBottom="@+id/dateText"
         android:layout_toLeftOf="@+id/showDatePicker"
         android:layout_toStartOf="@+id/showDatePicker"
-        android:layout_marginBottom="25dp" />
+        android:layout_marginBottom="25dp"
+        android:maxLength="20" />
 
     <Button
         android:id="@+id/showDatePicker"

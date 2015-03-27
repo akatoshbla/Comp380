@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Coinz</string>
+    <string name="app_name">Coyn</string>
     <string name="amount_text">Amount</string>
     <string name="action_settings">Settings</string>
     <string name="action_add_income">Add Income</string>
@@ -33,5 +33,7 @@
     <string name="cancel_button_text">Cancel</string>
     <string name="createCat_button_text">Create</string>
     <string name="details">Details</string>
+    <string name="title_activity_goals">GoalsActivity</string>
+
 
 </resources>

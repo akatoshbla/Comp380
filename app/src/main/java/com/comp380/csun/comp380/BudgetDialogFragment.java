@@ -48,6 +48,11 @@ public class BudgetDialogFragment extends DialogFragment implements View.OnClick
 
         create = (Button)v.findViewById(R.id.createCat_button);
         create.setOnClickListener(this);
+
+        //default create button to disabled
+        create.setEnabled(false);
+        create.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+
         Button cancel = (Button)v.findViewById(R.id.cancel_button);
         cancel.setOnClickListener(this);
 
@@ -102,11 +107,12 @@ public class BudgetDialogFragment extends DialogFragment implements View.OnClick
 
                 if(limitBox.getText().toString().equals("")){
 
-                    limit = Integer.parseInt(limitBox.getText().toString());
+
+                    limit = 10;
 
                 }else{
 
-                    limit = 10;
+                    limit = Integer.parseInt(limitBox.getText().toString());
                 }
 
 
