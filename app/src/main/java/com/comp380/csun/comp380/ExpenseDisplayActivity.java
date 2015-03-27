@@ -1,12 +1,11 @@
 package com.comp380.csun.comp380;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,11 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -49,14 +45,14 @@ public class ExpenseDisplayActivity extends ActionBarActivity implements View.On
         setSupportActionBar(toolbar);
 
         Intent intent = getIntent();
+        String sortType = intent.getStringExtra("key");
 
         dbHandler = new DatabaseHandler(this, null, null, 1);
 
         //set up the database cursor based on sort type
         Cursor cursor;
 
-        if (intent != null) {
-            String sortType = intent.getStringExtra("key");
+        if (sortType != null) {
 
             if (sortType.equals("All")) {
                 cursor = dbHandler.getAllRows();
