@@ -24,14 +24,6 @@ public class BudgetPickerFragment extends DialogFragment implements View.OnClick
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        /*return new AlertDialog.Builder(getActivity())
-                            .setPositiveButton("Done",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int whichButton) {
-                                            ((ExpenseDisplayActivity)getActivity()).doPositiveClick();
-                                        }
-                                    }
-                            ).create(); */
 
 
         return super.onCreateDialog(savedInstanceState);

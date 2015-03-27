@@ -47,7 +47,8 @@
         android:hint="$10"
         android:inputType="number"
         android:layout_alignLeft="@+id/categoryTextView"
-        android:layout_alignStart="@+id/categoryTextView" />
+        android:layout_alignStart="@+id/categoryTextView"
+        android:maxLength="12" />
 
     <Button
         android:layout_width="140dp"

@@ -60,7 +60,6 @@ public class AddExpenseActivity extends ActionBarActivity {
         costBox = (EditText) findViewById(R.id.amount_input);
         dateBox = (EditText) findViewById(R.id.date_input);
 
-
         //disable the button if the text has not been changed
         buttonSubmit.setEnabled(false);
         buttonSubmit.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
