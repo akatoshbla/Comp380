@@ -2,8 +2,10 @@ package com.comp380.csun.comp380;
 
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,12 +36,16 @@ public class GoalsActivity extends ActionBarActivity implements View.OnClickList
     private TextView progressBarText;
     private Button addButton;
     private final String FILENAME = "GoalsFile";
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goals);
 
+        // Init ToolBar
+        toolbar = (Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
 
         progressBar = (ProgressBar)findViewById(R.id.goalsProgressBar);
         currentGoalText = (TextView)findViewById(R.id.currentGoalTextView);
@@ -153,7 +159,8 @@ public class GoalsActivity extends ActionBarActivity implements View.OnClickList
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_goals, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        menu.removeItem(R.id.goals);
         return true;
     }
 
@@ -167,6 +174,12 @@ public class GoalsActivity extends ActionBarActivity implements View.OnClickList
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+
+        // Switch to addExpenseActivity if the plus button is pushed
+        if (id == R.id.action_add) {
+            startActivity(new Intent(this, AddExpenseActivity.class));
+            finish();
         }
 
         return super.onOptionsItemSelected(item);

@@ -48,9 +48,29 @@ public class ExpenseDisplayActivity extends ActionBarActivity implements View.On
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
 
-        dbHandler = new DatabaseHandler(this,null,null,1);
-        //set up the database cursor
-        Cursor cursor = dbHandler.getAllRows();
+        Intent intent = getIntent();
+
+        dbHandler = new DatabaseHandler(this, null, null, 1);
+
+        //set up the database cursor based on sort type
+        Cursor cursor;
+
+        if (intent != null) {
+            String sortType = intent.getStringExtra("key");
+
+            if (sortType.equals("All")) {
+                cursor = dbHandler.getAllRows();
+                TextView categoryText = (TextView)findViewById(R.id.budgetEdit);
+                categoryText.setText("All Categories");
+            } else {
+                cursor = dbHandler.getAllRowsForCategory(dbHandler.getCategoryID(sortType));
+                TextView categoryText = (TextView)findViewById(R.id.budgetEdit);
+                categoryText.setText(sortType);
+            }
+        }
+        else {
+            cursor = dbHandler.getAllRows();
+        }
 
         mColumns = dbHandler.tableNames();
 
@@ -117,8 +137,6 @@ public class ExpenseDisplayActivity extends ActionBarActivity implements View.On
 
         ListView listview = (ListView) findViewById(R.id.listViewTasks);
         listview.setAdapter(adapter);
-
-
     }
 
     /**
@@ -289,6 +307,12 @@ public class ExpenseDisplayActivity extends ActionBarActivity implements View.On
         // Switch to addExpenseActivity if the plus button is pushed
         if (id == R.id.action_add) {
             startActivity(new Intent(this, AddExpenseActivity.class));
+            finish();
+        }
+
+        // Switch to GoalsActivity if the goals button is pushed
+        if (id == R.id.goals) {
+            startActivity(new Intent(this, GoalsActivity.class));
             finish();
         }
 

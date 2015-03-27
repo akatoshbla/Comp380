@@ -127,6 +127,7 @@ public class BudgetDialogFragment extends DialogFragment implements View.OnClick
 
 
                 startActivity(displayExpenses);
+                getActivity().finish();
 
                 break;
             case R.id.cancel_button:

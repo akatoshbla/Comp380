@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -86,11 +87,12 @@ public class MainActivity extends ActionBarActivity {
             startActivity(new Intent(this, AddExpenseActivity.class));
         }
 
-        return super.onOptionsItemSelected(item);
-    }
+        // Switch to GoalsActivity if the goals button is pushed
+        if (id == R.id.goals) {
+            startActivity(new Intent(this, GoalsActivity.class));
+        }
 
-    public void displayDetails(View view) {
-        startActivity(new Intent(this, ExpenseDisplayActivity.class));
+        return super.onOptionsItemSelected(item);
     }
 
     class MyPagerAdapter extends FragmentPagerAdapter {
@@ -145,6 +147,7 @@ public class MainActivity extends ActionBarActivity {
         private DatabaseHandler db;
         private String[] categories;
         private BudgetReport budgetReport;
+        private Button details;
         private MyPieChart myPieChart;
         String tab;
 
@@ -188,6 +191,9 @@ public class MainActivity extends ActionBarActivity {
             textViewTopFour.setTypeface(Typeface.MONOSPACE);
             textViewTopFive.setTypeface(Typeface.MONOSPACE);
 
+            // Linking details button for fragment
+            details = (Button) layout.findViewById(R.id.details);
+
             // Creates a bundle with arguments from myFragment bundle
             Bundle bundle = getArguments();
             if (bundle != null) {
@@ -230,6 +236,15 @@ public class MainActivity extends ActionBarActivity {
                 RelativeLayout linearLayout = (RelativeLayout) layout.findViewById(R.id.pieChart);
                 MyPieChart myPieChart = new MyPieChart(this.getActivity(), budgetReport.getMyPieChartData(), names);
                 linearLayout.addView(myPieChart);
+
+                details.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(getActivity(), ExpenseDisplayActivity.class);
+                        intent.putExtra("key", tab);
+                        startActivity(intent);
+                    }
+                });
             }
 
             db.close();

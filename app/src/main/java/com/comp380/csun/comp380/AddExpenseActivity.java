@@ -135,6 +135,12 @@ public class AddExpenseActivity extends ActionBarActivity {
             return true;
         }
 
+        // Switch to GoalsActivity if the goals button is pushed
+        if (id == R.id.goals) {
+            startActivity(new Intent(this, GoalsActivity.class));
+            finish();
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
