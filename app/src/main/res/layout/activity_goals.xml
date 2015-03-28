@@ -1,0 +1,91 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_background"
+    tools:context="com.comp380.csun.comp380.GoalsActivity">
+
+    <include
+        android:id="@+id/app_bar"
+        layout="@layout/app_bar" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Current Goal"
+        android:id="@+id/currentGoalTextView"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/white"
+        android:layout_below="@+id/app_bar" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/goalsImageView"
+        android:background="@drawable/goal"
+        android:contentDescription="Piggy Bank Picture"
+        android:layout_below="@+id/currentGoalTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="45dp" />
+
+    <ProgressBar
+        android:id="@+id/goalsProgressBar"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:indeterminate="false"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="73dp"
+        android:max="100"
+        android:padding="2dip" />
+
+    <TextView
+        android:id="@+id/textGoalsProgress"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:layout_alignBottom="@id/goalsProgressBar"
+        android:layout_alignTop="@id/goalsProgressBar"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/white"
+        android:text="0"
+        android:background="#00000000"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Progress to Goal"
+        android:id="@+id/textView2"
+        android:layout_above="@+id/goalsProgressBar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="41dp"
+        android:textColor="@color/white" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add"
+        android:id="@+id/addButton"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:onClick="onClick"
+        android:enabled="false"
+        style="@style/Buttons" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Change Goal"
+        android:id="@+id/changeGoalButton"
+        android:layout_alignTop="@+id/addButton"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:onClick="onClick"
+        style="@style/Buttons" />
+</RelativeLayout>

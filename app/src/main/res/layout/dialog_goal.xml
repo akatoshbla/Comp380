@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Goal Name"
+        android:id="@+id/goalNameText"
+        />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/goalNameEdit"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/goalNameText"
+        android:layout_toEndOf="@id/goalNameText"
+        android:layout_marginLeft="24dp"
+        android:layout_marginStart="24dp"
+        android:maxLength="15" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Goal Cost"
+        android:id="@+id/goalCostText"
+        android:layout_below="@id/goalNameEdit"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/goalCostEdit"
+        android:layout_alignTop="@id/goalCostText"
+        android:layout_alignLeft="@id/goalNameEdit"
+        android:layout_alignStart="@id/goalCostEdit"
+        android:maxLength="12"
+        android:inputType="numberDecimal" />
+
+    <Button
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        android:id="@+id/goalsCancelButton"
+        android:layout_below="@id/goalCostEdit"
+        android:onClick="onClick"
+        style="@style/Buttons"/>
+
+    <Button
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:text="Create"
+        android:id="@+id/goalsCreateButton"
+        android:layout_below="@id/goalCostEdit"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:onClick="onClick"
+        style="@style/Buttons"/>
+
+</RelativeLayout>

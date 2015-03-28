@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
  * Created by David on 3/8/2015.
  */
 
-// TODO: Need to label methods
+// TODO: Need to label methods and the first fragment is being drawn twice on startup
 public class MainActivity extends ActionBarActivity {
 
     private Toolbar toolbar;
@@ -51,6 +52,7 @@ public class MainActivity extends ActionBarActivity {
         myPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
         myTabs = (SlidingTabLayout) findViewById(R.id.tabs);
         myTabs.setViewPager(myPager);
+
     }
 
     // Refreshes Tabs and Fragments when coming from another activity
@@ -84,9 +86,15 @@ public class MainActivity extends ActionBarActivity {
             startActivity(new Intent(this, AddExpenseActivity.class));
         }
 
+        // Switch to GoalsActivity if the goals button is pushed
+        if (id == R.id.goals) {
+            startActivity(new Intent(this, GoalsActivity.class));
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
+    // Custom Page Adapter
     class MyPagerAdapter extends FragmentPagerAdapter {
 
         private ArrayList<String> tabs;
@@ -126,6 +134,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
 
+    // Custom fragment
     public static class MyFragment extends Fragment {
 
         private TextView textViewFraction;
@@ -139,6 +148,7 @@ public class MainActivity extends ActionBarActivity {
         private DatabaseHandler db;
         private String[] categories;
         private BudgetReport budgetReport;
+        private Button details;
         private MyPieChart myPieChart;
         String tab;
 
@@ -182,6 +192,9 @@ public class MainActivity extends ActionBarActivity {
             textViewTopFour.setTypeface(Typeface.MONOSPACE);
             textViewTopFive.setTypeface(Typeface.MONOSPACE);
 
+            // Linking details button for fragment
+            details = (Button) layout.findViewById(R.id.details);
+
             // Creates a bundle with arguments from myFragment bundle
             Bundle bundle = getArguments();
             if (bundle != null) {
@@ -224,6 +237,16 @@ public class MainActivity extends ActionBarActivity {
                 RelativeLayout linearLayout = (RelativeLayout) layout.findViewById(R.id.pieChart);
                 MyPieChart myPieChart = new MyPieChart(this.getActivity(), budgetReport.getMyPieChartData(), names);
                 linearLayout.addView(myPieChart);
+
+                // Sets the details button up with a custom intent to pass
+                details.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(getActivity(), ExpenseDisplayActivity.class);
+                        intent.putExtra("key", tab);
+                        startActivity(intent);
+                    }
+                });
             }
 
             db.close();
