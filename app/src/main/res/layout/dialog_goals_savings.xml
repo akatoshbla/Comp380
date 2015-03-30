@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
+    style="@style/PasswordsTheme"
     >
 
     <TextView
@@ -10,19 +11,23 @@
         android:id="@+id/savingsText"
         android:paddingBottom="20dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textColor="@android:color/white" />
 
     <EditText
-        android:layout_width="fill_parent"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:id="@+id/amountEdit"
         android:maxLength="12"
         android:inputType="numberDecimal"
-        android:layout_below="@+id/savingsText" />
+        android:background="@android:color/white"
+        android:layout_below="@+id/savingsText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp" />
 
     <Button
         android:layout_width="140dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:text="Cancel"
         android:id="@+id/savingsCancelButton"
         android:layout_below="@id/amountEdit"
@@ -31,7 +36,7 @@
 
     <Button
         android:layout_width="140dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:text="Add"
         android:id="@+id/addSavingsButton"
         android:layout_below="@id/amountEdit"

@@ -76,6 +76,7 @@ public class BudgetPickerFragment extends DialogFragment implements View.OnClick
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         getDialog().setTitle("Choose Category");
+        getDialog().setCanceledOnTouchOutside(true);
         View view = inflater.inflate(R.layout.budget_picker,container,false);
         picker = (NumberPicker) view.findViewById(R.id.budgetPicker);
         Button doneButton = (Button)view.findViewById(R.id.doneButton);
@@ -93,6 +94,7 @@ public class BudgetPickerFragment extends DialogFragment implements View.OnClick
         for(String cat : categoryStrings){
 
             pickerOptions[i] = cat;
+
             i++;
         }
 

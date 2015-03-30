@@ -32,7 +32,7 @@ public class ExpenseDisplayActivity extends ActionBarActivity implements View.On
     //the projection of the column names
     String[] mColumns;
     DatabaseHandler dbHandler;
-
+    TextView noExpenses;
     Toolbar toolbar;
 
 
@@ -42,6 +42,8 @@ public class ExpenseDisplayActivity extends ActionBarActivity implements View.On
         setContentView(R.layout.activity_expense_display);
 
         toolbar = (Toolbar) findViewById(R.id.app_bar);
+        noExpenses = (TextView)findViewById(R.id.noExpenses);
+        TextView categoryText = (TextView)findViewById(R.id.budgetEdit);
         setSupportActionBar(toolbar);
 
         Intent intent = getIntent();
@@ -52,19 +54,21 @@ public class ExpenseDisplayActivity extends ActionBarActivity implements View.On
         //set up the database cursor based on sort type
         Cursor cursor;
 
-        if (sortType != null) {
+        //TODO should be handled in a function
+        if (dbHandler.isCategory(sortType)) {
 
-            if (sortType.equals("All")) {
-                cursor = dbHandler.getAllRows();
-                TextView categoryText = (TextView)findViewById(R.id.budgetEdit);
-                categoryText.setText("All Categories");
-            } else {
-                cursor = dbHandler.getAllRowsForCategory(dbHandler.getCategoryID(sortType));
-                TextView categoryText = (TextView)findViewById(R.id.budgetEdit);
-                categoryText.setText(sortType);
+            cursor = dbHandler.getAllRowsForCategory(dbHandler.getCategoryID(sortType));
+
+            if(!cursor.moveToFirst()){
+
+                noExpenses.setVisibility(View.VISIBLE);
             }
+
+            categoryText.setText(sortType);
         }
+
         else {
+            categoryText.setText("All Categories");
             cursor = dbHandler.getAllRows();
         }
 
@@ -112,8 +116,9 @@ public class ExpenseDisplayActivity extends ActionBarActivity implements View.On
         TextView categoryText = (TextView)findViewById(R.id.budgetEdit);
         categoryText.setText(category);
         Cursor cursor;
-        TextView noExpenses = (TextView)findViewById(R.id.noExpenses);
 
+
+        //TODO should be handled in a function
         if(dbHandler.isCategory(category))
         {
             noExpenses.setVisibility(View.GONE);
