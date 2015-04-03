@@ -1,7 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/app_background">
+    android:background="@color/app_background"
+    >
 
     <include
         android:id="@+id/app_bar"
@@ -26,11 +27,11 @@
         android:hint="Enter Cost"
         android:inputType="numberDecimal"
         android:background="@android:color/white"
-        android:layout_marginBottom="26dp"
-        android:layout_alignBottom="@+id/amountText"
-        android:layout_toRightOf="@+id/amountText"
-        android:layout_toEndOf="@+id/amountText"
-        android:maxLength="12" />
+        android:maxLength="12"
+        android:layout_above="@+id/categoryText"
+        android:layout_alignLeft="@+id/category_input"
+        android:layout_alignStart="@+id/category_input"
+        android:layout_marginBottom="25dp" />
 
     <TextView android:text="@string/category_text"
         style="@style/TextStyle"
@@ -80,7 +81,7 @@
         android:layout_above="@+id/dateText"
         android:layout_toLeftOf="@+id/showDatePicker"
         android:layout_toStartOf="@+id/showDatePicker"
-        android:layout_marginBottom="23dp"
+        android:layout_marginBottom="26dp"
         android:paddingBottom="30dp"
         android:paddingTop="30dp"
         android:layout_alignParentRight="false"
@@ -143,8 +144,8 @@
         android:layout_height="70dp"
         android:onClick="onButtonClick"
         android:background="@drawable/calender"
-        android:layout_alignBottom="@+id/dateText"
         android:layout_alignRight="@+id/submit_button"
-        android:layout_alignEnd="@+id/submit_button" />
+        android:layout_alignEnd="@+id/submit_button"
+        android:layout_alignBottom="@+id/date_input" />
 
 </RelativeLayout>
