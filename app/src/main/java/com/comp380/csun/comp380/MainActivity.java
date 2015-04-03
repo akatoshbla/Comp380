@@ -163,94 +163,92 @@ public class MainActivity extends ActionBarActivity {
         // Edit Fragments here
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+                // Declaring variables
+                db = new DatabaseHandler(this.getActivity(), null, null, 1);
+                categories = db.getCategoriesStrings();
 
-            // Declaring variables
-            db = new DatabaseHandler(this.getActivity(), null, null, 1);
-            categories = db.getCategoriesStrings();
+                // Grabs resources to dynamically change the color of the progress bar
+                Resources resources = getResources();
 
-            // Grabs resources to dynamically change the color of the progress bar
-            Resources resources = getResources();
+                // Inflater for linking the fragment layout xml to a view
+                View layout = inflater.inflate(R.layout.fragment_layout, container, false);
 
-            // Inflater for linking the fragment layout xml to a view
-            View layout = inflater.inflate(R.layout.fragment_layout, container, false);
+                // Linking the declared variables to xml objects
+                textViewFraction = (TextView) layout.findViewById(R.id.position);
+                progressBar = (ProgressBar) layout.findViewById(R.id.pBar);
+                textProgressBar = (TextView) layout.findViewById(R.id.textPBar);
+                textViewTopOne = (TextView) layout.findViewById(R.id.numOne);
+                textViewTopTwo = (TextView) layout.findViewById(R.id.numTwo);
+                textViewTopThree = (TextView) layout.findViewById(R.id.numThree);
+                textViewTopFour = (TextView) layout.findViewById(R.id.numFour);
+                textViewTopFive = (TextView) layout.findViewById(R.id.numFive);
 
-            // Linking the declared variables to xml objects
-            textViewFraction = (TextView) layout.findViewById(R.id.position);
-            progressBar = (ProgressBar) layout.findViewById(R.id.pBar);
-            textProgressBar = (TextView) layout.findViewById(R.id.textPBar);
-            textViewTopOne = (TextView) layout.findViewById(R.id.numOne);
-            textViewTopTwo = (TextView) layout.findViewById(R.id.numTwo);
-            textViewTopThree = (TextView) layout.findViewById(R.id.numThree);
-            textViewTopFour = (TextView) layout.findViewById(R.id.numFour);
-            textViewTopFive = (TextView) layout.findViewById(R.id.numFive);
+                // Sets the TypeFace (font) so that java string format works for
+                // toString prints.
+                textViewTopOne.setTypeface(Typeface.MONOSPACE);
+                textViewTopTwo.setTypeface(Typeface.MONOSPACE);
+                textViewTopThree.setTypeface(Typeface.MONOSPACE);
+                textViewTopFour.setTypeface(Typeface.MONOSPACE);
+                textViewTopFive.setTypeface(Typeface.MONOSPACE);
 
-            // Sets the TypeFace (font) so that java string format works for
-            // toString prints.
-            textViewTopOne.setTypeface(Typeface.MONOSPACE);
-            textViewTopTwo.setTypeface(Typeface.MONOSPACE);
-            textViewTopThree.setTypeface(Typeface.MONOSPACE);
-            textViewTopFour.setTypeface(Typeface.MONOSPACE);
-            textViewTopFive.setTypeface(Typeface.MONOSPACE);
+                // Linking details button for fragment
+                details = (Button) layout.findViewById(R.id.details);
 
-            // Linking details button for fragment
-            details = (Button) layout.findViewById(R.id.details);
+                // Creates a bundle with arguments from myFragment bundle
+                Bundle bundle = getArguments();
+                if (bundle != null) {
 
-            // Creates a bundle with arguments from myFragment bundle
-            Bundle bundle = getArguments();
-            if (bundle != null) {
-
-                // Creates a BudgetReport object based on current tab
-                if (bundle.getInt("position") == 0) {
-                    budgetReport = new BudgetReport(db, "All");
-                    tab = "All";
-                }
-                else {
-                    budgetReport = new BudgetReport(db, categories[bundle.getInt("position") - 1]);
-                    tab = categories[bundle.getInt("position") - 1];
-                }
-
-                // Sets the top viewer in the Main Screen Fragment
-                textViewFraction.setText(budgetReport.getBudgetCurrent() + " / " +
-                        budgetReport.getBudgetMax());
-
-                // Setup of the progress bar (color, percent, progress)
-                progressBar.setProgress(budgetReport.getProgressBar());
-                progressBar.setProgressDrawable(resources.getDrawable(budgetReport.getProgressBarColor()));
-                textProgressBar.setText(budgetReport.getProgressBar() + "%");
-
-                // Testing white color percent over the progress color
-                if (budgetReport.getProgressBar() < 1000) {
-                    textProgressBar.setTextColor(getResources().getColor(R.color.white));
-                }
-
-                // Sets TextViews for top five expenses
-                textViewTopOne.setText(budgetReport.getTopFiveExpenses(0));
-                textViewTopTwo.setText(budgetReport.getTopFiveExpenses(1));
-                textViewTopThree.setText(budgetReport.getTopFiveExpenses(2));
-                textViewTopFour.setText(budgetReport.getTopFiveExpenses(3));
-                textViewTopFive.setText(budgetReport.getTopFiveExpenses(4));
-                String[] names = {budgetReport.getExpenseNames(0).getTransactionName(), budgetReport.getExpenseNames(1).getTransactionName(),
-                        budgetReport.getExpenseNames(2).getTransactionName(), budgetReport.getExpenseNames(3).getTransactionName(),
-                        budgetReport.getExpenseNames(4).getTransactionName()};
-
-                // Sets the pie chart up
-                RelativeLayout linearLayout = (RelativeLayout) layout.findViewById(R.id.pieChart);
-                MyPieChart myPieChart = new MyPieChart(this.getActivity(), budgetReport.getMyPieChartData(), names);
-                linearLayout.addView(myPieChart);
-
-                // Sets the details button up with a custom intent to pass
-                details.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(getActivity(), ExpenseDisplayActivity.class);
-                        intent.putExtra("key", tab);
-                        startActivity(intent);
+                    // Creates a BudgetReport object based on current tab (fix double pie created here)
+                    if (bundle.getInt("position") == 0) {
+                        budgetReport = new BudgetReport(db, "All");
+                        tab = "All";
+                    } else {
+                        budgetReport = new BudgetReport(db, categories[bundle.getInt("position") - 1]);
+                        tab = categories[bundle.getInt("position") - 1];
                     }
-                });
-            }
 
-            db.close();
-            return layout;
-        }
+                    // Sets the top viewer in the Main Screen Fragment
+                    textViewFraction.setText(budgetReport.getBudgetCurrent() + " / " +
+                            budgetReport.getBudgetMax());
+
+                    // Setup of the progress bar (color, percent, progress)
+                    progressBar.setProgress(budgetReport.getProgressBar());
+                    progressBar.setProgressDrawable(resources.getDrawable(budgetReport.getProgressBarColor()));
+                    textProgressBar.setText(budgetReport.getProgressBar() + "%");
+
+                    // Testing white color percent over the progress color
+                    if (budgetReport.getProgressBar() < 1000) {
+                        textProgressBar.setTextColor(getResources().getColor(R.color.white));
+                    }
+
+                    // Sets TextViews for top five expenses
+                    textViewTopOne.setText(budgetReport.getTopFiveExpenses(0));
+                    textViewTopTwo.setText(budgetReport.getTopFiveExpenses(1));
+                    textViewTopThree.setText(budgetReport.getTopFiveExpenses(2));
+                    textViewTopFour.setText(budgetReport.getTopFiveExpenses(3));
+                    textViewTopFive.setText(budgetReport.getTopFiveExpenses(4));
+                    String[] names = {budgetReport.getExpenseNames(0).getTransactionName(), budgetReport.getExpenseNames(1).getTransactionName(),
+                            budgetReport.getExpenseNames(2).getTransactionName(), budgetReport.getExpenseNames(3).getTransactionName(),
+                            budgetReport.getExpenseNames(4).getTransactionName()};
+
+                    // Sets the pie chart up
+                    RelativeLayout linearLayout = (RelativeLayout) layout.findViewById(R.id.pieChart);
+                    MyPieChart myPieChart = new MyPieChart(this.getActivity(), budgetReport.getMyPieChartData(), names);
+                    linearLayout.addView(myPieChart);
+
+                    // Sets the details button up with a custom intent to pass
+                    details.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(getActivity(), ExpenseDisplayActivity.class);
+                            intent.putExtra("key", tab);
+                            startActivity(intent);
+                        }
+                    });
+                }
+
+                db.close();
+                return layout;
+            }
     }
 }

@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.util.Log;
 import android.view.View;
 
 /**
@@ -16,7 +15,7 @@ public class MyPieChart extends View {
     private float[] valueDegree;
     private String[] names;
     RectF rectf = new RectF(120, 120, 380, 380);
-    float temp = 0;
+    float temp;
 
     public MyPieChart(Context context, float[] values, String[] names) {
         super(context);
@@ -29,6 +28,7 @@ public class MyPieChart extends View {
         super.onDraw(canvas);
 
         int offsetY = 40;
+        temp = 0;
 
         // 0 Light Blue, 1 Light Green, 2 Yellow, 3 Orange, 4 Magenta
         int[] colors = {Color.rgb(51, 255, 255),
@@ -38,21 +38,19 @@ public class MyPieChart extends View {
                 Color.rgb(255, 51, 255)};
 
 
-            for (int i = 0; i < names.length && !names[i].equals(""); i++) {
-                if (i == 0) {
-                    paint.setColor(colors[i]);
-                    canvas.drawArc(rectf, 0, valueDegree[i], true, paint);
-                    Log.v("valueDegree:", i + " : " + valueDegree[i]);
-                    paint.setTextSize(20);
-                    canvas.drawText(names[i], 0, 40, paint);
-                } else {
-                    temp += valueDegree[i - 1];
-                    paint.setColor(colors[i]);
-                    canvas.drawArc(rectf, temp, valueDegree[i], true, paint);
-                    Log.v("valueDegree:", i + " : " + valueDegree[i]);
-                    paint.setTextSize(20);
-                    canvas.drawText(names[i], 0, offsetY += 20, paint);
-                }
+        for (int i = 0; i < names.length && !names[i].equals(""); i++) {
+            if (i == 0) {
+                paint.setColor(colors[i]);
+                canvas.drawArc(rectf, 0, valueDegree[i], true, paint);
+                paint.setTextSize(20);
+                canvas.drawText(names[i], 0, 40, paint);
+            } else {
+                temp += valueDegree[i - 1];
+                paint.setColor(colors[i]);
+                canvas.drawArc(rectf, temp, valueDegree[i], true, paint);
+                paint.setTextSize(20);
+                canvas.drawText(names[i], 0, offsetY += 20, paint);
             }
+        }
     }
 }

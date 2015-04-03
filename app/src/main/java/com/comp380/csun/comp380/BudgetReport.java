@@ -175,6 +175,7 @@ public class BudgetReport {
                 myPieChartData[i] = 360 * (topFiveExpenses.get(i).getCost() / total);
             }
         }
+        // Need this for show to user on an empty category / vendor???
         else {
             myPieChartData = new float[2];
             myPieChartData[0] = 50;
