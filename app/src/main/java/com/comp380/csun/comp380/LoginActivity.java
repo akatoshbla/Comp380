@@ -35,9 +35,9 @@ public class LoginActivity extends ActionBarActivity {
 
         //TEST open the expense viewer FOR TESTING PURPOSES ---------------------
         //create intent for ExpenseDisplayActivity
-        Intent displayExpenses = new Intent(this, AddExpenseActivity.class);
+        //Intent displayExpenses = new Intent(this, AddExpenseActivity.class);
 
-        startActivity(displayExpenses);
+        //startActivity(displayExpenses);
 
         //------------------------------------------
 

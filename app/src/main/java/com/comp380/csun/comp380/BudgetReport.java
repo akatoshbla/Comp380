@@ -204,7 +204,7 @@ public class BudgetReport {
 
         public String toString() {
 
-            String temp = String.format("%-20s%6.2f", transactionName, transactionCost);
+            String temp = String.format("%-20s%s%-6.2f", transactionName, "$", +transactionCost);
             return temp;
         }
     }

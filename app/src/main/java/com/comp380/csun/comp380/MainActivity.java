@@ -185,6 +185,7 @@ public class MainActivity extends ActionBarActivity {
 
                 // Sets the TypeFace (font) so that java string format works for
                 // toString prints.
+                textViewFraction.setTypeface(Typeface.MONOSPACE);
                 textViewTopOne.setTypeface(Typeface.MONOSPACE);
                 textViewTopTwo.setTypeface(Typeface.MONOSPACE);
                 textViewTopThree.setTypeface(Typeface.MONOSPACE);
@@ -208,8 +209,8 @@ public class MainActivity extends ActionBarActivity {
                     }
 
                     // Sets the top viewer in the Main Screen Fragment
-                    textViewFraction.setText(budgetReport.getBudgetCurrent() + " / " +
-                            budgetReport.getBudgetMax());
+                    textViewFraction.setText("$" + budgetReport.getBudgetCurrent() + " / " +
+                            "$" + budgetReport.getBudgetMax());
 
                     // Setup of the progress bar (color, percent, progress)
                     progressBar.setProgress(budgetReport.getProgressBar());
