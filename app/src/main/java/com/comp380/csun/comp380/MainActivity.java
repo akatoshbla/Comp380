@@ -28,9 +28,9 @@ import java.util.ArrayList;
  * Created by David on 3/8/2015.
  */
 
-// TODO: Need to label methods and the first fragment is being drawn twice on startup
 public class MainActivity extends ActionBarActivity {
 
+    // Declared Variables
     private Toolbar toolbar;
     private ViewPager myPager;
     private SlidingTabLayout myTabs;
@@ -138,6 +138,7 @@ public class MainActivity extends ActionBarActivity {
     // Custom fragment
     public static class MyFragment extends Fragment {
 
+        // Declared Variables
         private TextView textViewFraction;
         private ProgressBar progressBar;
         private TextView textProgressBar;
@@ -158,6 +159,7 @@ public class MainActivity extends ActionBarActivity {
         private MyPieChart myPieChart;
         String tab;
 
+        // Fragment class for the creating and managing fragments
         public static MyFragment getInstance(int position) {
             MyFragment myFragment = new MyFragment();
             Bundle args = new Bundle();
@@ -194,15 +196,6 @@ public class MainActivity extends ActionBarActivity {
                 textViewTopFive = (TextView) layout.findViewById(R.id.numFive);
                 textViewTopFiveNumber = (TextView) layout.findViewById(R.id.numFiveNumber);
 
-                // Sets the TypeFace (font) so that java string format works for
-                // toString prints.
-                //textViewFraction.setTypeface(Typeface.MONOSPACE);
-                //textViewTopOne.setTypeface(Typeface.MONOSPACE);
-                //textViewTopTwo.setTypeface(Typeface.MONOSPACE);
-                //textViewTopThree.setTypeface(Typeface.MONOSPACE);
-                //textViewTopFour.setTypeface(Typeface.MONOSPACE);
-                //textViewTopFive.setTypeface(Typeface.MONOSPACE);
-
                 // Linking details button for fragment
                 details = (Button) layout.findViewById(R.id.details);
 
@@ -228,11 +221,6 @@ public class MainActivity extends ActionBarActivity {
                     progressBar.setProgress(budgetReport.getProgressBar());
                     progressBar.setProgressDrawable(resources.getDrawable(budgetReport.getProgressBarColor()));
                     textProgressBar.setText(budgetReport.getProgressBar() + "%");
-
-/*                    // Testing white color percent over the progress color
-                    if (budgetReport.getProgressBar() < 1000) {
-                        textProgressBar.setTextColor(getResources().getColor(R.color.white));
-                    }*/
 
                     // Sets TextViews for top five expenses
                     textViewTopOne.setText(budgetReport.getTopFiveExpenses(0).getTransactionName());

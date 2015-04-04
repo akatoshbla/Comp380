@@ -11,9 +11,9 @@ import java.util.Comparator;
  * Created by David on 3/11/2015.
  */
 
-// TODO: Need to label methods
 public class BudgetReport {
 
+    // Declared variables
     private DatabaseHandler db;
     private int budgetCurrent;
     private int budgetMax;
@@ -22,6 +22,7 @@ public class BudgetReport {
     private float[] myPieChartData;
     private ArrayList<Transaction> topFiveExpenses;
 
+    // BudgetReport Constructor
     public BudgetReport(DatabaseHandler db, String tabName) {
         this.db = db;
 
@@ -34,6 +35,7 @@ public class BudgetReport {
         db.close();
     }
 
+    // Get Methods
     public int getBudgetCurrent() {
         return budgetCurrent;
     }
@@ -55,12 +57,9 @@ public class BudgetReport {
             return topFiveExpenses.get(position);
         }
         return new Transaction();
-/*        if (topFiveExpenses != null && position < topFiveExpenses.size()) {
-            return topFiveExpenses.get(position).toString();
-        }
-        return "";*/
     }
 
+    // TODO: Fix issue with no vendor name, but a cost
     public Transaction getExpenseNames(int position) {
         if (topFiveExpenses != null && position < topFiveExpenses.size()) {
             return topFiveExpenses.get(position);
@@ -68,7 +67,7 @@ public class BudgetReport {
         return new Transaction("", 0);
     }
 
-
+    // Get method for Pie Chart
     public float[] getMyPieChartData() { return myPieChartData; }
 
     // This method will set the budgetCurrent and topFiveExpenses ArrayList
@@ -111,7 +110,6 @@ public class BudgetReport {
             }
 
         budgetCurrent = totalBudgetSum;
-        //sortTransactions(topFiveExpenses);
 
         if (totalBudgetSum == 0) {
             budgetCurrent = 0;
@@ -119,13 +117,6 @@ public class BudgetReport {
             topFiveExpenses = null;
         }
     }
-
-    // This method will setup the Top 5 Categories and costs in a TreeMap with a
-    // Transaction object as the value.
-/*    private void sortTransactions(ArrayList<Transaction> alist) {
-        TransactionComparator comparator = new TransactionComparator();
-        Collections.sort(alist, comparator);
-    }*/
 
     // Access the db and sets the budgetMax based on tabName shown
     private void setBudgetMax(String tabName) {
@@ -168,6 +159,7 @@ public class BudgetReport {
         }
     }
 
+    // Calculating degree of circle for Pie Chart
     private void setMyPieChartData() {
         float total = 0;
 
@@ -191,18 +183,23 @@ public class BudgetReport {
     // Object for the Transactions that are put into an ArrayList(DataStructure)
     public static class Transaction {
 
+        // Declared variables
         private String transactionName;
         private float transactionCost;
 
+        // Default constructor
         public Transaction() {
             transactionName = "";
             transactionCost = 0;
         }
+
+        // Transaction constructor with signature
         public Transaction(String name, float cost) {
             transactionName = name;
             transactionCost = cost;
         }
 
+        // Get methods
         public String getTransactionName() {
             return transactionName;
         }
@@ -217,30 +214,5 @@ public class BudgetReport {
 
             return "";
         }
-
-        public String toString() {
-
-            String temp = String.format("%-20s%s%6.2f", transactionName, "$", +transactionCost);
-            return temp;
-        }
     }
-
-/*    public static class TransactionComparator implements Comparator<Transaction> {
-
-        @Override
-        public int compare(Transaction tOne, Transaction tTwo) {
-            Float costOne = tOne.getCost();
-            Float costTwo = tTwo.getCost();
-
-            if (costOne > costTwo) {
-                return -1;
-            }
-            else if (costOne  < costTwo) {
-                return 1;
-            }
-            else {
-                return 0;
-            }
-        }
-    }*/
 }
