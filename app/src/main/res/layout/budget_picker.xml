@@ -8,14 +8,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/budgetPicker"
-        android:layout_weight="0.12" />
+        android:layout_weight="0.12"
+        android:gravity="fill_horizontal"
+        android:theme="@android:style/Theme.Holo"
+        />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
         android:text="Done"
         android:id="@+id/doneButton"
         android:onClick="onClick"
         android:layout_gravity="center_horizontal"
-        android:layout_weight="0.12" />
+        style="@style/Buttons"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp" />
 </LinearLayout>

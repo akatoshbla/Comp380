@@ -87,6 +87,7 @@ public class GoalsDialogFragment extends DialogFragment implements View.OnClickL
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         getDialog().setTitle("Create Goal");
+        getDialog().setCanceledOnTouchOutside(true);
         View view = inflater.inflate(R.layout.dialog_goal,container,false);
         Button cancelButton = (Button)view.findViewById(R.id.goalsCancelButton);
         cancelButton.setOnClickListener(this);
@@ -171,5 +172,7 @@ public class GoalsDialogFragment extends DialogFragment implements View.OnClickL
 
         return view;
     }
+
+
 
 }
