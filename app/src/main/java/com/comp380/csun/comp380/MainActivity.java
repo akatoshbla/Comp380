@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -141,10 +142,15 @@ public class MainActivity extends ActionBarActivity {
         private ProgressBar progressBar;
         private TextView textProgressBar;
         private TextView textViewTopOne;
+        private TextView textViewTopOneNumber;
         private TextView textViewTopTwo;
+        private TextView textViewTopTwoNumber;
         private TextView textViewTopThree;
+        private TextView textViewTopThreeNumber;
         private TextView textViewTopFour;
+        private TextView textViewTopFourNumber;
         private TextView textViewTopFive;
+        private TextView textViewTopFiveNumber;
         private DatabaseHandler db;
         private String[] categories;
         private BudgetReport budgetReport;
@@ -178,19 +184,24 @@ public class MainActivity extends ActionBarActivity {
                 progressBar = (ProgressBar) layout.findViewById(R.id.pBar);
                 textProgressBar = (TextView) layout.findViewById(R.id.textPBar);
                 textViewTopOne = (TextView) layout.findViewById(R.id.numOne);
+                textViewTopOneNumber = (TextView) layout.findViewById(R.id.numOneNumber);
                 textViewTopTwo = (TextView) layout.findViewById(R.id.numTwo);
+                textViewTopTwoNumber = (TextView) layout.findViewById(R.id.numTwoNumber);
                 textViewTopThree = (TextView) layout.findViewById(R.id.numThree);
+                textViewTopThreeNumber = (TextView) layout.findViewById(R.id.numThreeNumber);
                 textViewTopFour = (TextView) layout.findViewById(R.id.numFour);
+                textViewTopFourNumber = (TextView) layout.findViewById(R.id.numFourNumber);
                 textViewTopFive = (TextView) layout.findViewById(R.id.numFive);
+                textViewTopFiveNumber = (TextView) layout.findViewById(R.id.numFiveNumber);
 
                 // Sets the TypeFace (font) so that java string format works for
                 // toString prints.
-                textViewFraction.setTypeface(Typeface.MONOSPACE);
-                textViewTopOne.setTypeface(Typeface.MONOSPACE);
-                textViewTopTwo.setTypeface(Typeface.MONOSPACE);
-                textViewTopThree.setTypeface(Typeface.MONOSPACE);
-                textViewTopFour.setTypeface(Typeface.MONOSPACE);
-                textViewTopFive.setTypeface(Typeface.MONOSPACE);
+                //textViewFraction.setTypeface(Typeface.MONOSPACE);
+                //textViewTopOne.setTypeface(Typeface.MONOSPACE);
+                //textViewTopTwo.setTypeface(Typeface.MONOSPACE);
+                //textViewTopThree.setTypeface(Typeface.MONOSPACE);
+                //textViewTopFour.setTypeface(Typeface.MONOSPACE);
+                //textViewTopFive.setTypeface(Typeface.MONOSPACE);
 
                 // Linking details button for fragment
                 details = (Button) layout.findViewById(R.id.details);
@@ -209,25 +220,31 @@ public class MainActivity extends ActionBarActivity {
                     }
 
                     // Sets the top viewer in the Main Screen Fragment
-                    textViewFraction.setText("$" + budgetReport.getBudgetCurrent() + " / " +
-                            "$" + budgetReport.getBudgetMax());
+                    DecimalFormat cost = new DecimalFormat("$###,###,###.00");
+                    textViewFraction.setText(cost.format(budgetReport.getBudgetCurrent()) + " / " +
+                            cost.format(budgetReport.getBudgetMax()));
 
                     // Setup of the progress bar (color, percent, progress)
                     progressBar.setProgress(budgetReport.getProgressBar());
                     progressBar.setProgressDrawable(resources.getDrawable(budgetReport.getProgressBarColor()));
                     textProgressBar.setText(budgetReport.getProgressBar() + "%");
 
-                    // Testing white color percent over the progress color
+/*                    // Testing white color percent over the progress color
                     if (budgetReport.getProgressBar() < 1000) {
                         textProgressBar.setTextColor(getResources().getColor(R.color.white));
-                    }
+                    }*/
 
                     // Sets TextViews for top five expenses
-                    textViewTopOne.setText(budgetReport.getTopFiveExpenses(0));
-                    textViewTopTwo.setText(budgetReport.getTopFiveExpenses(1));
-                    textViewTopThree.setText(budgetReport.getTopFiveExpenses(2));
-                    textViewTopFour.setText(budgetReport.getTopFiveExpenses(3));
-                    textViewTopFive.setText(budgetReport.getTopFiveExpenses(4));
+                    textViewTopOne.setText(budgetReport.getTopFiveExpenses(0).getTransactionName());
+                    textViewTopOneNumber.setText(budgetReport.getTopFiveExpenses(0).getTransactionCostString());
+                    textViewTopTwo.setText(budgetReport.getTopFiveExpenses(1).getTransactionName());
+                    textViewTopTwoNumber.setText(budgetReport.getTopFiveExpenses(1).getTransactionCostString());
+                    textViewTopThree.setText(budgetReport.getTopFiveExpenses(2).getTransactionName());
+                    textViewTopThreeNumber.setText(budgetReport.getTopFiveExpenses(2).getTransactionCostString());
+                    textViewTopFour.setText(budgetReport.getTopFiveExpenses(3).getTransactionName());
+                    textViewTopFourNumber.setText(budgetReport.getTopFiveExpenses(3).getTransactionCostString());
+                    textViewTopFive.setText(budgetReport.getTopFiveExpenses(4).getTransactionName());
+                    textViewTopFiveNumber.setText(budgetReport.getTopFiveExpenses(4).getTransactionCostString());
                     String[] names = {budgetReport.getExpenseNames(0).getTransactionName(), budgetReport.getExpenseNames(1).getTransactionName(),
                             budgetReport.getExpenseNames(2).getTransactionName(), budgetReport.getExpenseNames(3).getTransactionName(),
                             budgetReport.getExpenseNames(4).getTransactionName()};

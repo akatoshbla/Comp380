@@ -47,7 +47,8 @@
         android:layout_alignTop="@id/pBar"
         android:layout_centerHorizontal="true"
         android:background="#00000000"
-        android:text="@string/textPBar"/>
+        android:text="@string/textPBar"
+        android:textColor="@color/white" />
 
     <TextView
         android:id="@+id/topFive"
@@ -70,8 +71,21 @@
         android:text="@string/expense_one"
         android:textColor="@color/white"
         android:textSize="20sp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
+        android:paddingLeft="40dp" />
+
+    <TextView
+        android:id="@+id/numOneNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/topFive"
+        android:paddingTop="10dp"
+        android:text="@string/sampleNumber"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:paddingRight="40dp"
+        android:paddingEnd="40dp" />
 
     <TextView
         android:id="@+id/numTwo"
@@ -81,8 +95,20 @@
         android:text="@string/expense_two"
         android:textColor="@color/white"
         android:textSize="20sp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
+        android:paddingLeft="40dp" />
+
+    <TextView
+        android:id="@+id/numTwoNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/numOne"
+        android:text="@string/sampleNumber"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:paddingRight="40dp"
+        android:paddingEnd="40dp" />
 
     <TextView
         android:id="@+id/numThree"
@@ -92,8 +118,20 @@
         android:text="@string/expense_three"
         android:textColor="@color/white"
         android:textSize="20sp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
+        android:paddingLeft="40dp" />
+
+    <TextView
+        android:id="@+id/numThreeNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/numTwo"
+        android:text="@string/sampleNumber"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:paddingRight="40dp"
+        android:paddingEnd="40dp" />
 
     <TextView
         android:id="@+id/numFour"
@@ -103,8 +141,20 @@
         android:text="@string/expense_four"
         android:textColor="@color/white"
         android:textSize="20sp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
+        android:paddingLeft="40dp" />
+
+    <TextView
+        android:id="@+id/numFourNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/numThree"
+        android:text="@string/sampleNumber"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:paddingRight="40dp"
+        android:paddingEnd="40dp" />
 
     <TextView
         android:id="@+id/numFive"
@@ -114,8 +164,20 @@
         android:text="@string/expense_five"
         android:textColor="@color/white"
         android:textSize="20sp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
+        android:paddingLeft="40dp" />
+
+    <TextView
+        android:id="@+id/numFiveNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/numFour"
+        android:text="@string/sampleNumber"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:paddingRight="40dp"
+        android:paddingEnd="40dp" />
 
     <RelativeLayout
         android:id="@+id/pieChart"
