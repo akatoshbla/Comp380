@@ -38,6 +38,7 @@ public class GoalsSavingsDialog extends DialogFragment implements View.OnClickLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         getDialog().setTitle("Add to Savings");
+        getDialog().setCanceledOnTouchOutside(true);
         View view = inflater.inflate(R.layout.dialog_goals_savings,container,false);
         amountBox = (EditText) view.findViewById(R.id.amountEdit);
         addButton = (Button) view.findViewById(R.id.addSavingsButton);

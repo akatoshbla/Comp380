@@ -2,6 +2,7 @@ package com.comp380.csun.comp380;
 
 import android.database.Cursor;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -10,9 +11,9 @@ import java.util.Comparator;
  * Created by David on 3/11/2015.
  */
 
-// TODO: Need to label methods
 public class BudgetReport {
 
+    // Declared variables
     private DatabaseHandler db;
     private int budgetCurrent;
     private int budgetMax;
@@ -21,6 +22,7 @@ public class BudgetReport {
     private float[] myPieChartData;
     private ArrayList<Transaction> topFiveExpenses;
 
+    // BudgetReport Constructor
     public BudgetReport(DatabaseHandler db, String tabName) {
         this.db = db;
 
@@ -33,6 +35,7 @@ public class BudgetReport {
         db.close();
     }
 
+    // Get Methods
     public int getBudgetCurrent() {
         return budgetCurrent;
     }
@@ -49,13 +52,14 @@ public class BudgetReport {
         return progressBar;
     }
 
-    public String getTopFiveExpenses(int position) {
-        if (topFiveExpenses != null && position < topFiveExpenses.size()) {
-            return topFiveExpenses.get(position).toString();
+    public Transaction getTopFiveExpenses(int position) {
+        if (topFiveExpenses != null && position <topFiveExpenses.size()) {
+            return topFiveExpenses.get(position);
         }
-        return "";
+        return new Transaction();
     }
 
+    // TODO: Fix issue with no vendor name, but a cost
     public Transaction getExpenseNames(int position) {
         if (topFiveExpenses != null && position < topFiveExpenses.size()) {
             return topFiveExpenses.get(position);
@@ -63,7 +67,7 @@ public class BudgetReport {
         return new Transaction("", 0);
     }
 
-
+    // Get method for Pie Chart
     public float[] getMyPieChartData() { return myPieChartData; }
 
     // This method will set the budgetCurrent and topFiveExpenses ArrayList
@@ -106,20 +110,12 @@ public class BudgetReport {
             }
 
         budgetCurrent = totalBudgetSum;
-        sortTransactions(topFiveExpenses);
 
         if (totalBudgetSum == 0) {
             budgetCurrent = 0;
             budgetMax = 150;
             topFiveExpenses = null;
         }
-    }
-
-    // This method will setup the Top 5 Categories and costs in a TreeMap with a
-    // Transaction object as the value.
-    private void sortTransactions(ArrayList<Transaction> alist) {
-        TransactionComparator comparator = new TransactionComparator();
-        Collections.sort(alist, comparator);
     }
 
     // Access the db and sets the budgetMax based on tabName shown
@@ -163,16 +159,17 @@ public class BudgetReport {
         }
     }
 
+    // Calculating degree of circle for Pie Chart
     private void setMyPieChartData() {
         float total = 0;
 
         if (topFiveExpenses != null) {
             myPieChartData = new float[topFiveExpenses.size()];
             for (int i = 0; i < myPieChartData.length; i++) {
-                total += topFiveExpenses.get(i).getCost();
+                total += topFiveExpenses.get(i).getTransactionCost();
             }
             for (int i = 0; i < myPieChartData.length; i++) {
-                myPieChartData[i] = 360 * (topFiveExpenses.get(i).getCost() / total);
+                myPieChartData[i] = 360 * (topFiveExpenses.get(i).getTransactionCost() / total);
             }
         }
         // Need this for show to user on an empty category / vendor???
@@ -186,45 +183,36 @@ public class BudgetReport {
     // Object for the Transactions that are put into an ArrayList(DataStructure)
     public static class Transaction {
 
+        // Declared variables
         private String transactionName;
         private float transactionCost;
 
+        // Default constructor
+        public Transaction() {
+            transactionName = "";
+            transactionCost = 0;
+        }
+
+        // Transaction constructor with signature
         public Transaction(String name, float cost) {
             transactionName = name;
             transactionCost = cost;
         }
 
+        // Get methods
         public String getTransactionName() {
             return transactionName;
         }
 
-        public float getCost()  {
-            return transactionCost;
-        }
+        public float getTransactionCost() { return transactionCost; }
 
-        public String toString() {
-
-            String temp = String.format("%-20s%6.2f", transactionName, transactionCost);
-            return temp;
-        }
-    }
-
-    public static class TransactionComparator implements Comparator<Transaction> {
-
-        @Override
-        public int compare(Transaction tOne, Transaction tTwo) {
-            Float costOne = tOne.getCost();
-            Float costTwo = tTwo.getCost();
-
-            if (costOne > costTwo) {
-                return -1;
+        public String getTransactionCostString()  {
+            DecimalFormat cost = new DecimalFormat("$###,###,###.00");
+            if (transactionCost > 0) {
+                return cost.format(transactionCost);
             }
-            else if (costOne  < costTwo) {
-                return 1;
-            }
-            else {
-                return 0;
-            }
+
+            return "";
         }
     }
 }

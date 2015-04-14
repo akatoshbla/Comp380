@@ -19,7 +19,8 @@
         </activity>
         <activity
             android:name=".AddExpenseActivity"
-            android:label="@string/app_name">
+            android:theme="@style/ThemeForDialogs"
+            android:label="Add Expense">
 
             </activity>
         <activity
@@ -31,10 +32,11 @@
             android:name=".WelcomeActivity"
             android:theme="@style/PasswordsTheme">
 
-            </activity>
+        </activity>
         <activity
             android:name=".ExpenseDisplayActivity"
-            android:label="@string/app_name">
+            android:theme="@style/ThemeForDialogs"
+            android:label="Expense Display">
 
             </activity>
         <activity
@@ -43,7 +45,8 @@
         </activity>
         <activity
             android:name=".GoalsActivity"
-            android:label="@string/app_name">
+            android:theme="@style/ThemeForDialogs"
+            android:label="Goals">
         </activity>
     </application>
 

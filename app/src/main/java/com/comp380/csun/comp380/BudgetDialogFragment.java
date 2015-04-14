@@ -34,8 +34,6 @@ public class BudgetDialogFragment extends DialogFragment implements View.OnClick
     private DatabaseHandler dbHandler;
     Button create;
 
-
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,6 +42,7 @@ public class BudgetDialogFragment extends DialogFragment implements View.OnClick
 
         //create a view for the dialog
         getDialog().setTitle(title);
+        getDialog().setCanceledOnTouchOutside(true);
         View v = inflater.inflate(R.layout.dialog_budget_display,container,false);
 
         create = (Button)v.findViewById(R.id.createCat_button);
@@ -96,6 +95,10 @@ public class BudgetDialogFragment extends DialogFragment implements View.OnClick
 
     }
 
+    /**
+     * Handle clicks from the budget dialog fragment
+     * @param v
+     */
     @Override
     public void onClick(View v) {
 
@@ -106,7 +109,6 @@ public class BudgetDialogFragment extends DialogFragment implements View.OnClick
                 int limit;
 
                 if(limitBox.getText().toString().equals("")){
-
 
                     limit = 10;
 

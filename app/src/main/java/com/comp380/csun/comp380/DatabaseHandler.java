@@ -68,7 +68,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String CREATE_CATEGORIES_TABLE = "CREATE TABLE " +
                 TABLE_CATEGORIES + "("
                 + COLUMN_CATID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_CATDESC
-                + " TEXT UNIQUE," + COLUMN_BUDGET + " Integer DEFAULT 10)";
+                + " TEXT UNIQUE," + COLUMN_BUDGET + " REAL DEFAULT 10)";
 
         //password table
         String CREATE_PASSWORD_TABLE  = "CREATE TABLE " +
@@ -195,7 +195,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 categories[i] = category;
                 i++;
             }
-            db.close();
+            cursor.close();
             return categories;
         }
         System.out.print("Error reading categories to string");
