@@ -2,7 +2,6 @@ package com.comp380.csun.comp380;
 
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -217,6 +216,7 @@ public class MainActivity extends ActionBarActivity {
                     textViewFraction.setText(cost.format(budgetReport.getBudgetCurrent()) + " / " +
                             cost.format(budgetReport.getBudgetMax()));
 
+                    // TODO: On a clean run when adding an expense and moving back to main the bar is not colored
                     // Setup of the progress bar (color, percent, progress)
                     progressBar.setProgress(budgetReport.getProgressBar());
                     progressBar.setProgressDrawable(resources.getDrawable(budgetReport.getProgressBarColor()));
