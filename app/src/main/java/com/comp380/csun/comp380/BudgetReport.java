@@ -4,8 +4,6 @@ import android.database.Cursor;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 /**
  * Created by David on 3/11/2015.
@@ -15,8 +13,8 @@ public class BudgetReport {
 
     // Declared variables
     private DatabaseHandler db;
-    private int budgetCurrent;
-    private int budgetMax;
+    private float budgetCurrent;
+    private float budgetMax;
     private int progressBarColor;
     private int progressBar;
     private float[] myPieChartData;
@@ -36,11 +34,11 @@ public class BudgetReport {
     }
 
     // Get Methods
-    public int getBudgetCurrent() {
+    public float getBudgetCurrent() {
         return budgetCurrent;
     }
 
-    public int getBudgetMax() {
+    public float getBudgetMax() {
         return budgetMax;
     }
 
@@ -73,14 +71,13 @@ public class BudgetReport {
     // This method will set the budgetCurrent and topFiveExpenses ArrayList
     private void setBudgetReport(String tabName) {
 
-        int totalBudgetSum = 0;
+        float totalBudgetSum = 0;
         topFiveExpenses = new ArrayList<>();
         Cursor cursor;
         Transaction transaction;
 
         if (tabName.equals("All")) {
             cursor = db.categoryByCost();
-            budgetMax = 150; // Testing purposes
 
             if (cursor != null) {
                 // Linear search through list to get total Budget - Categories
@@ -95,7 +92,6 @@ public class BudgetReport {
         }
         else {
                 cursor = db.vendorByCost(tabName);
-                budgetMax = 150; //  Testing Purposes
 
                 if (cursor != null) {
                     // Linear search through list to get total Budget - Vendors
@@ -112,8 +108,7 @@ public class BudgetReport {
         budgetCurrent = totalBudgetSum;
 
         if (totalBudgetSum == 0) {
-            budgetCurrent = 0;
-            budgetMax = 150;
+            budgetMax = 0;
             topFiveExpenses = null;
         }
     }
@@ -122,7 +117,7 @@ public class BudgetReport {
     private void setBudgetMax(String tabName) {
         if (tabName.equals("All")) {
             // TODO: Add all the category incomes up and set to budgetMax
-            int sum = 0;
+            float sum = 0;
             String[] temp = db.getCategoriesStrings();
 
             for (int i = 0; i < temp.length; i++) {
@@ -136,9 +131,8 @@ public class BudgetReport {
         }
     }
 
-    // Sets the status color of the defCom textView in fragment layout
+    // Sets the status color of progress bar
     private void setProgressBarColor() {
-
         if (progressBar < 40) {
             progressBarColor = R.drawable.greenprogressbar;
         } else if (progressBar >= 40 && progressBar < 60) {
@@ -152,11 +146,15 @@ public class BudgetReport {
 
     // Sets the progressBar in the fragment layout
     private void setProgressBar() {
-        if (budgetMax == 0) {
-            progressBar = 0;
-        } else {
-            progressBar = (int)((double)(budgetCurrent) / budgetMax * 100);
+        if (budgetMax > 0) {
+            progressBar = (int)(budgetCurrent / budgetMax * 100);
         }
+        else {
+            progressBar = 0;
+        }
+
+        System.out.println(budgetCurrent + " " + budgetMax);
+        System.out.println(progressBar);
     }
 
     // Calculating degree of circle for Pie Chart
@@ -207,7 +205,7 @@ public class BudgetReport {
         public float getTransactionCost() { return transactionCost; }
 
         public String getTransactionCostString()  {
-            DecimalFormat cost = new DecimalFormat("$###,###,###.00");
+            DecimalFormat cost = new DecimalFormat("$###,###,##0.00");
             if (transactionCost > 0) {
                 return cost.format(transactionCost);
             }

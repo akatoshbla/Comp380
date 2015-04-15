@@ -2,7 +2,6 @@ package com.comp380.csun.comp380;
 
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -213,12 +212,18 @@ public class MainActivity extends ActionBarActivity {
                     }
 
                     // Sets the top viewer in the Main Screen Fragment
-                    DecimalFormat cost = new DecimalFormat("$###,###,###.00");
+                    DecimalFormat cost = new DecimalFormat("$###,###,##0.00");
                     textViewFraction.setText(cost.format(budgetReport.getBudgetCurrent()) + " / " +
                             cost.format(budgetReport.getBudgetMax()));
 
                     // Setup of the progress bar (color, percent, progress)
-                    progressBar.setProgress(budgetReport.getProgressBar());
+                    // Had to create a post thread to get the onResume redraw for progress bar to show updates
+                    progressBar.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressBar.setProgress(budgetReport.getProgressBar());
+                        }
+                    });
                     progressBar.setProgressDrawable(resources.getDrawable(budgetReport.getProgressBarColor()));
                     textProgressBar.setText(budgetReport.getProgressBar() + "%");
 
