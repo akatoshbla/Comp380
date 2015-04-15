@@ -205,7 +205,7 @@ public class BudgetReport {
         public float getTransactionCost() { return transactionCost; }
 
         public String getTransactionCostString()  {
-            DecimalFormat cost = new DecimalFormat("$###,###,###.00");
+            DecimalFormat cost = new DecimalFormat("$###,###,##0.00");
             if (transactionCost > 0) {
                 return cost.format(transactionCost);
             }
