@@ -25,16 +25,14 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
-
 /**
- * Created by gdfairclough on 2/15/15.
+ * Created by David on 4/25/2015.
  */
+public class AddIncomeActivity extends ActionBarActivity{
 
-public class AddExpenseActivity extends ActionBarActivity {
 
-    private AutoCompleteTextView categoryBox;
-    private AutoCompleteTextView vendorBox;
-    private EditText costBox;
+    private AutoCompleteTextView sourceBox;
+    private EditText amountBox;
     private EditText dateBox;
     private DatabaseHandler dbHandler;
     private Button buttonSubmit;
@@ -46,22 +44,15 @@ public class AddExpenseActivity extends ActionBarActivity {
 
         dbHandler = new DatabaseHandler(this, null, null,1);
 
-        //manually insert hardcoded categories for testing purposees
-
-/*        dbHandler.testCategoryValues();
-        dbHandler.testVendors();
-        dbHandler.testExpenseValues();*/
-
-        setContentView(R.layout.activity_addexpense);
+        setContentView(R.layout.activity_addincome);
 
         // Init ToolBar
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
 
         buttonSubmit = (Button) findViewById(R.id.submit_button);
-        categoryBox = (AutoCompleteTextView) findViewById(R.id.category_input);
-        vendorBox = (AutoCompleteTextView) findViewById(R.id.vendor_input);
-        costBox = (EditText) findViewById(R.id.amount_input);
+        sourceBox = (AutoCompleteTextView) findViewById(R.id.source_input);
+        amountBox = (EditText) findViewById(R.id.amount_input);
         dateBox = (EditText) findViewById(R.id.date_input);
 
         //disable the button if the text has not been changed
@@ -69,7 +60,7 @@ public class AddExpenseActivity extends ActionBarActivity {
         buttonSubmit.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
 
         //add text changed listener to the cost field;
-        costBox.addTextChangedListener(new TextWatcher() {
+        amountBox.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -82,7 +73,7 @@ public class AddExpenseActivity extends ActionBarActivity {
                 buttonSubmit.setBackgroundColor(getResources().getColor
                         (R.color.buttons));
                 buttonSubmit.setEnabled(true);
-                if(costBox.getText().toString().equals("")){
+                if(amountBox.getText().toString().equals("")){
                     buttonSubmit.setEnabled(false);
                     buttonSubmit.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
                 }
@@ -97,25 +88,20 @@ public class AddExpenseActivity extends ActionBarActivity {
 
 
 
-        //populate autocompletetextview for category
+        //populate autocompletetextview for sources
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<String>(this,R.layout.autocomplete_dropdown_item,
-                        dbHandler.getCategoriesStrings());
+                        dbHandler.getIncomeStrings());
 
-        categoryBox.setAdapter(adapter);
-
-        //populate autocompletetextview for vendor
-        adapter = new ArrayAdapter<String>(this,R.layout.autocomplete_dropdown_item,
-                dbHandler.getVendorStrings());
-
-        vendorBox.setAdapter(adapter);
-
+        if (adapter.getCount() > 0) {
+            sourceBox.setAdapter(adapter);
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_expense_display, menu);
+        getMenuInflater().inflate(R.menu.menu_income, menu);
         return true;
     }
 
@@ -131,10 +117,9 @@ public class AddExpenseActivity extends ActionBarActivity {
             return true;
         }
 
-        // Switch to IncomeActivity if money bag is pressed
-        if (id == R.id.action_add_income) {
-            startActivity(new Intent(this, IncomeActivity.class));
-            finish();
+        // Switch to AddExpenseActivity if Add button is pushed
+        if (id == R.id.action_add) {
+            startActivity(new Intent(this, AddExpenseActivity.class));
         }
 
         // Switch to GoalsActivity if the goals button is pushed
@@ -146,49 +131,34 @@ public class AddExpenseActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void newExpense (View view){
-        Expense expense;
-        String category;
-        String vendor;
-        Float cost;
+    public void newIncome (View view){
+        Income income;
+        String source;
+        Float amount;
 
-
-        //check if category field is blank
-        if(categoryBox.getText().toString().equals("")){
-            category = "Uncategorized";
+        //check if source field is blank
+        if(sourceBox.getText().toString().equals("")){
+            source = "Unspecified";
         }else{
-            category = categoryBox.getText().toString();
-        }
-        //check if vendor field is blank
-        if(vendorBox.getText().toString().equals("")){
-            vendor = "Unspecified";
-        }else{
-            vendor = vendorBox.getText().toString();
-        }
-
-        //check if category is in the database, if not, show a dialog for choosing the budget
-        if(dbHandler.getCategoryID(categoryBox.getText().toString()) < 0){
-            //show a dialog fragment for choosing a budget
-
+            source = sourceBox.getText().toString();
         }
 
         //set cost equal to the current value in the editText field
-        cost = Float.parseFloat(costBox.getText().toString());
+        amount = Float.parseFloat(amountBox.getText().toString());
 
         //set default date to today if nothing is in the editText field
         if (!dateBox.getText().toString().equals("")){
             String date  = dateBox.getText().toString();
             date = convertDateToYMD(date);
-            expense = new Expense(category,vendor,cost,date);
+            income = new Income(source, amount, date);
         }else{
-            expense = new Expense(category,vendor,cost);
+            income = new Income(source, amount);
         }
 
 
-        dbHandler.addExpense(expense);
-        categoryBox.setText("");
-        vendorBox.setText("");
-        costBox.setText("");
+        dbHandler.addIncome(income);
+        sourceBox.setText("");
+        amountBox.setText("");
         dateBox.setText("");
 
     }
@@ -214,80 +184,30 @@ public class AddExpenseActivity extends ActionBarActivity {
 
     }
 
-
-
     public void onButtonClick(View view){
 
         int id = view.getId();
 
         if(id == R.id.reset_button){
-            categoryBox.setText(null);
-            vendorBox.setText(null);
+            sourceBox.setText(null);
+            amountBox.setText(null);
             dateBox.setText(null);
-            costBox.setText(null);
         }
         else if(id == R.id.submit_button){
 
             //create intent for ExpenseDisplayActivity
-            Intent displayExpenses = new Intent(this, ExpenseDisplayActivity.class);
+            Intent displayIncomes = new Intent(this, IncomeActivity.class);
 
-            String category = categoryBox.getText().toString();
-            if(category.equals("")){
+            //add to the database
+            newIncome(view);
 
-                category = "Uncategorized";
-            }
-            if(!dbHandler.isCategory(category)){
-
-                showBudgetDialog();
-
-            }
-            else{
-
-                //add to the database
-                newExpense(view);
-
-                startActivity(displayExpenses);
-                finish();
-            }
-
-
+            startActivity(displayIncomes);
+            finish();
         }
-        else if(id == R.id.showDatePicker){
+        else if(id == R.id.showDatePickerIncome){
 
             showDatePicker();
         }
-    }
-
-
-    /**
-     * display the budgetDialog when a new category is entered
-     */
-    private void showBudgetDialog(){
-
-        BudgetDialogFragment budgetDialog = new BudgetDialogFragment();
-
-        //create a bundle to pass information to the fragment
-        Bundle args = new Bundle();
-
-        args.putString("title","Create New Category?");
-
-        //set dialog text for the category name (Uncategorized if nothing is set
-        if(categoryBox.getText().toString().equals("")){
-
-            args.putString("category","Uncategorized");
-
-        }else{
-
-            args.putString("category",categoryBox.getText().toString());
-        }
-
-        args.putString("cost",costBox.getText().toString());
-        args.putString("vendor",vendorBox.getText().toString());
-        args.putString("date",dateBox.getText().toString());
-
-        budgetDialog.setArguments(args);
-
-        budgetDialog.show(getFragmentManager(), "Create a category");
     }
 
     /**
@@ -325,19 +245,4 @@ public class AddExpenseActivity extends ActionBarActivity {
             dateBox.setText(dateString);
         }
     };
-
-    public void lookupExpense(View view){
-
-        Expense expense = dbHandler.findExpense(categoryBox.getText().toString());
-
-        if (expense != null){
-            categoryBox.setText(String.valueOf(expense.getCategory()));
-            vendorBox.setText(String.valueOf(expense.getVendor()));
-            costBox.setText(String.valueOf(expense.getCost()));
-            dateBox.setText(String.valueOf(expense.getDate()));
-        }else{
-            categoryBox.setText("No match found");
-        }
-
-    }
 }

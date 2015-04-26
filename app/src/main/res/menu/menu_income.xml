@@ -1,11 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.comp380.csun.comp380.ExpenseDisplayActivity">
+    tools:context="com.comp380.csun.comp380.IncomeActivity">
 
-    <item android:id="@+id/action_add_income"
-        android:icon="@drawable/income"
-        android:title="@string/action_add_income"
+    <item android:id="@+id/action_add"
+        android:icon="@drawable/ic_action_new"
+        android:title="@string/action_add_expense"
         app:showAsAction="always"/>
 
     <item android:id="@+id/goals"
@@ -16,4 +16,5 @@
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+
 </menu>

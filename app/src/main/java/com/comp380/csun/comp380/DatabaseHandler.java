@@ -22,6 +22,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String TABLE_CATEGORIES = "categories";
     private static final String TABLE_VENDORS = "vendors";
     private static final String TABLE_PASSWORD = "password";
+    private static final String TABLE_INCOME = "income";
 
     //column names
     private static final String COLUMN_ID = "_id";
@@ -40,6 +41,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String COLUMN_VENDID = "vendor_id";
     private static final String COLUMN_VENDDESC = "vendor_desc";
 
+    //income table column names
+    private static final String COLUMN_INCID = "income_id";
+    private static final String COLUMN_INCSOURCE = "income_source";
+    private static final String COLUMN_INCAMOUNT = "income_amount";
+    private static final String COLUMN_INCDATE = "income_date";
 
     public DatabaseHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
@@ -82,6 +88,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_VENDDESC
                 + " VARCHAR(255) UNIQUE" + ")";
 
+        //income table
+        String CREATE_INCOME_TABLE = "CREATE TABLE " + TABLE_INCOME + "(" +
+                COLUMN_INCID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_INCSOURCE
+                + " VARCHAR(255)," + COLUMN_INCAMOUNT +  " REAL," + COLUMN_INCDATE +
+                " DATE DEFAULT CURRENT_DATE NOT NULL" + ")";
         // ---------------------------------------------------
 
         //execute the above sql statements
@@ -90,6 +101,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_CATEGORIES_TABLE);
         db.execSQL(CREATE_VENDORS_TABLE);
         db.execSQL(CREATE_PASSWORD_TABLE);
+        db.execSQL(CREATE_INCOME_TABLE);
     }
 
     @Override
@@ -107,6 +119,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORIES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PASSWORD);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_VENDORS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_INCOME);
         onCreate(db);
 
     }
@@ -182,6 +195,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.insert(TABLE_VENDORS,null,values);
         db.close();
     }*/
+
+    public void addIncome(Income income) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_INCSOURCE, income.getSource());
+        values.put(COLUMN_INCAMOUNT, income.getAmount());
+        if (income.getDate() != null){
+
+            values.put(COLUMN_INCDATE, income.getDate());
+        }
+
+        //insert data into the writable database
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.insert(TABLE_INCOME, null, values);
+        db.close();
+    }
 
     public String[] getCategoriesStrings(){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -272,6 +300,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             return vendors;
         }
         Log.d("Vendor String Error","Error reading vendors to string");
+        db.close();
+        return null;
+
+    }
+
+    public String[] getIncomeStrings(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT " + COLUMN_INCSOURCE+ " FROM " + TABLE_INCOME,null);
+        if (cursor != null){
+            //store vendor text to a string
+            int i = 0;
+            String[] sources = new String[cursor.getCount()];
+            while(cursor.moveToNext()){
+                String vendor = cursor.getString(cursor.getColumnIndex(COLUMN_INCSOURCE));
+                sources[i] = vendor;
+                i++;
+            }
+            db.close();
+            return sources;
+        }
+        Log.d("Source String Error","Error reading sources to string");
         db.close();
         return null;
 
@@ -373,11 +422,36 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
+    //Gets all the rows of the income table on one cursor for ListView
+    public Cursor getAllIncomeRows() {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        //join categories and expenses tables
+        String INCOME_SELECT_SQL = "SELECT " + COLUMN_INCID +", "+ COLUMN_INCSOURCE +", "+COLUMN_INCAMOUNT
+                +", " +COLUMN_INCDATE + " FROM " + TABLE_INCOME +" ORDER BY " + COLUMN_INCDATE + " DESC,"
+                + COLUMN_INCID +" DESC";
+
+        Cursor cursor = db.rawQuery(INCOME_SELECT_SQL,null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+        }
+
+        db.close();
+        return cursor;
+    }
+
     //Gets all String names of table
     public String[] tableNames() {
         String[] names = new String[] {COLUMN_CATDESC, COLUMN_VENDDESC, COLUMN_COST,
                 COLUMN_DATE,COLUMN_ID};
         return names;
+    }
+
+    //Gets all String names of Income Table
+    public String[] incomeColumnNames() {
+        String[] columnNames = new String[] {COLUMN_INCSOURCE, COLUMN_INCAMOUNT, COLUMN_INCDATE,
+                COLUMN_INCID};
+        return columnNames;
     }
 
     //find an expense using this method which generates a SELECT statement
@@ -595,6 +669,26 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
 
         return budgetTotal;
+    }
+
+    public double getTotalOfIncome() {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String INCOME_TOTAL_SQL = "SELECT SUM(" + COLUMN_INCAMOUNT + ") FROM " + TABLE_INCOME;
+        Cursor cursor = db.rawQuery(INCOME_TOTAL_SQL, null);
+
+        double incomeTotal;
+        if (cursor.moveToFirst()) {
+            incomeTotal = Double.parseDouble(cursor.getString(0));
+        }
+        else {
+            incomeTotal = 0;
+        }
+
+        cursor.close();
+        db.close();
+
+        return incomeTotal;
     }
 
     public double getExpensesForMonth(Date prevDate, Date curDate){

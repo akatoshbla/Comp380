@@ -3,8 +3,8 @@ package com.comp380.csun.comp380;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,7 +18,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.ObjectStreamException;
 import java.io.StreamCorruptedException;
@@ -159,8 +158,7 @@ public class GoalsActivity extends ActionBarActivity implements View.OnClickList
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        menu.removeItem(R.id.goals);
+        getMenuInflater().inflate(R.menu.menu_goals, menu);
         return true;
     }
 
@@ -174,6 +172,12 @@ public class GoalsActivity extends ActionBarActivity implements View.OnClickList
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+
+        // Switch to IncomeActivity if money bag is pressed
+        if (id == R.id.action_add_income) {
+            startActivity(new Intent(this, IncomeActivity.class));
+            finish();
         }
 
         // Switch to addExpenseActivity if the plus button is pushed

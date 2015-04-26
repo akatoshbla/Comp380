@@ -152,9 +152,6 @@ public class BudgetReport {
         else {
             progressBar = 0;
         }
-
-        System.out.println(budgetCurrent + " " + budgetMax);
-        System.out.println(progressBar);
     }
 
     // Calculating degree of circle for Pie Chart

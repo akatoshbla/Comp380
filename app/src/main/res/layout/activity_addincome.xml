@@ -1,0 +1,123 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_background"
+    >
+
+    <include
+        android:id="@+id/app_bar"
+        layout="@layout/app_bar" />
+
+    <TextView android:text="@string/amount_text"
+        style="@style/TextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingRight="60dp"
+        android:paddingTop="30dp"
+        android:paddingBottom="30dp"
+        android:id="@+id/amountText"
+        android:layout_below="@+id/app_bar"/>
+
+    <EditText
+        android:id="@+id/amount_input"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:hint="Enter Income"
+        android:inputType="numberDecimal"
+        android:background="@android:color/white"
+        android:maxLength="12"
+        android:layout_above="@+id/sourceText"
+        android:layout_alignLeft="@+id/source_input"
+        android:layout_alignStart="@+id/source_input"
+        android:layout_marginBottom="25dp" />
+
+    <TextView android:text="From"
+        style="@style/TextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingRight="100dp"
+        android:paddingBottom="30dp"
+        android:id="@+id/sourceText"
+        android:layout_below="@id/amountText"
+        android:paddingTop="30dp" />
+
+    <AutoCompleteTextView
+        android:id="@+id/source_input"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:hint="Source of Income"
+        android:inputType="textAutoCorrect"
+        android:background="@android:color/white"
+        android:padding="5dp"
+        android:layout_above="@+id/dateText"
+        android:layout_toLeftOf="@+id/showDatePickerIncome"
+        android:layout_toStartOf="@+id/showDatePickerIncome"
+        android:layout_marginBottom="26dp"
+        android:paddingBottom="30dp"
+        android:paddingTop="30dp"
+        android:layout_alignParentRight="false"
+        android:dropDownSelector="#ffffab15"
+        android:completionThreshold="1"
+        android:maxLength="20" />
+
+    <Button
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:text="@string/reset_button_text"
+        android:id="@+id/reset_button"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:onClick="onButtonClick"
+        style="@style/Buttons" />
+
+    <Button
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:text="@string/submit_button_text"
+        android:id="@+id/submit_button"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:onClick="onButtonClick"
+        style="@style/Buttons" />
+
+    <TextView
+        android:text="@string/date_text"
+        style="@style/TextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingRight="100dp"
+        android:id="@+id/dateText"
+        android:layout_below="@id/sourceText"
+        android:paddingTop="30dp"
+        android:paddingBottom="30dp" />
+
+    <EditText
+        android:id="@+id/date_input"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:enabled="false"
+        android:hint="MM-DD-YYYY"
+        android:background="@android:color/white"
+        android:paddingTop="30dp"
+        android:layout_alignBottom="@+id/dateText"
+        android:layout_toLeftOf="@+id/showDatePickerIncome"
+        android:layout_toStartOf="@+id/showDatePickerIncome"
+        android:layout_marginBottom="25dp"
+        android:maxLength="20" />
+
+    <Button
+        android:id="@+id/showDatePickerIncome"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:onClick="onButtonClick"
+        android:background="@drawable/calender"
+        android:layout_alignRight="@+id/submit_button"
+        android:layout_alignEnd="@+id/submit_button"
+        android:layout_alignBottom="@+id/date_input" />
+
+</RelativeLayout>

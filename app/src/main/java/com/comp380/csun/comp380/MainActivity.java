@@ -86,6 +86,11 @@ public class MainActivity extends ActionBarActivity {
             startActivity(new Intent(this, AddExpenseActivity.class));
         }
 
+        // Switch to addIncomeActivity if the bag button is pushed
+        if (id == R.id.action_add_income) {
+            startActivity(new Intent(this, IncomeActivity.class));
+        }
+
         // Switch to GoalsActivity if the goals button is pushed
         if (id == R.id.goals) {
             startActivity(new Intent(this, GoalsActivity.class));
