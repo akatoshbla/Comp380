@@ -176,8 +176,9 @@ public class GoalsActivity extends ActionBarActivity implements View.OnClickList
 
         // Switch to IncomeActivity if money bag is pressed
         if (id == R.id.action_add_income) {
-            startActivity(new Intent(this, IncomeActivity.class));
-            finish();
+            Intent intent = new Intent(this, IncomeActivity.class);
+            intent.putExtra("key", "All Months");
+            startActivity(intent);
         }
 
         // Switch to addExpenseActivity if the plus button is pushed
