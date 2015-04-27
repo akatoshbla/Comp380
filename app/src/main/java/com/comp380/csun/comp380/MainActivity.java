@@ -88,7 +88,9 @@ public class MainActivity extends ActionBarActivity {
 
         // Switch to addIncomeActivity if the bag button is pushed
         if (id == R.id.action_add_income) {
-            startActivity(new Intent(this, IncomeActivity.class));
+            Intent intent = new Intent(this, IncomeActivity.class);
+            intent.putExtra("key", "All Months");
+            startActivity(intent);
         }
 
         // Switch to GoalsActivity if the goals button is pushed

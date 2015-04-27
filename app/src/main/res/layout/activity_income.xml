@@ -8,11 +8,26 @@
         android:id="@+id/app_bar"
         layout="@layout/app_bar" />
 
+    <TextView
+        android:id="@+id/monthEdit"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:text="Click to Sort by Month"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:background="@color/buttons"
+        android:clickable="true"
+        android:onClick="onClick"
+        android:editable="false"
+        android:inputType="none"
+        android:layout_below="@+id/app_bar" />
+
     <ListView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/incomeListViewTasks"
-        android:layout_below="@id/app_bar"
+        android:layout_below="@id/monthEdit"
         android:layout_above="@+id/addIncomeButton" />
 
     <Button
@@ -32,8 +47,20 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:text="Total Income  $999.99"
+        android:text="Total Income: $9999999.99"
         android:textSize="24sp"
         android:textColor="@color/white" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="No incomes found for selected month!"
+        android:id="@+id/noIncomes"
+        android:layout_marginTop="28dp"
+        android:visibility="gone"
+        android:textColor="@android:color/white"
+        android:layout_below="@+id/monthEdit"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

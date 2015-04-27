@@ -232,6 +232,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
+    public String[] getIncomeMonths() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String MONTH_QUERY_SQL = "SELECT DISTINCT strftime('%m', " + COLUMN_INCDATE + ") FROM " + TABLE_INCOME
+                + " ORDER BY " + COLUMN_INCDATE;
+        Cursor cursor = db.rawQuery(MONTH_QUERY_SQL, null);
+        if (cursor != null) {
+            int i = 0;
+            String[] months = new String[cursor.getCount()];
+            while (cursor.moveToNext()) {
+                String month = cursor.getString(0);
+                months[i] = month;
+                i++;
+            }
+            cursor.close();
+            return months;
+        }
+        System.out.print("Error reading months to string");
+        db.close();
+        return null;
+    }
+
     //lookup to see if a category exists
     public int getCategoryID(String category){
         SQLiteDatabase db = this.getReadableDatabase();
@@ -420,6 +441,34 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             return null;
         }
 
+    }
+
+    public Cursor getAllRowsForMonth(String month) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        if (month.equals("Current Month")) {
+            Date date = new Date();
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            month = "0" + Integer.toString(cal.get(Calendar.MONTH) + 1);
+        }
+
+        String MONTH_SELECT_SQL = "SELECT " + COLUMN_INCID +"," + COLUMN_INCSOURCE +","
+                + COLUMN_INCAMOUNT +"," +COLUMN_INCDATE + " FROM " + TABLE_INCOME +  " WHERE "
+                + "strftime('%m', " + COLUMN_INCDATE + ") IN('" +month + "') ORDER BY " +COLUMN_INCDATE;
+
+        Cursor cursor = db.rawQuery(MONTH_SELECT_SQL, null);
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+            db.close();
+            return cursor;
+        }
+        else {
+            Log.d("Month Cursor Error:", " Issue creating the cursor for month picker");
+            db.close();
+            return null;
+        }
     }
 
     //Gets all the rows of the income table on one cursor for ListView
@@ -671,10 +720,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return budgetTotal;
     }
 
-    public double getTotalOfIncome() {
+    public double getTotalOfIncome(String sort) {
         SQLiteDatabase db = this.getReadableDatabase();
+        String INCOME_TOTAL_SQL;
+        if (sort.equals("All Months")) {
+            INCOME_TOTAL_SQL = "SELECT SUM(" + COLUMN_INCAMOUNT + ") FROM " + TABLE_INCOME;
+        }
+        else if (sort.equals("Current Month")) {
+            Date date = new Date();
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            String month = "0" + Integer.toString(cal.get(Calendar.MONTH) + 1);
 
-        String INCOME_TOTAL_SQL = "SELECT SUM(" + COLUMN_INCAMOUNT + ") FROM " + TABLE_INCOME;
+            INCOME_TOTAL_SQL = "SELECT SUM(" + COLUMN_INCAMOUNT + ") FROM " + TABLE_INCOME
+                    + " WHERE strftime('%m', " + COLUMN_INCDATE + ") IN('" +month +"')";
+        }
+        else {
+            INCOME_TOTAL_SQL = "SELECT SUM(" + COLUMN_INCAMOUNT + ") FROM " + TABLE_INCOME
+                    + " WHERE strftime('%m', " + COLUMN_INCDATE + ") IN('" + sort +"')";
+        }
         Cursor cursor = db.rawQuery(INCOME_TOTAL_SQL, null);
 
         double incomeTotal;

@@ -51,7 +51,8 @@
         </activity>
         <activity
             android:name=".IncomeActivity"
-            android:label="Income" >
+            android:label="Income"
+            android:theme="@style/ThemeForDialogs">
         </activity>
     </application>
 

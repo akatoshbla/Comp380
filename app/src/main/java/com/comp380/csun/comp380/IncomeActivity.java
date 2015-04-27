@@ -1,5 +1,6 @@
 package com.comp380.csun.comp380;
 
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -24,11 +25,13 @@ import java.util.Date;
 import java.util.Locale;
 
 
-public class IncomeActivity extends ActionBarActivity implements View.OnClickListener {
+public class IncomeActivity extends ActionBarActivity implements View.OnClickListener, IncomePickerFragment.IncomePickerListener {
 
     //the projection of the column names
     String[] mColumns;
     DatabaseHandler dbHandler;
+    TextView noIncomes;
+    TextView monthText;
     Toolbar toolbar;
 
     @Override
@@ -37,32 +40,20 @@ public class IncomeActivity extends ActionBarActivity implements View.OnClickLis
         setContentView(R.layout.activity_income);
 
         toolbar = (Toolbar) findViewById(R.id.app_bar);
+        noIncomes = (TextView) findViewById(R.id.noIncomes);
+        monthText = (TextView) findViewById(R.id.monthEdit);
         setSupportActionBar(toolbar);
 
         dbHandler = new DatabaseHandler(this, null, null, 1);
 
-        //set up the database cursor
-        Cursor cursor;
-        cursor = dbHandler.getAllIncomeRows();
-
-        if (cursor != null) {
-            populateViewer(cursor);
-        }
-
-        calculateTotalIncome();
-        dbHandler.close();
+        setPopulateViewer();
     }
 
     protected void onResume() {
         super.onResume();
-        Cursor cursor;
-        cursor = dbHandler.getAllIncomeRows();
 
-        if (cursor != null) {
-            populateViewer(cursor);
-        }
-        calculateTotalIncome();
-        dbHandler.close();
+        dbHandler = new DatabaseHandler(this, null, null, 1);
+        setPopulateViewer();
     }
 
     @Override
@@ -70,8 +61,8 @@ public class IncomeActivity extends ActionBarActivity implements View.OnClickLis
 
         switch(v.getId()){
 
-            case R.id.incomeListViewTasks:
-
+            case R.id.monthEdit:
+                showMonthPicker();
                 break;
             case R.id.addIncomeButton:
                 startActivity(new Intent(this, AddIncomeActivity.class));
@@ -84,7 +75,57 @@ public class IncomeActivity extends ActionBarActivity implements View.OnClickLis
 
     }
 
-    public void populateViewer(Cursor cursor) {
+    public void showMonthPicker(){
+
+        IncomePickerFragment monthPicker = new IncomePickerFragment();
+
+        //start the budget picker fragment
+
+        monthPicker.show(getFragmentManager(), "Month Picker");
+
+    }
+
+
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog, String month) {
+
+        //display income in the list view based on the chosen month
+
+        TextView monthText = (TextView)findViewById(R.id.monthEdit);
+        monthText.setText(month);
+        Intent intent = getIntent();
+        intent.putExtra("key", month);
+        setPopulateViewer();
+    }
+
+    public void setPopulateViewer() {
+        Cursor cursor;
+        Intent intent = getIntent();
+        String sortType = intent.getStringExtra("key");
+
+        if (!sortType.equals("All Months") && !sortType.equals("Current Month")) {
+            noIncomes.setVisibility(View.GONE);
+            cursor = dbHandler.getAllRowsForMonth(sortType);
+
+            if (!cursor.moveToFirst()) {
+                noIncomes.setVisibility(View.VISIBLE);
+            }
+            monthText.setText(sortType);
+        }
+        else if (sortType.equals("Current Month")) {
+            noIncomes.setVisibility(View.GONE);
+            cursor = dbHandler.getAllRowsForMonth(sortType);
+        }
+        else {
+            noIncomes.setVisibility(View.GONE);
+            cursor = dbHandler.getAllIncomeRows();
+        }
+
+        populateViewer(cursor);
+        calculateTotalIncome(sortType);
+    }
+
+    private void populateViewer(Cursor cursor) {
         // Populate listview
         ListView listview = (ListView) findViewById(R.id.incomeListViewTasks);
         mColumns = dbHandler.incomeColumnNames();
@@ -92,12 +133,13 @@ public class IncomeActivity extends ActionBarActivity implements View.OnClickLis
         //set up the adapter for the listView
         CustomAdapter adapter = new CustomAdapter(this,cursor);
         listview.setAdapter(adapter);
+        dbHandler.close();
     }
 
-    public void calculateTotalIncome() {
-        TextView totalIncome = (TextView) findViewById(R.id.totalIncome);
+    public void calculateTotalIncome(String sort) {
         DecimalFormat decimalFormat = new DecimalFormat("$###,###,##0.00");
-        totalIncome.setText("Total Income " + decimalFormat.format(dbHandler.getTotalOfIncome()));
+        TextView totalIncome = (TextView) findViewById(R.id.totalIncome);
+        totalIncome.setText("Total Income: " + decimalFormat.format(dbHandler.getTotalOfIncome(sort)));
     }
 
     /**
