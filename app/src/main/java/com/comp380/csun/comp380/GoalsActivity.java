@@ -269,9 +269,11 @@ public class GoalsActivity extends ActionBarActivity implements View.OnClickList
         switch(v.getId()){
             case R.id.addButton:
                 showUpdateSavingsDialog(false, new Date());
+                finish();
                 break;
             case R.id.changeGoalButton:
                 showGoalDialog();
+                finish();
             default:
 
         }
