@@ -201,6 +201,9 @@ public class AddIncomeActivity extends ActionBarActivity{
             //add to the database
             newIncome(view);
 
+            // Add sortType key
+            displayIncomes.putExtra("key", "All Months");
+
             startActivity(displayIncomes);
             finish();
         }

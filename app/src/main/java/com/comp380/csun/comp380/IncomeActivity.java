@@ -119,7 +119,7 @@ public class IncomeActivity extends ActionBarActivity implements View.OnClickLis
         else {
             noIncomes.setVisibility(View.GONE);
             cursor = dbHandler.getAllIncomeRows();
-            monthText.setText(sortType);
+            monthText.setText("All Months");
         }
 
         populateViewer(cursor);

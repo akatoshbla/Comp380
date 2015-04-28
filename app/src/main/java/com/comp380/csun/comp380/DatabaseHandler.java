@@ -742,7 +742,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(INCOME_TOTAL_SQL, null);
 
         double incomeTotal;
-        if (cursor.moveToFirst()) {
+        if (cursor.moveToFirst() && cursor.getString(0) != null) {
             incomeTotal = Double.parseDouble(cursor.getString(0));
         }
         else {
