@@ -179,6 +179,7 @@ public class GoalsActivity extends ActionBarActivity implements View.OnClickList
             Intent intent = new Intent(this, IncomeActivity.class);
             intent.putExtra("key", "All Months");
             startActivity(intent);
+            finish();
         }
 
         // Switch to addExpenseActivity if the plus button is pushed
@@ -269,11 +270,9 @@ public class GoalsActivity extends ActionBarActivity implements View.OnClickList
         switch(v.getId()){
             case R.id.addButton:
                 showUpdateSavingsDialog(false, new Date());
-                finish();
                 break;
             case R.id.changeGoalButton:
                 showGoalDialog();
-                finish();
             default:
 
         }
