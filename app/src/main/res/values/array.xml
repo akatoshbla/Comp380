@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sync_option_label">
+        <item>Monthly</item>
+        <item>Weekly</item>
+        <item>Yearly</item>
+    </string-array>
+
+    <string-array name="sync_option_value">
+        <item>Monthly</item>
+        <item>Weekly</item>
+        <item>Yearly</item>
+    </string-array>
+
+</resources>

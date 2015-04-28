@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="Settings">
+    <ListPreference
+        android:key="cync_length"
+        android:title="Budget Length"
+        android:summary="Week, Month, Year"
+        android:dialogTitle="Duration"
+        android:entries="@array/sync_option_label"
+        android:entryValues="@array/sync_option_value"
+        />
+    </PreferenceCategory>
+</PreferenceScreen>

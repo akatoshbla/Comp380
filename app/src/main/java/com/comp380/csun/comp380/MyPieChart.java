@@ -14,20 +14,29 @@ public class MyPieChart extends View {
     private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private float[] valueDegree;
     private String[] names;
-    RectF rectf = new RectF(120, 120, 380, 380);
-    float temp;
+    private RectF rectf;
+    private int width;
+    private int height;
+    private float temp;
+
 
     public MyPieChart(Context context, float[] values, String[] names) {
         super(context);
         valueDegree = values;
         this.names = names;
+        setupRectF();
+    }
+
+    private void setupRectF(){
+        width = getResources().getDisplayMetrics().widthPixels;
+        height = getResources().getDisplayMetrics().heightPixels;
+        rectf = new RectF(width/7, width/7, height/4, height/4);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
-        int offsetY = 40;
+        int offsetY = 80;
         temp = 0;
 
         // 0 Light Blue, 1 Light Green, 2 Yellow, 3 Orange, 4 Magenta
@@ -42,14 +51,14 @@ public class MyPieChart extends View {
             if (i == 0) {
                 paint.setColor(colors[i]);
                 canvas.drawArc(rectf, 0, valueDegree[i], true, paint);
-                paint.setTextSize(20);
-                canvas.drawText(names[i], 0, 40, paint);
+                paint.setTextSize(40);
+                canvas.drawText(names[i], 0, 80, paint);
             } else {
                 temp += valueDegree[i - 1];
                 paint.setColor(colors[i]);
                 canvas.drawArc(rectf, temp, valueDegree[i], true, paint);
-                paint.setTextSize(20);
-                canvas.drawText(names[i], 0, offsetY += 20, paint);
+                paint.setTextSize(40);
+                canvas.drawText(names[i], 0, offsetY += 50, paint);
             }
         }
     }
